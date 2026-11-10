@@ -1,4 +1,6 @@
 /target
 melqui.dump
 /.local/
+__pycache__/
+*.py[cod]
 

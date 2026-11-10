@@ -372,7 +372,7 @@ The first release uses one administrative role with separate administrative iden
 - **Hosting:** Vultr has been considered, but no hosting provider or production deployment arrangement has been selected.
 - **Development:** Rust and Angular can run directly on Linux. PostgreSQL can be installed locally; an optional Docker Compose setup for PostgreSQL is also acceptable. Docker is not a prerequisite for all development.
 
-The project owner has created a local PostgreSQL database named **`escolar`** for later use. Connection details and its current contents have not been established in this specification. It should be inspected before any changes are made.
+The project owner created a local PostgreSQL database named **`escolar`**. Its initially empty `catalog` and `store_snapshot` schemas have since been created and populated with a starter taxonomy, generic items, a catalog-only store snapshot, and pending match suggestions. The remaining application data model and the user-facing catalog and administrator interfaces are not yet implemented. See the [catalog database guide](../db/README.md) for the connection and review workflow.
 
 An earlier catalog experiment in this workspace used a **separate**, isolated local PostgreSQL cluster under `.local/` and a database named `lista_escolar`; it did not use the owner's `escolar` database. Its schema and import scripts are prototypes, not a substitute for implementing this specification.
 
@@ -434,7 +434,6 @@ The product rules above are settled defaults for implementation. The following e
 
 - Confirm and register `listacole.cl`; no domain availability or trademark conclusion has been established.
 - Select hosting, production database arrangement, backups, retention/purge schedules, and operational ownership. Set recovery objectives and rehearse restoring a backup, including reapplying deletions and privacy removals before serving restored data. The launch audience size and launch date are unknown; establish a capacity and monitoring baseline before public launch.
-- Establish connection details and inspect the owner's existing `escolar` database before using it.
 - Select the specific Google Workspace sending method, configure a verified sending domain, and establish delivery monitoring and handling for provider limits.
 - Obtain real example spreadsheets and, where possible, representative long lists to validate imports and multi-page PDF layouts.
 - Continue curating the store-derived catalog. The dump contains many products beyond school supplies; automatic normalization cannot be assumed complete or accurate without review.

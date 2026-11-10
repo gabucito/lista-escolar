@@ -64,7 +64,15 @@ INSERT INTO catalog.attribute_definitions (key, name, data_type, unit) VALUES
     ('orientacion', 'Orientación', 'text', NULL),
     ('largo_cm', 'Largo', 'number', 'cm'),
     ('numero_colores', 'Número de colores', 'number', 'colores'),
-    ('tipo_punta', 'Tipo de punta', 'text', NULL)
+    ('tipo_punta', 'Tipo de punta', 'text', NULL),
+    ('dureza_grafito', 'Dureza del grafito', 'text', NULL),
+    ('incluye_goma', 'Incluye goma', 'boolean', NULL),
+    ('dimension_menor_cm', 'Dimensión menor', 'number', 'cm'),
+    ('dimension_mayor_cm', 'Dimensión mayor', 'number', 'cm'),
+    ('tipo_block', 'Tipo de block', 'text', NULL),
+    ('numero_block', 'Número de block', 'number', NULL),
+    ('fraccion_block', 'Fracción de block', 'text', NULL),
+    ('peso_g', 'Peso', 'number', 'g')
 ON CONFLICT (key) DO NOTHING;
 
 INSERT INTO catalog.subcategory_attributes (subcategory_id, attribute_id, sort_order)
@@ -86,8 +94,17 @@ FROM (VALUES
     ('cuadernos', 'lisos', 'numero_hojas', 20),
     ('arte-y-dibujo', 'croqueras', 'formato', 10),
     ('arte-y-dibujo', 'croqueras', 'numero_hojas', 20),
+    ('arte-y-dibujo', 'croqueras', 'dimension_menor_cm', 30),
+    ('arte-y-dibujo', 'croqueras', 'dimension_mayor_cm', 40),
+    ('arte-y-dibujo', 'blocks', 'tipo_block', 10),
+    ('arte-y-dibujo', 'blocks', 'numero_block', 20),
+    ('arte-y-dibujo', 'blocks', 'fraccion_block', 30),
+    ('arte-y-dibujo', 'blocks', 'numero_hojas', 40),
     ('arte-y-dibujo', 'lapices-colores', 'numero_colores', 10),
+    ('escritura', 'grafito', 'dureza_grafito', 10),
+    ('escritura', 'grafito', 'incluye_goma', 20),
     ('geometria', 'reglas', 'largo_cm', 10),
+    ('pegado-y-corte', 'pegamentos', 'peso_g', 10),
     ('pegado-y-corte', 'tijeras', 'tipo_punta', 10)
 ) AS v(category_slug, subcategory_slug, attribute_key, sort_order)
 JOIN catalog.categories c ON c.slug = v.category_slug

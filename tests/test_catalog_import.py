@@ -48,6 +48,60 @@ class NotebookSuggestionsTest(unittest.TestCase):
         self.assertEqual(item["format"], "medio oficio")
         self.assertEqual(item["sheets"], 150)
 
+    def test_explicit_extra_notebook_specifications_are_not_discarded(self):
+        self.assertIsNone(catalog_import.notebook_suggestion("Cuad. Univ. 100H 7mm 3 materias"))
+        self.assertIsNone(catalog_import.notebook_suggestion("Cuad. Univ. 100H 7mm 80g"))
+        self.assertIsNone(catalog_import.notebook_suggestion("Cuad. Univ. 100H 7mm 90grs"))
+
+
+class OtherSupplySuggestionsTest(unittest.TestCase):
+    def test_color_count_is_preserved_and_mixed_sets_are_skipped(self):
+        item = catalog_import.color_pencil_suggestion("Lápiz Color 12 col Artel")
+        self.assertEqual(item["key"], "manual:lapices-colores-12")
+        self.assertEqual(item["attributes"]["numero_colores"], 12)
+        self.assertIsNone(catalog_import.color_pencil_suggestion("Lápiz Color 12 col + grafito + goma"))
+        self.assertIsNone(catalog_import.color_pencil_suggestion("Lápiz Color 12 col Acuarelable"))
+        self.assertIsNone(catalog_import.color_pencil_suggestion("Lapiz Color 12col Woody Aquarelable"))
+        self.assertIsNone(catalog_import.color_pencil_suggestion("Lapiz Color 12 Col Mega Hexagonal"))
+        self.assertIsNone(catalog_import.color_pencil_suggestion("Lapiz Color 12 col 3.0 Giotto"))
+
+    def test_graphite_grade_and_eraser_are_distinct(self):
+        with_eraser = catalog_import.graphite_pencil_suggestion("Lapiz Grafito HB c/Goma Doms")
+        without_eraser = catalog_import.graphite_pencil_suggestion("Lapiz Grafito HB s/Goma Doms")
+        self.assertEqual(with_eraser["attributes"], {"dureza_grafito": "HB", "incluye_goma": True})
+        self.assertEqual(without_eraser["attributes"]["incluye_goma"], False)
+        self.assertNotEqual(with_eraser["key"], without_eraser["key"])
+        self.assertIsNone(catalog_import.graphite_pencil_suggestion("Lapiz Grafito HB x12"))
+
+    def test_sketchbook_distinguishes_format_sheet_count_and_dimensions(self):
+        item = catalog_import.sketchbook_suggestion("Croquera 21x32 OF. 80H Artel")
+        self.assertEqual(item["attributes"], {"formato": "oficio", "numero_hojas": 80,
+                                             "dimension_menor_cm": 21.0, "dimension_mayor_cm": 32.0})
+        other = catalog_import.sketchbook_suggestion("Croquera 22x32 OF. 80H Artel")
+        self.assertNotEqual(item["key"], other["key"])
+        self.assertIsNone(catalog_import.sketchbook_suggestion("Croquera XL A4 50H 160g Canson"))
+        self.assertIsNone(catalog_import.sketchbook_suggestion("Croquera A4 68 páginas"))
+        self.assertIsNone(catalog_import.sketchbook_suggestion("Croquera D/F 50H Carta"))
+        self.assertIsNone(catalog_import.sketchbook_suggestion("Croquera A4 90grs 120H"))
+        self.assertIsNone(catalog_import.sketchbook_suggestion("Croquera A4 20H 200g24x32"))
+
+    def test_drawing_block_attributes_are_preserved(self):
+        item = catalog_import.drawing_block_suggestion("Block Dibujo Medio 99 1/8 20H Mas+Arte")
+        self.assertEqual(item["attributes"], {"tipo_block": "medio", "numero_hojas": 20,
+                                             "numero_block": 99, "fraccion_block": "1/8"})
+        self.assertIsNone(catalog_import.drawing_block_suggestion("Block Dibujo Med. D/F 99 1/4 20H"))
+
+    def test_rulers_and_glue_have_correct_generic_keys(self):
+        ruler = catalog_import.ruler_suggestion("Regla 30 cm Artel")
+        self.assertEqual(ruler["key"], "manual:regla-30-cm")
+        self.assertIsNone(catalog_import.ruler_suggestion("Regla metálica 30 cm"))
+        self.assertIsNone(catalog_import.ruler_suggestion("Regla T aluminio 60cm"))
+        self.assertIsNone(catalog_import.ruler_suggestion("Regla plástica 15cm x 8un"))
+        self.assertIsNone(catalog_import.ruler_suggestion("Regla quilting 30x15cm"))
+        glue = catalog_import.glue_stick_suggestion("Pegamento en barra 21g Artel")
+        self.assertEqual(glue["attributes"]["peso_g"], 21)
+        self.assertNotEqual(glue["key"], catalog_import.glue_stick_suggestion("Pegamento en barra 8g Artel")["key"])
+
 
 class ExtractionTest(unittest.TestCase):
     def test_only_selected_catalog_tables_are_extracted(self):

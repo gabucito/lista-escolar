@@ -133,6 +133,12 @@ CREATE INDEX IF NOT EXISTS catalog_items_category_idx
     ON catalog.items (category_id, subcategory_id, review_status, name);
 CREATE INDEX IF NOT EXISTS catalog_item_aliases_lower_idx
     ON catalog.item_aliases (lower(alias));
+CREATE INDEX IF NOT EXISTS catalog_item_attributes_number_idx
+    ON catalog.item_attributes (attribute_id, number_value, item_id)
+    WHERE number_value IS NOT NULL;
+CREATE INDEX IF NOT EXISTS catalog_item_attributes_text_idx
+    ON catalog.item_attributes (attribute_id, lower(text_value), item_id)
+    WHERE text_value IS NOT NULL;
 CREATE INDEX IF NOT EXISTS store_products_lower_name_idx
     ON store_snapshot.products (lower(name));
 CREATE INDEX IF NOT EXISTS store_variants_product_idx
@@ -145,7 +151,16 @@ CREATE INDEX IF NOT EXISTS catalog_matches_status_idx
 CREATE OR REPLACE VIEW catalog.browse_items AS
 SELECT i.id, i.name, i.canonical_key, i.review_status,
        c.slug AS category_slug, c.name AS category,
-       s.slug AS subcategory_slug, s.name AS subcategory
+       s.slug AS subcategory_slug, s.name AS subcategory,
+       COALESCE((
+           SELECT jsonb_object_agg(a.key, jsonb_build_object(
+               'name', a.name, 'unit', a.unit,
+               'value', COALESCE(to_jsonb(v.text_value), to_jsonb(v.number_value), to_jsonb(v.boolean_value))
+           ))
+           FROM catalog.item_attributes v
+           JOIN catalog.attribute_definitions a ON a.id = v.attribute_id
+           WHERE v.item_id = i.id
+       ), '{}'::jsonb) AS attributes
 FROM catalog.items i
 JOIN catalog.categories c ON c.id = i.category_id
 LEFT JOIN catalog.subcategories s ON s.id = i.subcategory_id
@@ -162,5 +177,26 @@ WHERE p.deleted_at IS NULL
       SELECT 1 FROM catalog.store_product_matches m
       WHERE m.source_product_id = p.id AND m.review_status IN ('pending', 'approved')
   );
+
+-- This view is for administrators, not for the public list interface. Prices
+-- are from the imported snapshot and are not guaranteed to be current.
+CREATE OR REPLACE VIEW catalog.product_matches_for_review AS
+SELECT m.item_id, i.name AS generic_name, m.source_product_id,
+       p.name AS source_product_name, b.name AS source_brand,
+       p.price_clp AS snapshot_price_clp, m.match_method, m.created_at,
+       image.url AS source_image_url
+FROM catalog.store_product_matches m
+JOIN catalog.items i ON i.id = m.item_id
+JOIN store_snapshot.products p ON p.id = m.source_product_id
+LEFT JOIN store_snapshot.brands b ON b.id = p.brand_id
+LEFT JOIN LATERAL (
+    SELECT img.url
+    FROM store_snapshot.product_images pi
+    JOIN store_snapshot.images img ON img.id = pi.image_id
+    WHERE pi.product_id = p.id AND pi.deleted_at IS NULL AND img.deleted_at IS NULL
+    ORDER BY pi.position, pi.id
+    LIMIT 1
+) image ON true
+WHERE m.review_status = 'pending';
 
 COMMIT;

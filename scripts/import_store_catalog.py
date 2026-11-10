@@ -1,14 +1,16 @@
 #!/usr/bin/env python3
-"""Extract catalog-only COPY sections and suggest conservative notebook matches."""
+"""Import a store catalog snapshot and propose conservative generic matches."""
 
 from __future__ import annotations
 
 import argparse
 import json
 import mmap
+import os
 from pathlib import Path
 import re
 import subprocess
+import sys
 import tempfile
 import unicodedata
 
@@ -49,6 +51,10 @@ def notebook_suggestion(name: str) -> dict[str, str | int | None] | None:
     """
     text = normalize(name).strip()
     if not re.match(r"^CUAD(?:ERNO)?\.?(?:\s|$)", text):
+        return None
+    # These terms can describe meaningful extra specifications or multiple
+    # products. Leave them for review until they can be represented reliably.
+    if re.search(r"\b(?:SET|KIT|PACK|MULTI\s*\d+)\b|\b\d+\s*MATERIAS?\b|\b\d{2,3}\s*(?:GRAMOS|GRS|GR|G)(?![A-Z])|\bD\s*/\s*F\b|\bDOBLE\s+FAZ\b|\+", text):
         return None
     formats = {
         "universitario": ("universitario", r"\bUNIV(?:ERSITARIO)?\b"),
@@ -99,6 +105,198 @@ def notebook_suggestion(name: str) -> dict[str, str | int | None] | None:
     key = f"cuaderno:{format_key}:{subtype}:{orientation or '-'}:{spacing or '-'}:{sheet_count}"
     return {"key": key, "name": display_name, "subcategory": subtype, "format": format_label,
             "sheets": sheet_count, "spacing": spacing, "orientation": orientation}
+
+
+def color_pencil_suggestion(name: str) -> dict | None:
+    """Recognize only ordinary color-pencil products with an explicit count."""
+    text = normalize(name).strip()
+    match = re.match(r"^LAPIZ(?:ES)?\s+(?:DE\s+)?COLO(?:R|RES)\s+(\d{1,3})\s*COL(?:ORES)?\b", text)
+    if not match or re.search(
+        r"\+|\b(?:SET|KIT|PACK|GRAFITO|GOMA|SACAPUNTAS?|PIEL|NEON|FLUOR|METAL\w*|"
+        r"PASTEL|ACUAREL\w*|ACQUARELL\w*|AQUAREL\w*|JUMBO|CORTO\w*|TRIANG\w*|BICOLOR|"
+        r"LATA|SUPERSOFT|MEGA|MAXI|HEXAGON\w*|WOODY|NEGRO)\b|\b\d+[.,]\d+\b",
+        text,
+    ):
+        return None
+    count = int(match.group(1))
+    if not 2 <= count <= 100:
+        return None
+    return {
+        "key": "manual:lapices-colores-12" if count == 12 else f"lapices-colores:{count}",
+        "name": f"Lápices de colores, {count} colores",
+        "category": "arte-y-dibujo", "subcategory": "lapices-colores",
+        "attributes": {"numero_colores": count}, "method": "explicit_color_count",
+    }
+
+
+def graphite_pencil_suggestion(name: str) -> dict | None:
+    """Require an explicit lead grade and avoid mixed sets or known packs."""
+    text = normalize(name).strip()
+    if not re.match(r"^LAPIZ(?:ES)?\s+(?:DE\s+)?GRAFITO\b", text):
+        return None
+    if re.search(r"\+|\b(?:SET|KIT|PACK|CAJA|JUMBO|TRIANG\w*|HEXAGON\w*)\b|\bX\s*\d+\b|\(\d+\)|\b\d+\s*(?:UN|UNIDADES)\b", text):
+        return None
+    grades = set(re.findall(r"(?<![A-Z0-9])(HB|[1-9]B|[1-9]H)(?![A-Z0-9])", text))
+    if len(grades) != 1:
+        return None
+    grade = next(iter(grades))
+    with_eraser = bool(re.search(r"\b(?:C\s*/\s*GOMA|CON\s+GOMA)\b", text))
+    without_eraser = bool(re.search(r"\b(?:S\s*/\s*GOMA|SIN\s+GOMA)\b", text))
+    if with_eraser and without_eraser:
+        return None
+    attributes: dict[str, str | bool] = {"dureza_grafito": grade}
+    suffix = ""
+    eraser_key = "no-especificada"
+    if with_eraser or without_eraser:
+        attributes["incluye_goma"] = with_eraser
+        suffix = ", con goma" if with_eraser else ", sin goma"
+        eraser_key = "con-goma" if with_eraser else "sin-goma"
+    return {
+        "key": f"lapiz-grafito:{grade.lower()}:{eraser_key}",
+        "name": f"Lápiz grafito {grade}{suffix}",
+        "category": "escritura", "subcategory": "grafito", "attributes": attributes,
+        "method": "explicit_graphite_grade",
+    }
+
+
+def sketchbook_suggestion(name: str) -> dict | None:
+    """Keep format, sheet count and explicit dimensions distinct."""
+    text = normalize(name).strip()
+    if not re.match(r"^CROQUERA\b", text):
+        return None
+    # Paper type, grammage, and multipacks may be meaningful. Do not collapse
+    # them into an ordinary sketchbook until their meaning is reviewed.
+    if re.search(r"\+|\b(?:SET|KIT|PACK|MANGA|COMIC|MARKER|LETTERING|MULTITECHNIQUE|DESSIN|KRAFT|MANTEQUILLA|ACUAREL\w*|AQUARELL\w*)\b|\b\d{2,3}\s*(?:GRAMOS|GRS|GR|G)(?![A-Z])|\bD\s*/\s*F\b|\bDOBLE\s+FAZ\b", text):
+        return None
+    half = re.search(r"(?<!\d)1\s*/\s*2\s*OF(?:ICIO)?\b", text)
+    remaining = re.sub(r"(?<!\d)1\s*/\s*2\s*OF(?:ICIO)?\b", " ", text)
+    formats = [("medio-oficio", "medio oficio")] if half else []
+    for key, label, pattern in (
+        ("oficio", "oficio", r"\bOF(?:ICIO)?\b"), ("carta", "carta", r"\bCARTA\b"),
+        ("a3", "A3", r"\bA3\b"), ("a4", "A4", r"\bA4\b"), ("a5", "A5", r"\bA5\b"),
+    ):
+        if re.search(pattern, remaining):
+            formats.append((key, label))
+    sheets = {int(n) for n in re.findall(r"(?<!\d)(\d{1,3})\s*(?:HOJAS|HJS|H)\b", text)}
+    dimensions = re.findall(r"(?<![\d.,])(\d{1,3}(?:[.,]\d+)?)\s*X\s*(\d{1,3}(?:[.,]\d+)?)(?![\d.,])", text)
+    if len(formats) != 1 or len(sheets) != 1 or len(dimensions) > 1:
+        return None
+    count = next(iter(sheets))
+    if not 1 <= count <= 500:
+        return None
+    attributes: dict[str, object] = {"formato": formats[0][1], "numero_hojas": count}
+    dimension_key = "sin-medidas"
+    suffix = ""
+    if dimensions:
+        values = sorted(float(part.replace(",", ".")) for part in dimensions[0])
+        if not all(5 <= part <= 150 for part in values):
+            return None
+        attributes["dimension_menor_cm"], attributes["dimension_mayor_cm"] = values
+        dimension_key = "x".join(format(part, "g") for part in values)
+        suffix = ", " + " × ".join(format(part, "g").replace(".", ",") for part in values) + " cm"
+    return {
+        "key": f"croquera:{formats[0][0]}:{count}:{dimension_key}",
+        "name": f"Croquera {formats[0][1]}, {count} hojas{suffix}",
+        "category": "arte-y-dibujo", "subcategory": "croqueras", "attributes": attributes,
+        "method": "explicit_sketchbook_attributes",
+    }
+
+
+def drawing_block_suggestion(name: str) -> dict | None:
+    text = normalize(name).replace("MAS+ARTE", "MASARTE").strip()
+    match = re.match(r"^BLOCK(?:\s+DE)?\s+DIBUJO\s+(MED(?:IO)?|LICEO)\b", text)
+    if not match or re.search(r"\+|\b(?:SET|KIT|PACK)\b|\bD\s*/\s*F\b", text):
+        return None
+    sheets = {int(n) for n in re.findall(r"(?<!\d)(\d{1,3})\s*(?:HOJAS|HJS|H)\b", text)}
+    fractions = {a + "/" + b for a, b in re.findall(r"(?<!\d)(1)\s*/\s*(4|8)(?!\d)", text)}
+    if len(sheets) != 1 or len(fractions) > 1:
+        return None
+    count = next(iter(sheets))
+    if not 1 <= count <= 500:
+        return None
+    kind = "liceo" if match.group(1) == "LICEO" else "medio"
+    number_match = re.match(r"\.?\s*(\d{1,3})(?!\s*(?:H|/))\b", text[match.end():])
+    number = int(number_match.group(1)) if number_match else None
+    if number is not None and not 1 <= number <= 999:
+        return None
+    fraction = next(iter(fractions)) if fractions else None
+    attrs: dict[str, object] = {"tipo_block": kind, "numero_hojas": count}
+    name_parts = [f"Block de dibujo {kind}"]
+    key_parts = ["block", kind, str(number or "-"), fraction or "-", str(count)]
+    if number:
+        attrs["numero_block"] = number
+        name_parts.append(f"Nº {number}")
+    if fraction:
+        attrs["fraccion_block"] = fraction
+        name_parts.append(fraction)
+    return {
+        "key": ":".join(key_parts), "name": " ".join(name_parts) + f", {count} hojas",
+        "category": "arte-y-dibujo", "subcategory": "blocks", "attributes": attrs,
+        "method": "explicit_drawing_block_attributes",
+    }
+
+
+def ruler_suggestion(name: str) -> dict | None:
+    text = normalize(name).strip()
+    if not re.match(r"^REGLA\b", text) or re.search(
+        r"\+|^REGLA\s+T\b|\b(?:SET|KIT|PACK|METAL\w*|ALUMINIO|ACERO|MADERA|FLEXIBLE|PLEGABLE|ROLLER|QUILTING)\b|"
+        r"\bX\s*\d+\s*(?:UN|UND|UNIDADES)\b|\bC\s*/\s*MANGO\b|(?<!\d)\d+\s*X\s*\d+\s*CM\b", text
+    ):
+        return None
+    lengths = {int(n) for n in re.findall(r"(?<![\d.,])(\d{1,3})\s*(?:CM|CMS|CENTIMETROS)\b", text)}
+    if len(lengths) != 1:
+        return None
+    length = next(iter(lengths))
+    if not 5 <= length <= 100:
+        return None
+    return {
+        "key": "manual:regla-30-cm" if length == 30 else f"regla:{length}-cm",
+        "name": f"Regla, {length} cm", "category": "geometria", "subcategory": "reglas",
+        "attributes": {"largo_cm": length}, "method": "explicit_ruler_length",
+    }
+
+
+def glue_stick_suggestion(name: str) -> dict | None:
+    text = normalize(name).strip()
+    if not re.match(r"^(?:PEGAMENTO|PEGA)\s+(?:EN\s+)?BARRA\b", text):
+        return None
+    if re.search(r"\+|\b(?:SET|KIT|PACK)\b|\bX\s*\d+\b", text):
+        return None
+    weights = {int(n) for n in re.findall(r"(?<![\d.,])(\d{1,3})\s*(?:G|GR|GRAMOS)\b", text)}
+    if len(weights) > 1:
+        return None
+    weight = next(iter(weights)) if weights else None
+    if weight is not None and not 1 <= weight <= 250:
+        return None
+    return {
+        "key": "manual:pegamento-barra" if weight is None else f"pegamento-barra:{weight}-g",
+        "name": "Pegamento en barra" if weight is None else f"Pegamento en barra, {weight} g",
+        "category": "pegado-y-corte", "subcategory": "pegamentos",
+        "attributes": {} if weight is None else {"peso_g": weight}, "method": "explicit_glue_stick",
+    }
+
+
+def product_suggestion(name: str) -> dict | None:
+    notebook = notebook_suggestion(name)
+    if notebook is not None:
+        attributes = {"formato": notebook["format"], "numero_hojas": notebook["sheets"]}
+        if notebook["spacing"] is not None:
+            attributes["cuadricula_mm"] = notebook["spacing"]
+        if notebook["orientation"] is not None:
+            attributes["orientacion"] = notebook["orientation"]
+        return {
+            "key": notebook["key"], "name": notebook["name"], "category": "cuadernos",
+            "subcategory": notebook["subcategory"], "attributes": attributes,
+            "method": "explicit_notebook_attributes",
+        }
+    return (color_pencil_suggestion(name) or graphite_pencil_suggestion(name)
+            or sketchbook_suggestion(name) or drawing_block_suggestion(name)
+            or ruler_suggestion(name) or glue_stick_suggestion(name))
+
+
+def copy_text(value: object) -> str:
+    """Encode a generated value for PostgreSQL COPY text format."""
+    return str(value).replace("\\", "\\\\").replace("\t", "\\t").replace("\n", "\\n").replace("\r", "\\r")
 
 
 def extract_sections(dump_path: Path, temp_dir: Path) -> dict[str, int]:
@@ -154,9 +352,10 @@ def extract_sections(dump_path: Path, temp_dir: Path) -> dict[str, int]:
     return found
 
 
-def build_suggestions(products_path: Path, destination: Path) -> tuple[int, int]:
+def build_suggestions(products_path: Path, destination: Path) -> tuple[int, int, dict[str, int]]:
     keys: set[str] = set()
     matches = 0
+    methods: dict[str, int] = {}
     with products_path.open("rb") as source, destination.open("w", encoding="utf-8", newline="") as output:
         for raw in source:
             values = raw.rstrip(b"\n").split(b"\t")
@@ -164,17 +363,20 @@ def build_suggestions(products_path: Path, destination: Path) -> tuple[int, int]
                 raise ValueError("Unexpected extracted product row")
             if values[7] != b"\\N":
                 continue
-            suggestion = notebook_suggestion(decode_copy(values[2]))
+            suggestion = product_suggestion(decode_copy(values[2]))
             if suggestion is None:
                 continue
             keys.add(str(suggestion["key"]))
             values_out = [
-                suggestion["key"], suggestion["name"], suggestion["subcategory"], suggestion["format"],
-                suggestion["sheets"], suggestion["spacing"], suggestion["orientation"], values[0].decode("ascii"),
+                suggestion["key"], suggestion["name"], suggestion["category"], suggestion["subcategory"],
+                json.dumps(suggestion["attributes"], ensure_ascii=False, sort_keys=True),
+                suggestion["method"], values[0].decode("ascii"),
             ]
-            output.write("\t".join("\\N" if value is None else str(value) for value in values_out) + "\n")
+            output.write("\t".join(copy_text(value) for value in values_out) + "\n")
+            method = suggestion["method"]
+            methods[method] = methods.get(method, 0) + 1
             matches += 1
-    return len(keys), matches
+    return len(keys), matches, methods
 
 
 def sql_script(temp_dir: Path, single_user: bool = False) -> str:
@@ -192,32 +394,43 @@ def sql_script(temp_dir: Path, single_user: bool = False) -> str:
         lines.append(copy_from(f"stage_{table}", f"({columns})", temp_dir / (table + ".tsv")))
         lines.append(f"INSERT INTO store_snapshot.{table} ({columns}) SELECT {columns} FROM stage_{table} ON CONFLICT ({conflict}) DO NOTHING;")
     lines.extend([
-        "CREATE TEMP TABLE stage_notebooks (key text, name text, subcategory text, format text, sheets numeric, spacing numeric, orientation text, product_id uuid);",
-        copy_from("stage_notebooks", "", temp_dir / "notebooks.tsv"),
+        "CREATE TEMP TABLE stage_candidates (key text, name text, category text, subcategory text, attributes jsonb, method text, product_id uuid);",
+        copy_from("stage_candidates", "", temp_dir / "candidates.tsv"),
+        """DO $$ BEGIN
+           IF EXISTS (SELECT 1 FROM stage_candidates n
+               LEFT JOIN catalog.categories c ON c.slug = n.category
+               LEFT JOIN catalog.subcategories s ON s.category_id = c.id AND s.slug = n.subcategory
+               WHERE c.id IS NULL OR s.id IS NULL) THEN
+               RAISE EXCEPTION 'A proposed catalog category or subcategory is missing';
+           END IF;
+           IF EXISTS (SELECT 1 FROM stage_candidates n CROSS JOIN LATERAL jsonb_each(n.attributes) e
+               LEFT JOIN catalog.attribute_definitions a ON a.key = e.key WHERE a.id IS NULL) THEN
+               RAISE EXCEPTION 'A proposed catalog attribute is missing';
+           END IF;
+           IF EXISTS (SELECT 1 FROM stage_candidates n JOIN catalog.items i ON i.canonical_key = n.key
+               JOIN catalog.categories c ON c.id = i.category_id
+               JOIN catalog.subcategories s ON s.id = i.subcategory_id
+               WHERE c.slug <> n.category OR s.slug <> n.subcategory) THEN
+               RAISE EXCEPTION 'An existing catalog key belongs to a different category';
+           END IF;
+           END $$;""",
         """INSERT INTO catalog.items (category_id, subcategory_id, name, canonical_key, review_status)
            SELECT DISTINCT c.id, s.id, n.name, n.key, 'pending'
-           FROM stage_notebooks n JOIN catalog.categories c ON c.slug = 'cuadernos'
+           FROM stage_candidates n JOIN catalog.categories c ON c.slug = n.category
            JOIN catalog.subcategories s ON s.category_id = c.id AND s.slug = n.subcategory
            ON CONFLICT (canonical_key) DO NOTHING;""",
-        """INSERT INTO catalog.item_attributes (item_id, attribute_id, data_type, text_value, number_value)
-           SELECT DISTINCT i.id, a.id, a.data_type, n.format, NULL::numeric FROM stage_notebooks n
-           JOIN catalog.items i ON i.canonical_key = n.key JOIN catalog.attribute_definitions a ON a.key = 'formato'
+        """INSERT INTO catalog.item_attributes (item_id, attribute_id, data_type, text_value, number_value, boolean_value)
+           SELECT DISTINCT i.id, a.id, a.data_type,
+               CASE WHEN a.data_type = 'text' THEN e.value #>> '{}' END,
+               CASE WHEN a.data_type = 'number' THEN (e.value #>> '{}')::numeric END,
+               CASE WHEN a.data_type = 'boolean' THEN (e.value #>> '{}')::boolean END
+           FROM stage_candidates n JOIN catalog.items i ON i.canonical_key = n.key AND i.review_status <> 'rejected'
+           CROSS JOIN LATERAL jsonb_each(n.attributes) e
+           JOIN catalog.attribute_definitions a ON a.key = e.key
            ON CONFLICT (item_id, attribute_id) DO NOTHING;""",
-        """INSERT INTO catalog.item_attributes (item_id, attribute_id, data_type, number_value)
-           SELECT DISTINCT i.id, a.id, a.data_type, n.sheets FROM stage_notebooks n
-           JOIN catalog.items i ON i.canonical_key = n.key JOIN catalog.attribute_definitions a ON a.key = 'numero_hojas'
-           ON CONFLICT (item_id, attribute_id) DO NOTHING;""",
-        """INSERT INTO catalog.item_attributes (item_id, attribute_id, data_type, number_value)
-           SELECT DISTINCT i.id, a.id, a.data_type, n.spacing FROM stage_notebooks n
-           JOIN catalog.items i ON i.canonical_key = n.key JOIN catalog.attribute_definitions a ON a.key = 'cuadricula_mm'
-           WHERE n.spacing IS NOT NULL ON CONFLICT (item_id, attribute_id) DO NOTHING;""",
-        """INSERT INTO catalog.item_attributes (item_id, attribute_id, data_type, text_value)
-           SELECT DISTINCT i.id, a.id, a.data_type, n.orientation FROM stage_notebooks n
-           JOIN catalog.items i ON i.canonical_key = n.key JOIN catalog.attribute_definitions a ON a.key = 'orientacion'
-           WHERE n.orientation IS NOT NULL ON CONFLICT (item_id, attribute_id) DO NOTHING;""",
         """INSERT INTO catalog.store_product_matches (item_id, source_product_id, review_status, match_method)
-           SELECT DISTINCT i.id, n.product_id, 'pending', 'explicit_notebook_attributes'
-           FROM stage_notebooks n JOIN catalog.items i ON i.canonical_key = n.key
+           SELECT DISTINCT i.id, n.product_id, 'pending', n.method
+           FROM stage_candidates n JOIN catalog.items i ON i.canonical_key = n.key AND i.review_status <> 'rejected'
            ON CONFLICT (item_id, source_product_id) DO NOTHING;""",
         "COMMIT;",
     ])
@@ -229,28 +442,48 @@ def main() -> None:
     parser.add_argument("dump", nargs="?", type=Path, default=ROOT / "melqui.dump")
     parser.add_argument("--dry-run", action="store_true", help="inspect and count without connecting to PostgreSQL")
     parser.add_argument("--single-user", action="store_true", help="use the stopped local cluster in PostgreSQL single-user mode")
+    parser.add_argument("--cluster-dir", type=Path, default=ROOT / ".local/postgres", help="cluster for single-user mode")
+    parser.add_argument("--database", help="explicit PostgreSQL database for an online import")
+    parser.add_argument("--host", help="PostgreSQL host or Unix socket directory")
+    parser.add_argument("--port", type=int, help="PostgreSQL port")
+    parser.add_argument("--user", help="PostgreSQL user; provide credentials using .pgpass, not a command argument")
+    parser.add_argument("--pgpass", type=Path, help="use the single explicit target in this protected PostgreSQL password file")
     args = parser.parse_args()
+    if args.single_user and any((args.database, args.host, args.port, args.user, args.pgpass)):
+        parser.error("--single-user cannot be combined with online database connection options")
+    if args.pgpass and any((args.database, args.host, args.port, args.user)):
+        parser.error("--pgpass cannot be combined with separate connection options")
+    if not args.dry_run and not args.single_user and not (args.database or args.pgpass):
+        parser.error("specify --database or --pgpass for an online import, or use --single-user")
     with tempfile.TemporaryDirectory(prefix="lista-catalog-", dir="/tmp") as directory:
         temp_dir = Path(directory)
         counts = extract_sections(args.dump, temp_dir)
-        item_count, match_count = build_suggestions(temp_dir / "products.tsv", temp_dir / "notebooks.tsv")
+        item_count, match_count, methods = build_suggestions(temp_dir / "products.tsv", temp_dir / "candidates.tsv")
         print("Catalog-only source rows:", json.dumps(counts, ensure_ascii=False, sort_keys=True), flush=True)
-        print(f"Notebook suggestions: {item_count} generic items, {match_count} product matches; all pending review.", flush=True)
+        print(f"Suggestions: {item_count} generic items, {match_count} product matches; all pending review.", flush=True)
+        print("Suggestion methods:", json.dumps(methods, ensure_ascii=False, sort_keys=True), flush=True)
         if not args.dry_run:
             sql_path = temp_dir / "import.sql"
             sql = sql_script(temp_dir, single_user=args.single_user)
             sql_path.write_text(sql, encoding="utf-8")
             if args.single_user:
-                pg_bin = subprocess.run(["pg_config", "--bindir"], capture_output=True, text=True, check=True).stdout.strip()
+                pg_bin = os.environ.get("LISTA_PG_BIN") or subprocess.run(["pg_config", "--bindir"], capture_output=True, text=True, check=True).stdout.strip()
                 result = subprocess.run(
-                    [str(Path(pg_bin) / "postgres"), "--single", "-D", str(ROOT / ".local/postgres"), "-j", "lista_escolar"],
+                    [str(Path(pg_bin) / "postgres"), "--single", "-D", str(args.cluster_dir), "-j", "lista_escolar"],
                     input=sql, capture_output=True, text=True,
                 )
                 output = result.stdout + result.stderr
                 if result.returncode or re.search(r"\b(?:ERROR|FATAL|PANIC):", output):
                     raise RuntimeError("Single-user import failed: " + output[-4000:])
             else:
-                subprocess.run([str(ROOT / "scripts/dev-db.sh"), "psql", "-q", "-v", "ON_ERROR_STOP=1", "-f", str(sql_path)], check=True)
+                if args.pgpass:
+                    command = [sys.executable, str(ROOT / "scripts/psql_configured.py"), "--pgpass", str(args.pgpass), "--", "-q"]
+                else:
+                    command = ["psql", "-X", "-w", "-q", "-v", "ON_ERROR_STOP=1", "-d", args.database]
+                    for flag, value in (("-h", args.host), ("-p", args.port), ("-U", args.user)):
+                        if value is not None:
+                            command.extend((flag, str(value)))
+                subprocess.run(command + ["-f", str(sql_path)], check=True)
             print("Catalog snapshot and pending suggestions imported.", flush=True)
 
 
