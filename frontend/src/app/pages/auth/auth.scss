@@ -1,0 +1,120 @@
+:host {
+  display: block;
+}
+.auth-page {
+  width: min(100%, 490px);
+  margin: 1.5rem auto 2rem;
+}
+.auth-intro {
+  margin-bottom: 1.3rem;
+}
+.auth-intro h1 {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+.auth-intro p {
+  margin-bottom: 0;
+  font-size: 0.9rem;
+}
+.auth-intro .eyebrow {
+  margin-bottom: 0.5rem;
+  font-size: 0.7rem;
+}
+.auth-panel {
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+}
+.auth-switch {
+  display: flex;
+  gap: 1.5rem;
+  border-bottom: 1px solid var(--line);
+  margin: -0.3rem 0 1.2rem;
+}
+.auth-switch a {
+  padding: 0.5rem 0 0.8rem;
+  color: var(--muted);
+  font-weight: 650;
+  text-decoration: none;
+  border-bottom: 3px solid transparent;
+}
+.auth-switch a.selected {
+  color: var(--green);
+  border-color: var(--green);
+}
+label {
+  display: block;
+  font-size: 0.85rem;
+  margin: 1rem 0 0.4rem;
+}
+input {
+  margin: 0;
+  min-height: 44px;
+}
+.auth-panel small {
+  display: block;
+  font-size: 0.77rem;
+  margin-top: 0.4rem;
+  line-height: 1.5;
+}
+.password-field {
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: white;
+}
+.password-field input {
+  border: 0;
+  min-width: 0;
+  flex: 1;
+  background: transparent;
+}
+.password-toggle {
+  flex: none;
+  border: 0;
+  background: none;
+  color: var(--green);
+  font-size: 0.78rem;
+  font-weight: 650;
+  padding: 0.7rem 0.8rem;
+}
+.submit-button {
+  width: 100%;
+  margin-top: 1.2rem;
+}
+.auth-alternative {
+  text-align: center;
+  margin: 1.1rem 0 0;
+  font-size: 0.85rem;
+}
+.local-notice {
+  padding: 0.9rem 1rem;
+  background: var(--sage);
+  border-radius: 8px;
+  font-size: 0.78rem;
+}
+.local-notice strong {
+  color: var(--green);
+}
+.local-notice p {
+  margin: 0.25rem 0 0;
+  line-height: 1.5;
+}
+.validation-error {
+  color: var(--red);
+}
+.error-inline {
+  font-size: 0.83rem;
+  margin: 1rem 0 0;
+}
+@media (max-width: 480px) {
+  .auth-page {
+    margin: 0.5rem auto 1rem;
+  }
+  .auth-panel {
+    padding: 1rem;
+  }
+  .auth-intro h1 {
+    font-size: 1.75rem;
+  }
+}

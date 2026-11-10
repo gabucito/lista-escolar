@@ -143,7 +143,8 @@ fn summary(row: PgRow) -> ApiResult<Value> {
         "comuna":content.get("comuna").and_then(Value::as_str).unwrap_or(""),"region":content.get("region").and_then(Value::as_str).unwrap_or(""),
         "visibility":row.try_get::<String,_>("visibility")?,"archived":row.try_get::<bool,_>("archived")?,"hidden":row.try_get::<bool,_>("hidden")?,
         "current_version":row.try_get::<i32,_>("current_version")?,"votes":row.try_get::<i64,_>("votes")?,
-        "published_at":row.try_get::<Option<chrono::DateTime<chrono::Utc>>,_>("published_at")?,"owner_name":row.try_get::<String,_>("owner_name")?,"role":row.try_get::<String,_>("role")?}),
+        "published_at":row.try_get::<Option<chrono::DateTime<chrono::Utc>>,_>("published_at")?,"owner_name":row.try_get::<String,_>("owner_name")?,"role":row.try_get::<String,_>("role")?,
+        "following":row.try_get::<bool,_>("following")?}),
     )
 }
 async fn search(
@@ -157,6 +158,7 @@ async fn search(
         return Err(ApiError::bad_request("La búsqueda es demasiado larga."));
     }
     let rows=sqlx::query(r#"SELECT l.id,l.visibility,l.archived,l.hidden,l.current_version,v.content,v.published_at,
+        EXISTS(SELECT 1 FROM app.follows f WHERE f.list_id=l.id AND f.user_id=$1) following,
         COALESCE(u.display_name,'Usuario eliminado') owner_name,CASE WHEN l.owner_id=$1 THEN 'owner' ELSE COALESCE(g.role,'') END role,
         (SELECT count(*) FROM app.votes x WHERE x.list_id=l.id AND x.version=l.current_version) votes
         FROM app.lists l JOIN app.versions v ON v.list_id=l.id AND v.number=l.current_version
@@ -181,6 +183,7 @@ async fn search(
 }
 async fn mine(State(state): State<AppState>, user: User) -> ApiResult<Json<Value>> {
     let rows=sqlx::query(r#"SELECT l.id,l.visibility,l.archived,l.hidden,l.current_version,
+        EXISTS(SELECT 1 FROM app.follows f WHERE f.list_id=l.id AND f.user_id=$1) following,
         CASE WHEN l.owner_id=$1 OR g.role='editor' THEN l.draft ELSE COALESCE(v.content,'{}') END content,v.published_at,
         COALESCE(u.display_name,'Usuario eliminado') owner_name,CASE WHEN l.owner_id=$1 THEN 'owner' ELSE COALESCE(g.role,'') END role,
         (SELECT count(*) FROM app.votes x WHERE x.list_id=l.id AND x.version=l.current_version) votes

@@ -1,0 +1,64 @@
+{
+  "created_at": "2026-11-10",
+  "status": "implemented-browser-captures",
+  "source": "Chromium / local Angular-Rust application / isolated QA PostgreSQL",
+  "reference_mockups": [
+    "../06-categories-and-attributes/01-cuadernos.png",
+    "../06-categories-and-attributes/02-geometria.png"
+  ],
+  "screenshots": [
+    {
+      "file": "01-cuadernos-desktop.png",
+      "source": ".local/qa/category-attributes/final-01-cuadernos-desktop.png"
+    },
+    {
+      "file": "02-cuadernos-1366.png",
+      "source": ".local/qa/category-attributes/final-02-cuadernos-1366.png"
+    },
+    {
+      "file": "03-drawer-collapsed.png",
+      "source": ".local/qa/category-attributes/final-03-drawer-collapsed.png"
+    },
+    {
+      "file": "04-category-chooser.png",
+      "source": ".local/qa/category-attributes/final-04-category-chooser.png"
+    },
+    {
+      "file": "05-geometria-desktop.png",
+      "source": ".local/qa/category-attributes/final-05-geometria-desktop.png"
+    },
+    {
+      "file": "06-custom-attributes.png",
+      "source": ".local/qa/category-attributes/final-06-custom-attributes.png"
+    },
+    {
+      "file": "admin-types.png",
+      "source": ".local/qa/category-attributes/final-07-admin-types.png"
+    },
+    {
+      "file": "390-notebook-filters.png",
+      "source": ".local/qa/category-attributes/390-notebook-filters.png"
+    },
+    {
+      "file": "390-notebook-results.png",
+      "source": ".local/qa/category-attributes/390-notebook-results.png"
+    },
+    {
+      "file": "320-notebook-filters.png",
+      "source": ".local/qa/category-attributes/320-notebook-filters.png"
+    },
+    {
+      "file": "320-notebook-results.png",
+      "source": ".local/qa/category-attributes/320-notebook-results.png"
+    },
+    {
+      "file": "1440-admin-bindings.png",
+      "source": ".local/qa/category-attributes/1440-admin-bindings.png"
+    },
+    {
+      "file": "390-admin-bindings.png",
+      "source": ".local/qa/category-attributes/390-admin-bindings.png"
+    }
+  ],
+  "validation": "../../../docs/VALIDATION.md"
+}

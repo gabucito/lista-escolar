@@ -28,6 +28,8 @@ test('profile preferences, one-off PDF overrides and explicit account deletion',
   await page.getByRole('button', { name: 'Guardar cambios' }).click();
   await expect.poll(async () => (await api(context, 'GET', '/auth/me')).user.display_name).toBe('Familia del Futuro');
   await page.goto(`/listas/${id}`);
+  await page.getByRole('button', { name: 'Descargar PDF', exact: true }).first().click();
+  await expect(page.getByRole('dialog', { name: 'Vista previa del PDF' }).locator('app-pdf-preview img')).toBeVisible();
   await expect(page.getByRole('button', { name: 'Barra lateral', exact: true })).toHaveAttribute('aria-pressed', 'true');
   await expect(page.getByRole('combobox', { name: 'Papel', exact: true })).toHaveValue('A4');
   await page.getByRole('button', { name: 'Fichas', exact: true }).click();
@@ -112,7 +114,7 @@ test('separate administrator login, catalog review, taxonomy, templates, aliases
   }
   await navigation.getByRole('button', { name: 'Administradores', exact: true }).click();
   await page.getByLabel('Usuario', { exact: true }).fill(`admin_${tag}`);
-  await page.getByLabel('Contraseña inicial', { exact: false }).fill(password);
+  await page.getByLabel('Contraseña inicial', { exact: true }).fill(password);
   await page.getByRole('button', { name: 'Crear administrador' }).click();
   await expect(page.getByText('Cuenta administrativa creada', { exact: false })).toBeVisible();
 });
@@ -125,8 +127,8 @@ test('administrator creates and corrects typed generic items and searches a prod
   const alternate = `Alternativa del genérico ${tag}`;
   expect((await api(context, 'GET', '/auth/me')).user).toBeNull();
   const categories = await api(context, 'GET', '/catalog/categories');
-  const initialCategory = categories.find((category: { subcategories: unknown[] }) => category.subcategories.length > 0);
-  const correctedCategory = categories.find((category: { id: number }) => category.id !== initialCategory.id);
+  const initialCategory = categories.find((category: { slug: string }) => category.slug === 'escritura');
+  const correctedCategory = categories.find((category: { slug: string }) => category.slug === 'geometria');
   await page.goto('/admin');
   await page.getByLabel('Usuario', { exact: true }).fill(environment.admin.username);
   await page.getByLabel('Contraseña', { exact: true }).fill(environment.admin.password);
@@ -137,20 +139,24 @@ test('administrator creates and corrects typed generic items and searches a prod
   const form = page.getByRole('region', { name: 'Revisión del útil' });
   await form.getByLabel('Nombre genérico', { exact: true }).fill(name);
   await form.getByRole('combobox', { name: 'Categoría del útil', exact: true }).selectOption(String(initialCategory.id));
-  await form.getByRole('combobox', { name: 'Subcategoría del útil', exact: true }).selectOption(String(initialCategory.subcategories[0].id));
+  await expect(form.getByRole('combobox', { name: /Subcategoría/ })).toHaveCount(0);
   await form.getByLabel('Nombres alternativos', { exact: false }).fill(alternate);
   await form.getByRole('button', { name: 'Agregar atributo' }).click();
-  await form.getByRole('combobox', { name: 'Atributo 1', exact: true }).selectOption('numero_hojas');
-  await form.getByLabel('Valor 1', { exact: true }).fill('100');
+  await form.getByRole('combobox', { name: 'Atributo 1', exact: true }).selectOption('tipo_escritura');
+  await form.getByRole('combobox', { name: 'Valor 1', exact: true }).selectOption('Grafito');
   await form.getByRole('button', { name: 'Agregar atributo' }).click();
   await form.getByRole('combobox', { name: 'Atributo 2', exact: true }).selectOption('incluye_goma');
   await form.getByRole('combobox', { name: 'Valor 2', exact: true }).selectOption('false');
+  await form.getByRole('button', { name: 'Agregar atributo' }).click();
+  await form.getByRole('combobox', { name: 'Atributo 3', exact: true }).selectOption('dureza_grafito');
+  await form.getByLabel('Valor 3', { exact: true }).fill('HB');
   await form.getByRole('button', { name: 'Crear y aprobar útil' }).click();
   await expect(form).toHaveCount(0);
   const created = (await api(context, 'GET', `/admin/catalog?q=${encodeURIComponent(name)}`))[0];
   expect(created.review_status).toBe('approved');
   expect(created.aliases).toEqual([alternate.toLowerCase()]);
-  expect(created.attributes.numero_hojas.value).toBe(100);
+  expect(created.attributes.tipo_escritura.value).toBe('Grafito');
+  expect(created.attributes.dureza_grafito.value).toBe('HB');
   expect(created.attributes.incluye_goma.value).toBe(false);
   expect((await api(context, 'GET', '/auth/me')).user).toBeNull();
 
@@ -159,18 +165,21 @@ test('administrator creates and corrects typed generic items and searches a prod
   await page.getByRole('button', { name: `Revisar ${name}`, exact: true }).click();
   await form.getByLabel('Nombre genérico', { exact: true }).fill(`${name} corregido`);
   await form.getByRole('combobox', { name: 'Categoría del útil', exact: true }).selectOption(String(correctedCategory.id));
-  await expect(form.getByRole('combobox', { name: 'Subcategoría del útil', exact: true })).toHaveValue('');
+  await expect(form.locator('.attribute-row')).toHaveCount(0);
   await form.getByLabel('Nombres alternativos', { exact: false }).fill('');
-  // Attributes are returned in dictionary-key order, so select the row by its key.
-  const numericRow = form.locator('.attribute-row').filter({ has: page.locator('select').filter({ has: page.locator('option[value="numero_hojas"]:checked') }) });
-  await numericRow.locator('input').fill('80');
-  const booleanRow = form.locator('.attribute-row').filter({ has: page.locator('select').filter({ has: page.locator('option[value="incluye_goma"]:checked') }) });
-  await booleanRow.getByRole('button', { name: /Quitar atributo/ }).click();
+  await form.getByRole('button', { name: 'Agregar atributo' }).click();
+  await form.getByRole('combobox', { name: 'Atributo 1', exact: true }).selectOption('tipo_geometria');
+  await form.getByRole('combobox', { name: 'Valor 1', exact: true }).selectOption('Regla');
+  await form.getByRole('button', { name: 'Agregar atributo' }).click();
+  await form.getByRole('combobox', { name: 'Atributo 2', exact: true }).selectOption('largo_cm');
+  await form.getByLabel('Valor 2', { exact: true }).fill('30');
   await form.getByRole('button', { name: 'Guardar correcciones' }).click();
   await expect(form).toHaveCount(0);
   const revised = (await api(context, 'GET', `/admin/catalog?q=${tag}`))[0];
-  expect(revised.category_id).toBe(correctedCategory.id); expect(revised.subcategory_id).toBeNull();
-  expect(revised.aliases).toEqual([]); expect(revised.attributes.numero_hojas.value).toBe(80);
+  expect(revised.category_id).toBe(correctedCategory.id);
+  expect(revised.aliases).toEqual([]); expect(revised.attributes.largo_cm.value).toBe(30);
+  expect(revised.attributes.tipo_geometria.value).toBe('Regla');
+  expect(revised.attributes.tipo_escritura).toBeUndefined();
   expect(revised.attributes.incluye_goma).toBeUndefined();
   expect((await api(context, 'GET', `/catalog?q=${encodeURIComponent(alternate)}`))).toEqual([]);
 
@@ -182,6 +191,56 @@ test('administrator creates and corrects typed generic items and searches a prod
   await page.getByLabel('Buscar útil para vincular', { exact: true }).fill(tag);
   await page.getByRole('button', { name: 'Buscar equivalente', exact: true }).click();
   await page.getByRole('combobox', { name: 'Útil genérico', exact: true }).selectOption(created.id);
+  await expect(page.locator('.generic-selection')).toContainText(`${name} corregido`);
+  await expect(page.locator('.generic-selection')).toContainText('30');
   await page.getByRole('button', { name: 'Confirmar vínculo', exact: true }).click();
   await expect.poll(async () => (await api(context, 'GET', '/admin/matches')).some((row: { item_id: string }) => row.item_id === created.id)).toBe(true);
+});
+
+test('administrator manages category types and conditional attributes without subcategories', async ({ page, context }) => {
+  const tag = randomUUID().slice(0, 8);
+  await api(context, 'POST', '/admin/login', environment.admin);
+  await page.goto('/admin');
+  await page.getByRole('navigation', { name: 'Secciones de administración' }).getByRole('button', { name: 'Categorías', exact: true }).click();
+  await page.getByLabel('Nombre', { exact: true }).fill(`Materiales ${tag}`);
+  await page.getByLabel('Identificador', { exact: false }).fill(`materiales-${tag}`);
+  await page.getByRole('button', { name: 'Guardar', exact: true }).click();
+  await expect(page.getByRole('heading', { name: 'Tipos de útiles', exact: true })).toBeVisible();
+  for (const value of ['Cuadriculado', 'Liso']) {
+    await page.getByLabel('Nombre del tipo', { exact: true }).fill(value);
+    await page.getByRole('button', { name: 'Agregar tipo', exact: true }).click();
+    await expect(page.getByRole('button', { name: `Renombrar tipo ${value}`, exact: true })).toBeVisible();
+  }
+  await page.getByRole('button', { name: 'Agregar característica', exact: true }).click();
+  await page.getByRole('combobox', { name: 'Característica 1', exact: true }).selectOption('cuadricula_mm');
+  const binding = page.locator('.binding-card').first();
+  await binding.getByLabel('Para todos los tipos', { exact: true }).uncheck();
+  await binding.getByLabel('Cuadriculado', { exact: true }).check();
+  const saved = page.waitForResponse(response => response.url().endsWith('/attributes') && response.request().method() === 'PATCH' && response.ok());
+  await page.getByRole('button', { name: 'Guardar características', exact: true }).click(); await saved;
+  const category = (await api(context, 'GET', '/catalog/categories')).find((row: { slug: string }) => row.slug === `materiales-${tag}`);
+  expect(category.attributes.find((a: { key: string }) => a.key === 'cuadricula_mm').applies_to_types).toEqual(['Cuadriculado']);
+  const item = await api(context, 'POST', '/admin/catalog', {
+    name: `Material cuadriculado ${tag}`, category_id: category.id,
+    attributes: { [category.type_attribute]: 'Cuadriculado', cuadricula_mm: 5 }, approve: true,
+  });
+  const invalid = await context.request.post('/api/admin/catalog', { headers: { 'X-Requested-With': 'lista-escolar' }, data: {
+    name: `Material inválido ${tag}`, category_id: category.id,
+    attributes: { [category.type_attribute]: 'Liso', cuadricula_mm: 5 }, approve: true,
+  } });
+  expect(invalid.status()).toBe(400);
+  await page.getByRole('button', { name: 'Renombrar tipo Cuadriculado', exact: true }).click();
+  await page.getByLabel('Nombre del tipo', { exact: true }).fill('Cuadriculado fino');
+  await page.getByRole('button', { name: 'Guardar nombre del tipo', exact: true }).click();
+  await expect(page.getByRole('button', { name: 'Renombrar tipo Cuadriculado fino', exact: true })).toBeVisible();
+  const updated = (await api(context, 'GET', `/admin/catalog?q=${tag}`)).find((row: { id: string }) => row.id === item.id);
+  expect(updated.attributes[category.type_attribute].value).toBe('Cuadriculado fino');
+  await expect(binding.getByLabel('Cuadriculado fino', { exact: true })).toBeChecked();
+  const blocked = page.waitForResponse(response => response.url().endsWith('/types') && response.status() === 409);
+  page.once('dialog', dialog => dialog.accept());
+  await page.getByRole('button', { name: 'Quitar tipo Cuadriculado fino', exact: true }).click(); await blocked;
+  await expect(page.getByRole('button', { name: 'Renombrar tipo Cuadriculado fino', exact: true })).toBeVisible();
+  page.once('dialog', dialog => dialog.accept());
+  await page.getByRole('button', { name: 'Quitar tipo Liso', exact: true }).click();
+  await expect(page.getByRole('button', { name: 'Renombrar tipo Liso', exact: true })).toHaveCount(0);
 });

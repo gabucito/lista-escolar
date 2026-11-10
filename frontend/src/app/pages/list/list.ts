@@ -11,6 +11,7 @@ import { PdfOptions } from '../../shared/pdf-options/pdf-options';
   selector: 'app-list',
   imports: [RouterLink, FormField, PdfOptions, Modal],
   templateUrl: './list.html',
+  styleUrl: './list.scss',
 })
 export class List implements OnInit, OnDestroy {
   readonly api = inject(Api);
@@ -31,6 +32,7 @@ export class List implements OnInit, OnDestroy {
   readonly reportModel = signal({ reason: '', kind: 'content' });
   readonly reportFields = form(this.reportModel);
   readonly reporting = signal(false);
+  readonly moreActions = signal(false);
   private reportComment = '';
   private routeChanges?: Subscription;
   private loadSequence = 0;
@@ -141,16 +143,6 @@ export class List implements OnInit, OnDestroy {
     } finally {
       if (sequence === this.loadSequence) this.loading.set(false);
     }
-  }
-  showPdf() {
-    const panel = document.getElementById('published-pdf');
-    panel?.scrollIntoView({
-      block: 'start',
-      behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches
-        ? 'instant'
-        : 'smooth',
-    });
-    panel?.focus({ preventScroll: true });
   }
   changeVersion() {
     void this.router.navigate([], {

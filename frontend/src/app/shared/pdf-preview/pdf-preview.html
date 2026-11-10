@@ -1,0 +1,67 @@
+<div class="page-toolbar" role="group" aria-label="Navegar por la vista previa">
+  <div class="page-controls">
+    <button
+      type="button"
+      aria-label="Página anterior del PDF"
+      [disabled]="busy() || page() <= 1"
+      (click)="turn(-1)"
+    >
+      ‹</button
+    ><span>Página {{ page() }} de {{ pages() || '…' }}</span
+    ><button
+      type="button"
+      aria-label="Página siguiente del PDF"
+      [disabled]="busy() || page() >= pages()"
+      (click)="turn(1)"
+    >
+      ›
+    </button>
+  </div>
+  <div class="page-controls">
+    <button
+      type="button"
+      aria-label="Reducir vista previa"
+      [disabled]="busy() || zoom() <= 75"
+      (click)="resize(zoom() - 25)"
+    >
+      −</button
+    ><button
+      class="fit-page"
+      type="button"
+      aria-label="Ajustar PDF al ancho"
+      [disabled]="busy()"
+      (click)="resize(100)"
+    >
+      {{ zoom() }} %</button
+    ><button
+      type="button"
+      aria-label="Ampliar vista previa"
+      [disabled]="busy() || zoom() >= 200"
+      (click)="resize(zoom() + 25)"
+    >
+      ＋
+    </button>
+  </div>
+</div>
+<div
+  class="page-surface"
+  tabindex="0"
+  role="region"
+  aria-label="Documento PDF"
+  [attr.aria-busy]="busy()"
+>
+  @if (error()) {
+    <p class="preview-error" role="alert">{{ error() }}</p>
+  }
+  @if (busy()) {
+    <p class="render-status" role="status">Mostrando página…</p>
+  }
+  @if (image()) {
+    <img
+      [src]="image()"
+      [style.width.%]="zoom()"
+      [alt]="'Vista previa de la página ' + page() + ' del PDF'"
+    />
+    <p class="visually-hidden">{{ pageText() }}</p>
+  }
+</div>

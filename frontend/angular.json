@@ -25,6 +25,11 @@
             "inlineStyleLanguage": "scss",
             "assets": [
               {
+                "glob": "pdf.worker.min.mjs",
+                "input": "node_modules/pdfjs-dist/build",
+                "output": "assets/pdf"
+              },
+              {
                 "glob": "**/*",
                 "input": "public"
               }
@@ -42,8 +47,8 @@
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "4kB",
-                  "maximumError": "8kB"
+                  "maximumWarning": "25kB",
+                  "maximumError": "28kB"
                 }
               ],
               "outputHashing": "all"

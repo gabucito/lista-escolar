@@ -4,22 +4,28 @@
     <a routerLink="/" class="brand" aria-label="Lista Escolar, inicio"
       ><svg viewBox="0 0 40 36" aria-hidden="true">
         <path d="M20 7C14 2 7 3 2 5v25c7-2 12-1 18 3 6-4 11-5 18-3V5c-5-2-12-3-18 2Zm0 0v26" /></svg
-      ><span>Lista Escolar<small>Un buen comienzo.</small></span></a
+      ><span>Lista Escolar</span></a
     ><button
       class="mobile-menu"
       (click)="menu.set(!menu())"
       [attr.aria-expanded]="menu()"
       aria-label="Abrir navegación"
+      aria-controls="primary-navigation"
     >
       ☰
     </button>
-    <nav [class.open]="menu()" aria-label="Navegación principal">
+    <nav id="primary-navigation" [class.open]="menu()" aria-label="Navegación principal">
       <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
         >Buscar listas</a
       ><a routerLink="/mis-listas" routerLinkActive="active">Mis listas</a
       ><a class="nav-create" routerLink="/crear">＋ Crear lista</a>
       @if (session.user(); as user) {
-        <a routerLink="/cuenta" routerLinkActive="active">{{ user.display_name }}</a
+        <a
+          class="account-link"
+          routerLink="/cuenta"
+          routerLinkActive="active"
+          [title]="user.display_name"
+          >{{ user.display_name }}</a
         ><button class="nav-link" (click)="logout()">Salir</button>
       } @else {
         <a routerLink="/ingresar" routerLinkActive="active">Ingresar</a>
@@ -33,7 +39,12 @@
     descargados.
   </div>
 }
-<main id="contenido" tabindex="-1">
+<main
+  id="contenido"
+  tabindex="-1"
+  [class.workspace-main]="workspace()"
+  [class.admin-main]="administration()"
+>
   @if (api.error()) {
     <div class="notice error" role="alert">
       {{ api.error() }}<button (click)="api.error.set('')" aria-label="Cerrar aviso">×</button>
@@ -46,8 +57,10 @@
   }
   <router-outlet />
 </main>
-<footer class="site-footer">
-  <div><strong>Lista Escolar</strong><span>Listas claras. Comunidades conectadas.</span></div>
-  <p>Las listas son creadas por la comunidad; los votos no certifican aprobación del colegio.</p>
-  <a routerLink="/admin">Administración</a><small>Desarrollo local · sin envío de correos</small>
-</footer>
+@if (!workspace() && !administration()) {
+  <footer class="site-footer">
+    <div><strong>Lista Escolar</strong><span>Listas claras. Comunidades conectadas.</span></div>
+    <p>Las listas son creadas por la comunidad; los votos no certifican aprobación del colegio.</p>
+    <a routerLink="/admin">Administración</a><small>Desarrollo local · sin envío de correos</small>
+  </footer>
+}

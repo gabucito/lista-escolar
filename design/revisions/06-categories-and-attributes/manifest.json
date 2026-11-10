@@ -1,0 +1,22 @@
+{
+  "created_at": "2026-11-10",
+  "status": "revised-design-proposal",
+  "generator": "Built-in image_gen.imagegen",
+  "selected_layout": "C",
+  "model": "Category plus relevant typed attributes; no subcategory navigation",
+  "edit_reference": "../05-catalog-navigation/03-exploracion-por-niveles.png",
+  "images": [
+    {
+      "id": "01-cuadernos",
+      "title": "Cuadernos: tipo como atributo",
+      "file": "01-cuadernos.png",
+      "prompt": "01-cuadernos.prompt.txt"
+    },
+    {
+      "id": "02-geometria",
+      "title": "Geometría: atributos contextuales",
+      "file": "02-geometria.png",
+      "prompt": "02-geometria.prompt.txt"
+    }
+  ]
+}

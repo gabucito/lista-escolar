@@ -31,7 +31,7 @@ The working app name is **Lista Escolar**. The preferred domain is **`listacole.
 The first release includes all of the following:
 
 1. Public and private lists; creation, autosaved drafts, editing, publication, version history, archiving, and deletion.
-2. A searchable, brand-independent supply catalog with categories, subcategories, attributes, aliases, custom supplies, and administrator review.
+2. A searchable, brand-independent supply catalog with broad categories, category-owned type and specification attributes, aliases, custom supplies, and administrator review. Subcategories remain only for legacy compatibility.
 3. Reuse through grade-level templates and copying existing lists.
 4. Import from Excel and CSV, with column mapping, generic-item matching, and a review step.
 5. Public search and shareable links; restricted access and collaboration for private lists.
@@ -138,15 +138,62 @@ Copies and template-based lists start as a new draft owned by the person creatin
 
 ### 5.1 Structure and attributes
 
-Supplies are organized in **categories → subcategories**, with structured attributes describing differences that matter when selecting an item. The exact taxonomy and placement of individual supplies are delegated to the implementation and can be revised as the catalog is curated.
+Supplies are organized in **broad categories with relevant structured attributes**.
+There is no subcategory navigation. Classifications such as notebook ruling or
+instrument type are category-specific type attributes, combined with other
+properties instead of requiring another navigation level. The exact categories
+and attribute assignments can be revised as the catalog is curated.
 
 For example:
 
 - Category: **Cuadernos**.
-- Possible subcategories: **cuadriculados**, **rayados/de línea**, **composición**, **caligrafía**, and **croquis**, where those groupings are useful for browsing.
+- Attribute **Tipo de cuaderno**: Cuadriculado, Rayado, Composición, Caligrafía,
+  Croquis and Liso. Preserve these distinctions; do not infer ruling from use or
+  merge Croquis with Liso.
 - Attributes can include format or size, number of sheets, grid spacing such as **5 mm** or **7 mm**, and orientation where relevant.
 
 Other supply families need appropriate categories and attributes of their own. Attributes should be structured and typed where practical so users can browse and distinguish variants without creating a separate category for every size or measurement.
+
+Browsing combines a category with relevant attribute filters in any order. For
+example, within **Cuadernos**, a family can combine **Tipo: Cuadriculado,
+Formato: Universitario, 100 hojas and 7 mm**. Attribute choices and their result counts come from actual
+catalog values. Filters combine without converting sheets into pages or changing
+quantities. Users can remove individual filters or clear them, recover from no
+matches, and continue through all results with pagination. Category changes clear
+incompatible selections. Mobile filtering must preserve the product picker,
+selected filters, and the ability to return to results. A type change clears
+incompatible constraints (such as grid spacing when switching to Rayado) while
+retaining compatible format and sheet selections. Category-owned attribute
+definitions drive browsing, custom supplies and administration. New values must
+match their type, allowed choices and conditional applicability; unchanged
+historical curation is preserved until explicitly corrected.
+
+Desktop follows the chosen B comparison layout with a single collapsible left
+navigation panel, aligned catalog rows in the center and a compact working list
+on the right. Up to two applicable category attributes provide comparison
+columns, with labeled values in stacked mobile rows; notebook columns are not
+used for unrelated categories. Names remain readable and each row has an
+explicit Add action. Quantities remain directly editable; units, notes, category
+and ordering are available in each working item's details.
+The panel initially lists categories; selecting one replaces that list with its
+attributes in the same panel. The Catálogo breadcrumb and Volver a categorías
+action reopen the category view without clearing the current filters. Selecting
+another category clears incompatible filters. The central product workspace
+remains visible throughout desktop navigation. Phones use the same sequence in
+the M1 full-screen picker, with one state-specific header, native selectors for
+text attributes, optional numeric/boolean choices, and an explicit action to
+show results. The results footer retains custom-item/import access and a return
+to the working list. Closing and reopening the
+picker preserves the current view, focus and scroll. Collapsing the desktop
+panel preserves filters and the visible product position. Administration manages categories,
+type choices and conditional attributes. Legacy classification identifiers may
+remain as compatibility data; they do not determine the new browsing hierarchy.
+Migrations and imports preserve catalog identity keys and published snapshots.
+
+Catalog text search includes structured attribute names, values and units as well
+as generic names, alternative names and approved source-product names. Searching
+several terms, such as `univ 100 7mm`, combines those terms; Spanish accents and
+letter case do not prevent matching. Attribute filters use typed exact values.
 
 Catalog items are **generic and brand-independent**. Products that differ only by brand should generally map to the same generic supply. Meaningful differences—such as notebook format, sheet count, ruling, grid spacing, and croquis—must remain distinguishable. A generic catalog item can therefore correspond to multiple store products.
 
@@ -385,7 +432,7 @@ The implementation will need persistent representations for at least:
 - Regular users, authentication methods, display names, verification state, recovery tokens, and PDF layout, paper-size, and color preferences.
 - Separate administrative identities and administrative access.
 - School-name associations and aliases, optional comuna/region identifiers, and the original free-text school and class entry.
-- Categories, subcategories, typed attributes, generic supplies, alternative names, and shared-item review states.
+- Categories, category-owned type choices and conditional typed attributes, generic supplies, alternative names, and shared-item review states; legacy subcategory mappings preserve compatibility.
 - The imported store-product snapshot, variants and other source references, suggested matches, confirmed matches, and review decisions.
 - Lists, original creator attribution, current ownership, collaborators, access grants and requests, visibility, lifecycle/moderation state, revisioned drafts, published content snapshots, version history, and optional versioned logos.
 - Stable list-item occurrence identities and published names, attributes, quantities, units, notes, categories, and order. Catalog identifiers alone are not item identities or complete published content.

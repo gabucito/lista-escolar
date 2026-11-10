@@ -1,0 +1,233 @@
+:host {
+  display: block;
+}
+.account-heading {
+  margin-bottom: 1.2rem;
+}
+.account-heading h1 {
+  font-size: 1.9rem;
+  margin-bottom: 0.35rem;
+}
+.account-heading p {
+  font-size: 0.9rem;
+  margin: 0;
+}
+.account-workspace {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(300px, 0.8fr);
+  gap: 1.2rem;
+  max-width: 1180px;
+  align-items: start;
+}
+.account-workspace.reviewing {
+  grid-template-columns: minmax(320px, 0.8fr) minmax(0, 1fr);
+  max-width: 1400px;
+}
+.panel {
+  padding: 1.25rem;
+}
+.panel h2 {
+  font-size: 1.3rem;
+  margin-bottom: 1rem;
+}
+.profile-panel label {
+  font-size: 0.85rem;
+}
+.profile-panel small {
+  display: block;
+  font-size: 0.77rem;
+  margin-top: 0.35rem;
+}
+.account-email {
+  background: var(--paper);
+  padding: 0.8rem 1rem;
+  margin: 1rem 0;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  overflow-wrap: anywhere;
+}
+.account-email span {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--muted);
+  margin-bottom: 0.3rem;
+}
+.account-email strong {
+  font-size: 0.86rem;
+}
+.preferences {
+  border-top: 1px solid var(--line);
+  padding-top: 1rem;
+  margin: 1.2rem 0;
+}
+.preferences h3 {
+  font: 700 1rem system-ui;
+  margin-bottom: 0.4rem;
+}
+.preferences > p {
+  font-size: 0.8rem;
+  margin-bottom: 1rem;
+}
+.preference-fields {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 0.8rem;
+  margin-bottom: 1rem;
+}
+.preference-fields label {
+  min-width: 0;
+}
+.deletion-column {
+  min-width: 0;
+}
+.deletion-review {
+  scroll-margin-top: 1rem;
+}
+.deletion-start p {
+  font-size: 0.85rem;
+}
+.deletion-start small {
+  display: block;
+  font-size: 0.76rem;
+  margin-top: 0.8rem;
+  line-height: 1.5;
+}
+.review-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  gap: 0.7rem;
+}
+.review-heading h2 {
+  margin: 0.3rem 0 0.7rem;
+}
+.review-heading .text-button {
+  font-size: 0.8rem;
+}
+.review-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--red);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.deletion-review > p,
+.deletion-explanation p {
+  font-size: 0.8rem;
+  line-height: 1.6;
+}
+.deletion-explanation {
+  background: #fcf0e7;
+  padding: 0.8rem 1rem;
+  border-radius: 7px;
+  margin-bottom: 1rem;
+}
+.deletion-explanation > strong {
+  font-size: 0.84rem;
+}
+.deletion-explanation p {
+  margin: 0.35rem 0 0;
+}
+.disposition-row {
+  border-bottom: 1px solid var(--line);
+  padding: 0.8rem 0;
+}
+.disposition-row > div:first-child,
+.transfer-row > div {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  gap: 0.6rem;
+}
+.disposition-row strong,
+.transfer-row strong {
+  font-size: 0.85rem;
+  overflow-wrap: anywhere;
+}
+.disposition-row .badge,
+.transfer-row .badge {
+  flex: none;
+  font-size: 0.66rem;
+}
+.disposition-row p {
+  font-size: 0.8rem;
+  margin: 0.35rem 0 0.5rem;
+}
+.disposition-row .actions {
+  gap: 0.7rem;
+}
+.disposition-row .text-button {
+  font-size: 0.75rem;
+}
+.transfer-review h3 {
+  font: 700 0.95rem system-ui;
+  margin: 1rem 0 0.2rem;
+}
+.transfer-row {
+  padding: 0.7rem 0;
+  border-bottom: 1px solid var(--line);
+}
+.transfer-row small {
+  display: block;
+  font-size: 0.75rem;
+  margin: 0.3rem 0;
+}
+.transfer-row p {
+  font-size: 0.76rem;
+  margin: 0;
+  line-height: 1.5;
+}
+.privacy-reminder {
+  padding: 0.8rem;
+  background: var(--paper);
+  border-radius: 6px;
+  margin: 1rem 0;
+}
+.deletion-review label {
+  font-size: 0.82rem;
+}
+.confirm-deletion {
+  margin: 1rem 0;
+  align-items: start;
+  line-height: 1.5;
+}
+.confirm-deletion input {
+  flex: none;
+  margin-top: 0.2rem;
+}
+.deletion-review .form-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.deletion-review .form-actions .btn {
+  font-size: 0.8rem;
+}
+@media (max-width: 900px) {
+  .account-workspace,
+  .account-workspace.reviewing {
+    grid-template-columns: 1fr 1fr;
+  }
+  .deletion-review .form-actions .btn {
+    width: 100%;
+  }
+}
+@media (max-width: 700px) {
+  .account-workspace,
+  .account-workspace.reviewing {
+    grid-template-columns: 1fr;
+  }
+  .panel {
+    padding: 1rem;
+  }
+  .account-workspace.reviewing .deletion-column {
+    grid-row: 1;
+  }
+  .preference-fields {
+    grid-template-columns: 1fr 1fr;
+  }
+  .disposition-row .actions {
+    align-items: start;
+    flex-direction: column;
+  }
+}

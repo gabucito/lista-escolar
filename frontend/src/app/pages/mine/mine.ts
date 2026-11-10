@@ -1,81 +1,14 @@
-import { Component, inject, signal, OnInit } from '@angular/core';
+import { Component, inject, signal, computed, OnInit } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { Api } from '../../core/api';
 import { Session } from '../../core/session';
-import { ListSummary, Template } from '../../core/models';
-import { ListCard } from '../../shared/list-card/list-card';
+import { ListSummary, Template, dateLabel } from '../../core/models';
+import { form, FormField } from '@angular/forms/signals';
 @Component({
   selector: 'app-mine',
-  imports: [RouterLink, ListCard],
-  template: `<header class="page-head">
-      <div>
-        <p class="eyebrow">Mi espacio</p>
-        <h1>Todo listo para organizarte.</h1>
-        <p>Tus listas, las que compartes y las que sigues.</p>
-      </div>
-      <a routerLink="/crear" class="btn">＋ Crear lista</a>
-    </header>
-    @if (transfers().length) {
-      <section class="panel soft">
-        <h2>Te invitaron a ser propietario</h2>
-        @for (transfer of transfers(); track transfer.id) {
-          <div class="share-row">
-            <div>
-              <strong>{{ transfer.school || 'Lista escolar' }}</strong>
-              <p class="muted">{{ transfer.owner_name }} quiere transferirte esta lista.</p>
-            </div>
-            <button class="btn secondary" (click)="accept(transfer.id)">Aceptar propiedad</button>
-          </div>
-        }
-      </section>
-    }
-    @if (loading()) {
-      <div class="loading">Cargando tus listas…</div>
-    } @else if (lists().length) {
-      <div class="list-stack">
-        @for (list of lists(); track list.id) {
-          <app-list-card [item]="list" />
-        }
-      </div>
-    } @else {
-      <div class="empty">
-        <div class="empty-icon">▤</div>
-        <h2>Tu primera lista empieza aquí</h2>
-        <p>
-          Crea una lista desde cero o usa una plantilla. También puedes seguir listas públicas para
-          encontrarlas fácilmente.
-        </p>
-        <a routerLink="/crear" class="btn">Crear mi primera lista</a>
-      </div>
-    }
-    <section class="spaced">
-      <div class="section-row">
-        <div>
-          <p class="eyebrow">Un punto de partida</p>
-          <h2>Plantillas por nivel</h2>
-        </div>
-      </div>
-      <p class="muted">Adáptalas a tu curso. Son orientaciones generales, no listas oficiales.</p>
-      @if (templates().length) {
-        <div class="template-grid">
-          @for (template of templates(); track template.id) {
-            <article class="template-card">
-              <span class="badge">{{ template.grade }}</span>
-              <h3>{{ template.name }}</h3>
-              <p class="muted">{{ template.content.items.length }} útiles para comenzar</p>
-              <button class="btn secondary small" (click)="fromTemplate(template.id)">
-                Usar plantilla
-              </button>
-            </article>
-          }
-        </div>
-      } @else {
-        <p class="muted">
-          Todavía no hay plantillas compartidas. Puedes crear tu propia lista o copiar una lista
-          pública.
-        </p>
-      }
-    </section>`,
+  imports: [RouterLink, FormField],
+  templateUrl: './mine.html',
+  styleUrl: './mine.scss',
 })
 export class Mine implements OnInit {
   private api = inject(Api);
@@ -85,6 +18,38 @@ export class Mine implements OnInit {
   readonly templates = signal<Template[]>([]);
   readonly transfers = signal<{ id: string; school: string; owner_name: string }[]>([]);
   readonly loading = signal(true);
+  readonly creating = signal('');
+  readonly date = dateLabel;
+  readonly selected = signal<'all' | 'owner' | 'shared' | 'following'>('all');
+  readonly filter = signal({ status: 'all' });
+  readonly filterFields = form(this.filter);
+  readonly sections = [
+    { key: 'all', label: 'Todas' },
+    { key: 'owner', label: 'Propias' },
+    { key: 'shared', label: 'Compartidas' },
+    { key: 'following', label: 'Siguiendo' },
+  ] as const;
+  belongs(list: ListSummary, section: string) {
+    if (section === 'owner') return list.role === 'owner';
+    if (section === 'shared') return list.role === 'editor' || list.role === 'viewer';
+    if (section === 'following') return list.following === true;
+    return true;
+  }
+  count(section: string) {
+    return this.lists().filter((list) => this.belongs(list, section)).length;
+  }
+  readonly visibleLists = computed(() =>
+    this.lists().filter(
+      (list) =>
+        this.belongs(list, this.selected()) &&
+        (this.filter().status === 'all' ||
+          (this.filter().status === 'archived'
+            ? list.archived
+            : this.filter().status === 'draft'
+              ? !list.current_version
+              : !!list.current_version && !list.archived)),
+    ),
+  );
   ngOnInit() {
     void this.load();
   }
@@ -105,11 +70,15 @@ export class Mine implements OnInit {
     }
   }
   async fromTemplate(id: string) {
+    if (this.creating()) return;
+    this.creating.set(id);
     try {
       const result = await this.api.post<{ id: string }>('/templates/' + id + '/copy', {});
       await this.router.navigate(['/editar', result.id]);
     } catch (error) {
       this.api.fail(error);
+    } finally {
+      this.creating.set('');
     }
   }
   async accept(id: string) {

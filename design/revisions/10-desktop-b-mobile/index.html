@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>B en escritorio, adaptado a teléfonos · Lista Escolar</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; background: #f7f6ef; color: #24374a; font: 16px/1.55 system-ui, sans-serif; }
+    main { max-width: 1600px; margin: auto; padding: 30px; }
+    h1, h2 { font-family: Georgia, serif; line-height: 1.2; }
+    h1 { margin: 14px 0; font-size: 34px; }
+    a { color: #2e604d; }
+    a:focus-visible { outline: 3px solid #ad5d20; outline-offset: 4px; }
+    .intro { max-width: 950px; }
+    .choices { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin: 28px 0; }
+    .choice { padding: 20px; background: white; border: 1px solid #cbd6c4; border-radius: 10px; text-decoration: none; }
+    .choice strong, .choice span { display: block; }
+    .choice strong { font-size: 18px; margin-bottom: 8px; }
+    .choice span { color: #43534b; }
+    .choice:hover { background: #edf2e5; }
+    .note { padding: 16px 20px; border-left: 4px solid #3b6b55; background: #edf2e5; max-width: 1100px; }
+    section { margin-top: 36px; scroll-margin-top: 20px; }
+    .image-link { display: block; padding: 8px; border: 1px solid #ccd7c8; border-radius: 10px; background: white; }
+    img { display: block; width: 100%; height: auto; border-radius: 6px; }
+    .reference { max-width: 1100px; }
+    footer { margin-top: 36px; padding-top: 20px; border-top: 1px solid #ccd7c8; font-size: 14px; }
+    @media (max-width: 700px) { main { padding: 18px; } h1 { font-size: 28px; } .choices { grid-template-columns: 1fr; } .image-link { padding: 3px; } }
+  </style>
+</head>
+<body>
+<main>
+  <a href="../09-sidenav-design-exploration/">← Propuestas de escritorio</a>
+  <div class="intro">
+    <h1>B en escritorio, adaptado a teléfonos</h1>
+    <p>La opción elegida para escritorio es <strong>B · Comparar y agregar</strong>. En móvil, cada útil se presenta en una fila o tarjeta que aprovecha todo el ancho, con su nombre, características y acción para agregar.</p>
+    <p><strong>B + M1 ya implementados.</strong> <a href="../11-implemented-responsive-comparison/">Ver la comparación con capturas reales</a>.</p>
+    <p>Estas dos propuestas muestran tres momentos del mismo flujo: <strong>Categorías → Características → Resultados</strong>. Cada pantalla aparece por separado en el teléfono.</p>
+  </div>
+  <nav class="choices" aria-label="Propuestas móviles">
+    <a class="choice" href="#m1"><strong>M1 · Filas legibles — elegido</strong><span>Comparación rápida mediante filas compactas; categorías y filtros en un panel de pantalla completa.</span></a>
+    <a class="choice" href="#m2"><strong>M2 · Panel deslizante</strong><span>Tarjetas más amplias y un panel inferior que cambia de categorías a características.</span></a>
+  </nav>
+  <p class="note">Ambas conservan un único panel para categorías y atributos, el regreso visible a categorías, filtros opcionales, valores identificados con su unidad y acceso persistente a <strong>Mi lista</strong>.</p>
+  <section id="m1">
+    <h2>M1 · Filas legibles</h2>
+    <p>La opción elegida e implementada para mantener la rapidez de B en pantallas estrechas. <a href="01-movil-filas-legibles.prompt.txt">Prompt inicial</a> · <a href="01-movil-filas-legibles.refinement.prompt.txt">Refinamiento</a> · <a href="01-movil-filas-legibles.cleanup.prompt.txt">Ajuste final</a> · <a href="01-movil-filas-legibles-v3.png" download>Descargar PNG</a></p>
+    <a class="image-link" href="01-movil-filas-legibles-v3.png"><img src="01-movil-filas-legibles-v3.png" alt="Tres estados de M1: categorías, características y resultados en filas compactas"></a>
+  </section>
+  <section id="m2">
+    <h2>M2 · Panel deslizante</h2>
+    <p>Una alternativa con tarjetas de mayor tamaño y contexto de resultados detrás del panel. <a href="02-movil-panel-deslizante.prompt.txt">Prompt inicial</a> · <a href="02-movil-panel-deslizante.refinement.prompt.txt">Refinamiento</a> · <a href="02-movil-panel-deslizante-v2.png" download>Descargar PNG</a></p>
+    <a class="image-link" href="02-movil-panel-deslizante-v2.png"><img loading="lazy" src="02-movil-panel-deslizante-v2.png" alt="Tres estados de M2: panel inferior de categorías, atributos y resultados en tarjetas"></a>
+  </section>
+  <section class="reference">
+    <h2>Escritorio elegido · B</h2>
+    <a class="image-link" href="../09-sidenav-design-exploration/02-comparar-y-agregar.png"><img loading="lazy" src="../09-sidenav-design-exploration/02-comparar-y-agregar.png" alt="Diseño B elegido para escritorio con columnas de atributos alineadas"></a>
+  </section>
+  <footer>Mockups generados con la herramienta integrada <code>image_gen.imagegen</code>, 10 de noviembre de 2026. B y M1 están implementados. M2 se conserva como alternativa no elegida. <a href="../11-implemented-responsive-comparison/">Comparar con la aplicación</a>. <a href="manifest.json">Archivos y procedencia</a> · <a href="http://localhost:4200/">Aplicación actual</a>.</footer>
+</main>
+</body>
+</html>

@@ -3,6 +3,16 @@
 Aplicación local para preparar, compartir y usar listas de útiles escolares.
 Backend Rust/Axum, frontend Angular y PostgreSQL. La interfaz está en español.
 
+[Comparar los diseños con la aplicación implementada](design/revisions/03-implemented-workflows/index.html)
+· [Catálogo con filtros](design/revisions/04-catalog-browsing/index.html)
+· [Opción C: categorías y atributos](design/revisions/06-categories-and-attributes/index.html)
+· [Opción C implementada](design/revisions/07-implemented-categories-attributes/index.html)
+· [Categorías y filtros en el mismo panel](design/revisions/08-shared-catalog-sidenav/index.html)
+· [Tres propuestas visuales](design/revisions/09-sidenav-design-exploration/index.html)
+· [B en escritorio y alternativas móviles](design/revisions/10-desktop-b-mobile/index.html)
+· [B y M1 implementados](design/revisions/11-implemented-responsive-comparison/index.html)
+· [Validación y pruebas](docs/VALIDATION.md).
+
 ## Desarrollo local
 
 Requisitos: Rust, Node.js 24, npm y PostgreSQL en ejecución. El lanzador local
@@ -39,6 +49,43 @@ Las migraciones se aplican al iniciar. Para ejecutarlas sin abrir el servidor:
 ```bash
 cargo run -- migrate
 ```
+
+## Buscar y agregar útiles
+
+Abre una lista en el editor: el panel izquierdo muestra primero las
+**Categorías**. Al elegir una, el mismo panel muestra sus características y
+coincidencias, junto a las filas del catálogo y tu lista. Las columnas comparan
+las características de esa categoría; en teléfonos, cada fila muestra sus
+valores con etiquetas. **Catálogo** y
+**Volver a categorías** regresan al selector sin perder los filtros; elegir otra
+categoría cambia sus características. No hay un segundo nivel de subcategorías.
+
+Por ejemplo, elige **Cuadernos** y combina **Tipo de cuaderno: Cuadriculado,
+Formato: Universitario, 100 hojas y 7 mm**. También puedes escribir `cuaderno univ 100 7mm` en la
+búsqueda. Los filtros seleccionados se pueden quitar individualmente o limpiar
+todos; **Ver más útiles** carga la siguiente página sin perder lo ya mostrado.
+En el teléfono, primero pulsa **Agregar útiles**, elige la categoría y sus
+características, y después **Ver útiles** para agregar los resultados.
+
+Puedes cerrar el panel sin perder los filtros. Al cambiar de tipo se conservan
+las características compatibles: pasar de Cuadriculado a Rayado retira el filtro
+de cuadrícula, manteniendo formato y hojas. En Geometría, Regla permite filtrar
+por largo. Los administradores gestionan tipos y características desde
+**Categorías**; los útiles personalizados usan esas mismas definiciones.
+
+La migración 004 incorpora 24 variantes genéricas de cuadernos con formato,
+número de hojas y cuadrícula u orientación cuando corresponde. No representan
+existencias de una tienda. Se conservan los útiles y las listas existentes;
+las características sin datos todavía no aparecen como filtros.
+
+La migración 005 convierte las clasificaciones existentes en atributos de tipo
+y mantiene las identidades de útiles, los vínculos y las versiones publicadas.
+El importador requiere esta migración y conserva sus claves anteriores.
+
+La migración 006 incorpora 132 útiles adicionales y cinco categorías nuevas a partir
+de listas escolares chilenas de 2026. Está validada en una base desechable y
+aplicada a `escolar`: 176 útiles en 14 categorías. Consulta la
+[investigación, fuentes y criterios de conservación](docs/CATALOG_RESEARCH_2026-11-10.md).
 
 ## Cuentas y administración
 

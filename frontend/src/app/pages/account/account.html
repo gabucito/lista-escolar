@@ -1,0 +1,187 @@
+<header class="account-heading">
+  <h1>Mi cuenta</h1>
+  <p class="muted">Tu perfil y tus preferencias para preparar las listas.</p>
+</header>
+<div class="account-workspace" [class.reviewing]="!!preview()">
+  <section class="panel profile-panel">
+    <h2>Perfil y preferencias</h2>
+    <form (submit)="save(); $event.preventDefault()">
+      <label
+        >Nombre para mostrar<input
+          [formField]="fields.display_name"
+          autocomplete="nickname" /></label
+      ><small>Este nombre aparece en tus listas y comentarios.</small>
+      <div class="account-email">
+        <span>Correo electrónico</span><strong>{{ session.user()?.email }}</strong>
+      </div>
+      <div class="preferences">
+        <h3>Preferencias de PDF</h3>
+        <p class="muted">
+          Se usarán como punto de partida. Puedes cambiarlas al preparar cada PDF.
+        </p>
+        <div class="preference-fields">
+          <label
+            >Diseño de PDF<select [formField]="fields.layout">
+              <option value="columns">Dos columnas</option>
+              <option value="sidebar">Barra lateral</option>
+              <option value="cards">Fichas</option>
+            </select></label
+          ><label
+            >Papel<select [formField]="fields.paper">
+              <option value="LETTER">Carta</option>
+              <option value="A4">A4</option>
+            </select></label
+          >
+        </div>
+        <label class="check"
+          ><input type="checkbox" [formField]="fields.color" />PDF en color por defecto</label
+        >
+      </div>
+      <button class="btn" [disabled]="busy() || fields().invalid() || !model().display_name.trim()">
+        Guardar cambios
+      </button>
+    </form>
+  </section>
+  <aside class="deletion-column">
+    @if (preview(); as preview) {
+      <section
+        class="panel danger-zone deletion-review"
+        id="deletion-review"
+        aria-labelledby="deletion-review-title"
+      >
+        <div class="review-heading">
+          <div>
+            <span class="review-label">Eliminación de cuenta</span>
+            <h2 id="deletion-review-title" tabindex="-1">Revisa antes de eliminar</h2>
+          </div>
+          <button
+            class="text-button"
+            aria-label="Cerrar revisión de eliminación"
+            [disabled]="busy()"
+            (click)="cancelDeletion()"
+          >
+            ×
+          </button>
+        </div>
+        <p>Se eliminarán tu cuenta, comentarios, votos, checklists personales y preferencias.</p>
+        <div class="deletion-explanation">
+          <strong>Qué pasará con tus listas</strong>
+          <p>
+            Las listas públicas publicadas que sigan a tu nombre quedarán archivadas y sin
+            propietario. Las listas privadas y borradores que aún te pertenezcan se eliminarán.
+          </p>
+        </div>
+        <div class="disposition-list">
+          @for (list of preview.lists; track list.id) {
+            <article class="disposition-row">
+              <div>
+                <strong>{{ list.school || 'Borrador sin nombre' }}</strong
+                ><span class="badge" [class.warm]="list.disposition === 'delete'">{{
+                  list.visibility === 'private' ? 'Privada' : 'Pública'
+                }}</span>
+              </div>
+              <p>{{ disposition(list.disposition) }}</p>
+              <div class="actions">
+                <a class="text-button" [routerLink]="['/listas', list.id, 'compartir']"
+                  >Transferir propiedad</a
+                >
+                @if (list.current_version && list.visibility === 'public') {
+                  <a
+                    class="text-button"
+                    [routerLink]="['/listas', list.id]"
+                    [queryParams]="{ report: 'privacy' }"
+                    >Reportar datos personales</a
+                  >
+                }
+              </div>
+            </article>
+          }
+          @if (!preview.lists.length) {
+            <p class="muted">No tienes listas propias pendientes de resolver.</p>
+          }
+        </div>
+        @if (preview.transfers.length) {
+          <section class="transfer-review">
+            <h3>Transferencias de propiedad</h3>
+            @for (transfer of preview.transfers; track transfer.id) {
+              <article class="transfer-row">
+                <div>
+                  <strong>{{ transfer.school || 'Lista escolar' }}</strong
+                  ><span class="badge" [class.warm]="transfer.status === 'pending'">{{
+                    transfer.status === 'accepted'
+                      ? 'Aceptada'
+                      : transfer.expired
+                        ? 'Vencida'
+                        : 'Pendiente'
+                  }}</span>
+                </div>
+                <small
+                  >{{ transfer.direction === 'sent' ? 'Enviada a' : 'Recibida de' }}
+                  {{ transfer.other_party || 'Usuario eliminado' }}</small
+                >
+                <p>
+                  @if (transfer.status === 'accepted') {
+                    @if (transfer.direction === 'sent') {
+                      Aceptada: la lista permanece con su nuevo propietario. Eliminar tu cuenta no
+                      la elimina.
+                    } @else {
+                      Aceptada: recibiste la propiedad. Si la lista todavía te pertenece, se aplica
+                      el destino indicado arriba.
+                    }
+                  } @else if (transfer.expired) {
+                    Oferta vencida: no cambió la propiedad y el registro se retirará al eliminar tu
+                    cuenta.
+                  } @else {
+                    Oferta pendiente: se cancelará al eliminar tu cuenta. La propiedad todavía no
+                    cambió.
+                  }
+                </p>
+              </article>
+            }
+          </section>
+        }
+        <p class="privacy-reminder">
+          Quitar tu nombre no elimina datos personales escritos en una lista o en su logo. Puedes
+          reportarlos antes de continuar.
+        </p>
+        <form (submit)="remove(); $event.preventDefault()">
+          <label
+            >Confirma tu contraseña<input
+              type="password"
+              [formField]="deletionFields.password"
+              autocomplete="current-password" /></label
+          ><label class="check confirm-deletion"
+            ><input type="checkbox" [formField]="deletionFields.confirm" />Entiendo y acepto la
+            eliminación de mi cuenta y los efectos indicados.</label
+          >
+          <div class="form-actions">
+            <button
+              class="btn danger"
+              [disabled]="busy() || !deletion().confirm || !deletion().password"
+            >
+              Eliminar cuenta definitivamente</button
+            ><button type="button" class="btn quiet" [disabled]="busy()" (click)="cancelDeletion()">
+              Cancelar
+            </button>
+          </div>
+        </form>
+      </section>
+    } @else {
+      <section class="panel danger-zone deletion-start">
+        <h2>Eliminar mi cuenta</h2>
+        <p class="muted">
+          Revisa el destino de tus listas y transfiere las que quieras mantener en edición antes de
+          confirmar.
+        </p>
+        <button
+          id="review-deletion-button"
+          class="btn secondary danger-text"
+          [disabled]="busy()"
+          (click)="reviewDeletion()"
+        >
+          Revisar eliminación</button
+        ><small>Primero verás un resumen. Tu cuenta todavía no se eliminará.</small>
+      </section>
+    }
+  </aside>
+</div>

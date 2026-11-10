@@ -9,6 +9,8 @@ test('1000-row import review stays paged, retains explicit checks and cancels at
   response = await context.request.post('/api/lists', { headers, data: {} });
   expect(response.status()).toBe(200); const { id } = await response.json();
   await page.goto(`/editar/${id}`);
+  await page.getByRole('dialog', { name: 'Datos de la lista' }).getByRole('button', { name: 'Cancelar', exact: true }).click();
+  await page.getByRole('button', { name: 'Importar Excel o CSV', exact: true }).click();
   const csv = 'Nombre;Cantidad\n' + Array.from({ length: 1000 }, (_, index) => `Material importado QA ${index + 1};1`).join('\n');
   await page.getByLabel('Archivo', { exact: true }).setInputFiles({ name: '1000-utiles.csv', mimeType: 'text/csv', buffer: Buffer.from(csv) });
   await page.getByRole('button', { name: 'Revisar archivo', exact: true }).click();
@@ -16,6 +18,7 @@ test('1000-row import review stays paged, retains explicit checks and cancels at
   await dialog.getByRole('button', { name: 'Aplicar columnas y revisar' }).click();
   const reviewed = dialog.getByLabel('Revisé este útil, su cantidad, unidad y nota');
   await expect(reviewed).toHaveCount(25);
+  await page.screenshot({ path: '../.local/qa/ui/editor-workspace-import-review.png' });
   await expect(dialog.getByText('Página 1 de 40', { exact: true })).toBeVisible();
   for (const checkbox of await reviewed.all()) await checkbox.check();
   await dialog.getByRole('button', { name: 'Página siguiente', exact: true }).click();

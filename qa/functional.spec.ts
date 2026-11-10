@@ -37,13 +37,13 @@ async function seed(context: BrowserContext, data = content(), visibility = 'pub
   await api(context, 'POST', `/lists/${id}/publish`, { revision: draft.revision, current_version: 0, request_id: randomUUID() });
   return id;
 }
-async function saved(page: Page) { await expect(page.locator('.save-state')).toHaveText('Guardado'); }
+async function saved(page: Page) { await expect(page.locator('.save-state')).toHaveText('✓ Guardado'); }
 
 test('register, create, autosave, reorder, import, publish and personal checklist', async ({ page, context }) => {
   await page.goto('/registro');
   await page.getByLabel('Nombre para mostrar').fill('Apoderada QA');
   await page.getByLabel('Correo electrónico').fill(`ui-${randomUUID()}@example.invalid`);
-  await page.getByLabel('Contraseña').fill(password);
+  await page.getByLabel('Contraseña', { exact: true }).fill(password);
   await page.getByRole('button', { name: 'Crear cuenta', exact: true }).click();
   await expect(page).toHaveURL(/\/mis-listas$/);
   await page.goto('/crear');
@@ -51,19 +51,24 @@ test('register, create, autosave, reorder, import, publish and personal checklis
   await page.getByLabel('Colegio', { exact: true }).fill('Colegio Arcoíris QA');
   await page.getByLabel('Curso', { exact: true }).fill('2° básico B');
   await page.getByLabel('Año escolar', { exact: true }).fill('2027');
+  await page.getByRole('button', { name: 'Guardar datos', exact: true }).click();
+  await expect(page.getByRole('dialog', { name: 'Datos de la lista' })).toBeHidden();
   await page.getByLabel('Buscar en catálogo').fill('lápiz');
-  await page.locator('.catalog-result').first().click();
-  const custom = page.locator('section').filter({ has: page.getByRole('heading', { name: '¿Falta un útil?' }) });
+  await page.locator('.catalog-result').filter({ hasText: /lápiz/i }).first().getByRole('button').click();
+  await page.locator('.catalog-secondary-actions').getByRole('button', { name: /Útil personalizado/ }).click();
+  const custom = page.getByRole('dialog', { name: 'Útil personalizado', exact: true });
   await custom.getByLabel('Nombre', { exact: true }).fill('Papel para origami QA');
   await custom.getByLabel('Cantidad', { exact: true }).fill('2');
   await custom.getByRole('combobox', { name: 'Unidad', exact: true }).selectOption('paquete');
   await custom.getByRole('button', { name: 'Agregar útil' }).click();
-  await expect(page.locator('.item-editor')).toHaveCount(2);
+  await expect(page.locator('.supply-row')).toHaveCount(2);
+  await page.locator('.supply-row').last().locator('summary').click();
   await page.getByRole('button', { name: 'Subir Papel para origami QA' }).click();
-  await expect(page.locator('.item-editor').first().getByLabel('Útil', { exact: true })).toHaveValue('Papel para origami QA');
+  await expect(page.locator('.supply-row').first().getByLabel('Útil', { exact: true })).toHaveValue('Papel para origami QA');
   await saved(page);
   await page.reload();
-  await expect(page.getByLabel('Colegio', { exact: true })).toHaveValue('Colegio Arcoíris QA');
+  await expect(page.getByRole('heading', { level: 1 })).toContainText('Colegio Arcoíris QA');
+  await page.getByRole('button', { name: 'Importar Excel o CSV', exact: true }).click();
   await page.getByLabel('Archivo', { exact: true }).setInputFiles({ name: 'utiles.csv', mimeType: 'text/csv', buffer: Buffer.from('Nombre;Cantidad;Unidad;Nota\nTijera de punta roma;1;unidad;Marcar con nombre\nCinta de tela;1,5;m;Azul\n') });
   await page.getByRole('button', { name: 'Revisar archivo', exact: true }).click();
   const dialog = page.getByRole('dialog', { name: 'Revisar importación' });
@@ -74,7 +79,7 @@ test('register, create, autosave, reorder, import, publish and personal checklis
   for (const checkbox of await dialog.getByLabel('Revisé este útil, su cantidad, unidad y nota').all()) await checkbox.check();
   await dialog.getByRole('button', { name: 'Agregar 2 útiles', exact: true }).click();
   await expect(dialog).toBeHidden();
-  await expect(page.locator('.item-editor')).toHaveCount(4);
+  await expect(page.locator('.supply-row')).toHaveCount(4);
   await page.getByRole('button', { name: 'Publicar lista', exact: true }).click();
   await expect(page).toHaveURL(/\/listas\/[^/]+$/);
   await expect(page.getByRole('heading', { name: 'Colegio Arcoíris QA' })).toBeVisible();
@@ -99,7 +104,6 @@ test('public search combines school, class, year and locality', async ({ page, c
   await reader.getByLabel('Colegio', { exact: true }).fill(school);
   await reader.getByLabel('Curso', { exact: true }).fill('5° básico A');
   await reader.getByLabel('Año escolar', { exact: true }).fill('2027');
-  await reader.getByText('Filtrar por ubicación', { exact: true }).click();
   await reader.getByLabel('Comuna', { exact: true }).fill('Santiago');
   await reader.getByRole('button', { name: 'Buscar listas' }).click();
   await expect(reader.locator(`a[href="/listas/${id}"]`).first()).toBeVisible();
@@ -111,18 +115,21 @@ test('public search combines school, class, year and locality', async ({ page, c
 
 test('stale editor retains changes and deliberately reapplies after review', async ({ page, context }) => {
   await account(context); const id = await seed(context);
-  await page.goto(`/editar/${id}`); await expect(page.getByLabel('Colegio', { exact: true })).toBeVisible();
+  await page.goto(`/editar/${id}`);
+  await page.getByRole('button', { name: 'Editar datos', exact: true }).click();
+  await expect(page.getByLabel('Colegio', { exact: true })).toBeVisible();
   const draft = await api(context, 'GET', `/lists/${id}/draft`); draft.content.instructions = 'Cambio de otra persona';
   await api(context, 'PUT', `/lists/${id}/draft`, { revision: draft.revision, content: draft.content });
   await page.getByLabel('Colegio', { exact: true }).fill('Mi cambio conservado QA');
+  await page.getByRole('button', { name: 'Guardar datos', exact: true }).click();
   await expect(page.getByRole('heading', { name: 'Hay cambios de otra persona' })).toBeVisible();
-  await expect(page.getByLabel('Colegio', { exact: true })).toHaveValue('Mi cambio conservado QA');
+  await expect(page.getByRole('heading', { level: 1 })).toContainText('Mi cambio conservado QA');
   await page.getByText(/Ver borrador del servidor/).click();
   await expect(page.getByText('Cambio de otra persona', { exact: true })).toBeVisible();
   await page.getByRole('button', { name: /Conservar y guardar mis cambios|Reaplicar mis cambios/ }).click();
   await saved(page);
   await page.reload();
-  await expect(page.getByLabel('Colegio', { exact: true })).toHaveValue('Mi cambio conservado QA');
+  await expect(page.getByRole('heading', { level: 1 })).toContainText('Mi cambio conservado QA');
 });
 
 test('private invitations open the proper route and revoked readers lose access', async ({ page, context, browser }) => {
@@ -151,12 +158,22 @@ test('all 12 PDF layout/paper/color variants preserve long content and page boun
   await page.goto(`/listas/${id}`); await expect(page.getByRole('heading', { name: data.school })).toBeVisible();
   const { getDocument } = await import('pdfjs-dist/legacy/build/pdf.mjs');
   const results: unknown[] = [];
+  await page.getByRole('button', { name: 'Descargar PDF', exact: true }).first().click();
+  await expect(page.getByRole('dialog', { name: 'Vista previa del PDF' }).locator('app-pdf-preview img')).toBeVisible();
+  const preview = page.locator('app-pdf-preview');
+  await preview.getByRole('button', { name: 'Página siguiente del PDF' }).click();
+  await expect(preview.getByRole('img')).toHaveAttribute('alt', 'Vista previa de la página 2 del PDF');
+  await expect(preview.getByRole('region', { name: 'Documento PDF' })).toHaveAttribute('aria-busy', 'false');
+  await preview.getByRole('button', { name: 'Ampliar vista previa' }).click();
+  await expect(preview.getByRole('button', { name: 'Ajustar PDF al ancho' })).toHaveText('125 %');
+  await preview.getByRole('button', { name: 'Página anterior del PDF' }).click();
+  await expect(preview.getByRole('img')).toHaveAttribute('alt', 'Vista previa de la página 1 del PDF');
   for (const layout of ['Dos columnas', 'Barra lateral', 'Fichas']) for (const paper of ['LETTER', 'A4']) for (const color of [true, false]) {
     await page.getByRole('button', { name: layout, exact: true }).click();
     await page.getByRole('combobox', { name: 'Papel', exact: true }).selectOption(paper);
     await page.getByLabel('En color', { exact: true }).setChecked(color);
     const pending = page.waitForEvent('download');
-    await page.getByRole('button', { name: /Descargar PDF/ }).click();
+    await page.getByRole('dialog', { name: 'Vista previa del PDF' }).getByRole('button', { name: 'Descargar PDF', exact: true }).click();
     const download = await pending;
     const filename = `${layout.replaceAll(' ', '-')}-${paper}-${color ? 'color' : 'bw'}.pdf`;
     const path = `${artifacts}/${filename}`; await download.saveAs(path);
@@ -204,12 +221,16 @@ test('all 12 PDF layout/paper/color variants preserve long content and page boun
 test('template copy, archive/restore and confirmed list deletion', async ({ page, context }) => {
   await account(context); await page.goto('/mis-listas');
   await page.getByRole('button', { name: 'Usar plantilla', exact: true }).first().click();
-  await expect(page).toHaveURL(/\/editar\//); await expect(page.locator('.item-editor')).toHaveCount(5);
-  await page.getByLabel('Colegio', { exact: true }).fill('Escuela Plantilla QA'); await saved(page);
+  await expect(page).toHaveURL(/\/editar\//); await expect(page.locator('.supply-row')).toHaveCount(5);
+  await page.getByLabel('Colegio', { exact: true }).fill('Escuela Plantilla QA');
+  await page.getByRole('button', { name: 'Guardar datos', exact: true }).click();
+  await expect(page.getByRole('dialog', { name: 'Datos de la lista' })).toBeHidden();
+  await saved(page);
   await page.getByRole('button', { name: 'Publicar lista', exact: true }).click();
   await expect(page).toHaveURL(/\/listas\/[^/]+$/);
   await page.getByRole('link', { name: 'Compartir', exact: true }).click();
   page.on('dialog', dialog => dialog.accept());
+  await page.getByText('Administrar lista', { exact: true }).click();
   await page.getByRole('button', { name: 'Archivar lista', exact: true }).click();
   await expect(page.getByRole('button', { name: 'Restaurar lista', exact: true })).toBeVisible();
   await page.getByRole('button', { name: 'Restaurar lista', exact: true }).click();

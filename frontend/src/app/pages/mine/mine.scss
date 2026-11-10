@@ -1,0 +1,228 @@
+:host {
+  display: block;
+}
+.mine-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.2rem;
+}
+h1 {
+  font-size: 2rem;
+  margin-bottom: 0.3rem;
+}
+p {
+  margin-bottom: 0;
+}
+.mine-workspace {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 330px;
+  gap: 1.3rem;
+}
+.mine-workspace > section,
+.mine-workspace > aside {
+  min-width: 0;
+}
+.mine-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.8rem;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+.filter-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.2rem;
+  border-bottom: 1px solid var(--line);
+}
+.filter-tabs button {
+  border: 0;
+  border-bottom: 3px solid transparent;
+  background: none;
+  padding: 0.65rem 0.6rem;
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+.filter-tabs button.active {
+  border-color: var(--green);
+  color: var(--green);
+  font-weight: 750;
+}
+.filter-tabs span {
+  font-size: 0.75rem;
+  background: var(--sage);
+  border-radius: 12px;
+  padding: 0.1rem 0.35rem;
+  margin-left: 0.2rem;
+}
+.mine-toolbar label {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+}
+.mine-toolbar select {
+  width: auto;
+  min-height: 38px;
+  margin: 0;
+}
+.mine-row {
+  padding: 1rem 1.1rem;
+  background: white;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+}
+.row-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  gap: 0.7rem;
+}
+.row-heading > div {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.row-heading h2 {
+  font: 700 1.05rem system-ui;
+  margin-bottom: 0.25rem;
+}
+.row-heading p {
+  font-size: 0.85rem;
+}
+.row-heading .badge {
+  flex: none;
+}
+.locality {
+  font-size: 0.8rem;
+  margin-top: 0.2rem;
+}
+.row-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 0.7rem;
+}
+.row-footer small {
+  font-size: 0.76rem;
+  line-height: 1.5;
+}
+.row-footer .actions {
+  gap: 0.45rem;
+  flex-shrink: 0;
+}
+.row-footer .text-button {
+  font-size: 0.82rem;
+}
+.transfer-offers {
+  padding: 0.9rem 1rem;
+}
+.transfer-offers h2 {
+  font-size: 1.1rem;
+  margin-bottom: 0.3rem;
+}
+.transfer-offers .share-row {
+  gap: 0.6rem;
+}
+.transfer-offers p {
+  font-size: 0.82rem;
+}
+.templates-panel {
+  padding: 1rem;
+}
+.templates-panel > h2,
+.community-box h2 {
+  font-size: 1.25rem;
+  margin-bottom: 0.4rem;
+}
+.templates-panel > p {
+  font-size: 0.8rem;
+  margin-bottom: 0.9rem;
+}
+.template-card {
+  padding: 0.8rem 0;
+  border: 0;
+  border-top: 1px solid var(--line);
+  border-radius: 0;
+  background: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+  box-shadow: none;
+}
+.template-card h3 {
+  font: 650 0.9rem system-ui;
+  margin: 0.4rem 0 0.2rem;
+}
+.template-card small {
+  font-size: 0.75rem;
+}
+.template-card .btn {
+  font-size: 0.75rem;
+  padding: 0.45rem 0.55rem;
+  flex-shrink: 0;
+}
+.community-box {
+  background: var(--sage);
+  padding: 1rem;
+  border-radius: 10px;
+}
+.community-box p {
+  font-size: 0.82rem;
+  margin-bottom: 0.8rem;
+}
+@media (max-width: 1050px) {
+  .mine-workspace {
+    grid-template-columns: minmax(0, 1fr) 285px;
+  }
+  .row-footer {
+    align-items: start;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+}
+@media (max-width: 760px) {
+  .mine-workspace {
+    grid-template-columns: 1fr;
+  }
+  .mine-heading {
+    align-items: start;
+  }
+  .mine-heading .btn {
+    flex-shrink: 0;
+    padding: 0.6rem 0.7rem;
+  }
+  .mine-heading p {
+    font-size: 0.85rem;
+  }
+  .filter-tabs button {
+    padding: 0.6rem 0.45rem;
+  }
+  .mine-toolbar {
+    align-items: start;
+  }
+  .mine-toolbar label {
+    width: 100%;
+    justify-content: space-between;
+  }
+  .row-heading {
+    flex-wrap: wrap;
+  }
+  .row-footer .actions {
+    flex-wrap: wrap;
+  }
+  .row-footer .btn {
+    min-height: 38px;
+  }
+  .template-card {
+    align-items: center;
+  }
+  .transfer-offers .share-row {
+    align-items: start;
+  }
+}

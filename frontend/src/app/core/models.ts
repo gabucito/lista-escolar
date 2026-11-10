@@ -44,6 +44,7 @@ export interface ListSummary {
   published_at: string;
   owner_name: string;
   role: string;
+  following?: boolean;
 }
 export interface ListDetail {
   id: string;
@@ -84,10 +85,36 @@ export interface CatalogItem {
   review_status: string;
   attributes: Record<string, unknown>;
 }
+export type CatalogAttributeValue = string | number | boolean;
+export interface CatalogFacet {
+  key: string;
+  name: string;
+  data_type: 'text' | 'number' | 'boolean';
+  unit: string | null;
+  values: { value: CatalogAttributeValue; count: number }[];
+}
+export interface CatalogBrowseResult {
+  items: CatalogItem[];
+  total: number;
+  offset: number;
+  limit: number;
+  facets: CatalogFacet[];
+}
+export interface CategoryAttribute {
+  key: string;
+  name: string;
+  data_type: 'text' | 'number' | 'boolean';
+  unit: string | null;
+  options: string[];
+  applies_to_types: string[];
+  sort_order: number;
+}
 export interface Category {
   id: number;
   slug: string;
   name: string;
+  type_attribute: string | null;
+  attributes: CategoryAttribute[];
   subcategories: {
     id: number;
     slug: string;

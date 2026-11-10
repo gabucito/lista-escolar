@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Catálogo con filtros · Lista Escolar</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; background: #f8f7f1; color: #263b4c; font: 16px/1.5 system-ui, sans-serif; }
+    main { max-width: 1440px; margin: auto; padding: 28px; }
+    h1, h2 { font-family: Georgia, serif; line-height: 1.2; }
+    h1 { margin: 12px 0; }
+    a { color: #28604d; }
+    a:focus-visible { outline: 3px solid #ad5d20; outline-offset: 4px; }
+    .intro { max-width: 850px; }
+    .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+    figure { margin: 0 0 20px; padding: 14px; background: white; border: 1px solid #d6dfce; border-radius: 10px; }
+    figcaption { margin-bottom: 12px; font-weight: 600; }
+    img { display: block; width: 100%; height: auto; border: 1px solid #e2e6dc; }
+    .phone img { max-width: 390px; margin: auto; }
+    @media (max-width: 700px) { main { padding: 16px; } .grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <main>
+    <a href="../03-implemented-workflows/">← Diseños y flujos implementados</a>
+    <h1>Buscar útiles por sus características</h1>
+    <div class="intro">
+      <p>Capturas reales de la aplicación, tomadas con datos de prueba en una base aislada el 10 de noviembre de 2026.</p>
+      <p>Ejemplo: <strong>Cuadernos → Cuadriculados → Universitario → 100 hojas → 7 mm</strong>. Los filtros muestran las opciones y cantidades disponibles; la búsqueda también reconoce características, como <code>cuaderno univ 100 7mm</code>.</p>
+      <p>Se mantiene el catálogo junto a la lista en escritorio y un selector dedicado en teléfonos. Pulsa una imagen para verla a tamaño completo.</p>
+    </div>
+    <h2>Catálogo · 1366 × 768</h2>
+    <figure><figcaption>Siete útiles completos visibles, con características resumidas</figcaption><a href="1366-catalog.png"><img src="1366-catalog.png" alt="Editor con catálogo amplio y siete filas completas visibles"></a></figure>
+    <h2>Escritorio · 1366 × 768</h2>
+    <div class="grid">
+      <figure><figcaption>Elegir características</figcaption><a href="1366-notebook-filters.png"><img loading="lazy" src="1366-notebook-filters.png" alt="Filtros de formato, número de hojas y separación de cuadrícula"></a></figure>
+      <figure><figcaption>Resultado agregado a la lista</figcaption><a href="1366-notebook-results.png"><img loading="lazy" src="1366-notebook-results.png" alt="Cuaderno universitario de cien hojas y siete milímetros agregado a la lista"></a></figure>
+    </div>
+    <h2>Escritorio · 1440 × 900</h2>
+    <div class="grid">
+      <figure><figcaption>Filtros</figcaption><a href="1440-notebook-filters.png"><img loading="lazy" src="1440-notebook-filters.png" alt="Panel de características en escritorio de 1440 píxeles"></a></figure>
+      <figure><figcaption>Resultados</figcaption><a href="1440-notebook-results.png"><img loading="lazy" src="1440-notebook-results.png" alt="Catálogo filtrado y lista en escritorio de 1440 píxeles"></a></figure>
+    </div>
+    <h2>Teléfono · 390 × 844</h2>
+    <div class="grid phone">
+      <figure><figcaption>Filtros con acción persistente</figcaption><a href="390-notebook-filters.png"><img loading="lazy" src="390-notebook-filters.png" alt="Características del cuaderno en un teléfono de 390 píxeles"></a></figure>
+      <figure><figcaption>Agregar sin cerrar el catálogo</figcaption><a href="390-notebook-results.png"><img loading="lazy" src="390-notebook-results.png" alt="Resultado filtrado en teléfono y botón para volver a la lista"></a></figure>
+    </div>
+    <h2>Teléfono estrecho · 320 × 800</h2>
+    <div class="grid phone">
+      <figure><figcaption>Filtros</figcaption><a href="320-notebook-filters.png"><img loading="lazy" src="320-notebook-filters.png" alt="Filtros legibles en teléfono de 320 píxeles"></a></figure>
+      <figure><figcaption>Resultado</figcaption><a href="320-notebook-results.png"><img loading="lazy" src="320-notebook-results.png" alt="Cuaderno filtrado listo para agregar en teléfono de 320 píxeles"></a></figure>
+    </div>
+  </main>
+</body>
+</html>

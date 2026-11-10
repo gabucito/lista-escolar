@@ -34,6 +34,44 @@ fingerprint and source-product count were unchanged after migration. No user or
 administrator was seeded into the real database; acceptance fixtures live only
 in disposable PostgreSQL clusters.
 
+Migration `004_notebook_catalog.sql` adds 24 brand-independent notebook
+requirements on an unmodified starter taxonomy: cuadriculados, rayados,
+composición, caligrafía, croquis and lisos. Their format, sheet count, grid spacing
+and orientation are typed attributes; sheet counts are not page counts. The
+seed uses the same canonical keys as the store importer, so later imports reuse
+the generic item while store links still require separate review. It creates no
+brands, products, prices or approved store matches.
+
+Existing same-key items are preserved completely, including pending/rejected
+status, corrected names, attributes and aliases. Attributes are inserted only
+for newly created rows. Renamed or removed notebook taxonomy is not recreated;
+only surviving starter subcategories receive their variants. Application lists
+and published versions are not changed. The backend records migration 004's
+checksum under the same advisory lock and transaction as migration 003.
+
+Migration 005 adds category-owned attributes and converts existing classifications
+to type values. It preserves generic item identities, canonical keys, existing
+attribute values, aliases, source links and published list snapshots. Type options
+and conditional applicability are managed by the administrator. Legacy grouping
+records remain available for compatibility, while imports use category and type
+attributes directly and can run without those legacy records. Run application
+migrations before importing a store snapshot; the importer reports a missing
+migration 005 explicitly. Applied migrations 003 and 004 remain unchanged.
+
+Migration `006_catalog_expansion.sql` adds 132 generic supplies and five categories
+based on 15 primary Chilean school-list sources for 2026. On the unmodified
+post-005 catalog, this changes 44 items and nine categories to 176 items and 14
+categories. It preserves existing curated items, category/type changes, lists,
+published versions and source links, and adds typed, conditional attributes
+without restoring subcategories. Five isolated PostgreSQL migration tests pass,
+including rerun idempotence, identity/name collisions, removed-category handling
+and transactional rejection of incompatible definitions. **Application to the
+local `escolar` database completed on 2026-11-10 at 10:21−03.** The post-migration
+audit confirms 176 items, 14 categories and 381 attribute values, with the original
+44 items, their attributes and aliases preserved. See the
+[research summary and source evidence](../docs/CATALOG_RESEARCH_2026-11-10.md).
+The historical counts above describe earlier inspections and remain unchanged.
+
 ## Local connection
 
 The project owner supplied a local database named `escolar`. Connection details
@@ -78,9 +116,13 @@ with `cargo run -- create-admin administrador` and enter the password privately.
 
 `catalog` contains the app's brand-independent items:
 
-- `categories` and `subcategories` provide the browsing hierarchy.
-- `attribute_definitions`, `subcategory_attributes`, and `item_attributes`
-  describe typed details such as notebook format, sheet count, and grid spacing.
+- `categories` provide broad groups. `category_type_attributes` identifies each
+  category's type attribute; `category_attributes` assigns definitions, allowed
+  options, type-dependent applicability and display order.
+- `attribute_definitions` and `item_attributes` describe typed details such as
+  type, notebook format, sheet count and grid spacing. Legacy `subcategories`,
+  `subcategory_attributes` and `legacy_subcategory_types` remain compatibility
+  data, without a user-facing subcategory navigation level.
 - `items` and `item_aliases` provide generic names and alternative names.
 - `store_product_matches` stores proposed or reviewed links to store products.
 - `browse_items` includes categories, status, and attributes for browsing.
@@ -103,10 +145,10 @@ parent-facing experience must not expose store products in the first release.
 For example, to inspect generic notebooks and their attributes:
 
 ```sql
-SELECT subcategory, name, review_status, attributes
+SELECT attributes->'tipo_cuaderno'->>'value' AS tipo, name, review_status, attributes
 FROM catalog.browse_items
 WHERE category_slug = 'cuadernos'
-ORDER BY subcategory, name;
+ORDER BY tipo, name;
 ```
 
 To review proposed store links:
@@ -144,6 +186,7 @@ same names. For an empty target configured in `.local/pgpass`:
 
 ```bash
 python3 scripts/psql_configured.py -- -f db/001_catalog.sql -f db/002_seed_catalog.sql
+cargo run -- migrate
 ```
 
 That step creates the schema and starter seed; it does not load `melqui.dump` or

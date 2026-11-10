@@ -1,0 +1,70 @@
+<div class="invitation-page">
+  <div class="breadcrumb"><a routerLink="/mis-listas">← Mis listas</a></div>
+  <section class="panel invitation-panel">
+    <div class="invitation-icon" aria-hidden="true">{{ done() ? '✓' : request ? '↗' : '✉' }}</div>
+    <p class="eyebrow">Compartir con confianza</p>
+    <h1>
+      {{ done() ? 'Solicitud enviada' : request ? 'Solicitar acceso' : 'Te invitaron a una lista' }}
+    </h1>
+    <p class="muted">
+      {{
+        done()
+          ? 'Tu solicitud está pendiente de aprobación.'
+          : request
+            ? 'Pide permiso para consultar esta lista escolar.'
+            : 'Acepta la invitación para colaborar con tu comunidad.'
+      }}
+    </p>
+    @if (session.user(); as user) {
+      <div class="connected-account">
+        <span class="account-avatar" aria-hidden="true">{{
+          user.display_name.slice(0, 1).toUpperCase()
+        }}</span>
+        <div>
+          <small>Estás conectado como</small><strong>{{ user.email }}</strong>
+        </div>
+        @if (!done()) {
+          <button class="text-button" [disabled]="busy()" (click)="changeAccount()">
+            Cambiar cuenta
+          </button>
+        }
+      </div>
+      @if (done()) {
+        <div class="notice success" role="status">
+          Solicitud enviada. La lista aparecerá en Mis listas cuando te den acceso.
+        </div>
+        <p class="permission-note">
+          El propietario o un editor revisará tu solicitud. Enviar la solicitud todavía no permite
+          abrir la lista.
+        </p>
+      } @else {
+        <div class="permission-note">
+          <strong>{{
+            request ? 'El acceso requiere aprobación' : 'Una invitación para tu cuenta'
+          }}</strong>
+          <p>
+            {{
+              request
+                ? 'El propietario o un editor debe aprobar tu solicitud y asignar tus permisos antes de que puedas ver la lista.'
+                : 'Solo la cuenta con el correo invitado puede aceptar este enlace. Recibirás el permiso de lectura o edición que te haya asignado quien invita.'
+            }}
+          </p>
+        </div>
+        @if (error()) {
+          <p class="notice error" role="alert">{{ error() }}</p>
+        }
+        <button class="btn invitation-submit" [disabled]="busy()" (click)="accept()">
+          {{ busy() ? 'Un momento…' : request ? 'Enviar solicitud' : 'Aceptar invitación' }}
+        </button>
+      }
+      <a routerLink="/mis-listas" class="btn secondary invitation-secondary">Ir a mis listas</a>
+    } @else {
+      <div class="notice info">Ingresa con el correo que recibió la invitación para continuar.</div>
+      <a class="btn invitation-submit" routerLink="/ingresar" [queryParams]="{ next: returnUrl }"
+        >Ingresar</a
+      ><a class="invitation-secondary" routerLink="/registro" [queryParams]="{ next: returnUrl }"
+        >Crear una cuenta</a
+      >
+    }
+  </section>
+</div>

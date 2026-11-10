@@ -2,9 +2,9 @@
 :root {
   --ink: #25374b;
   --muted: #5b6671;
-  --paper: #faf7f0;
-  --white: #fffefa;
-  --green: #315f44;
+  --paper: #f8f7f2;
+  --white: #ffffff;
+  --green: #356552;
   --sage: #e9eddf;
   --line: #dddcd2;
   --orange: #c4773c;
@@ -75,12 +75,12 @@ h3 {
   letter-spacing: -0.025em;
 }
 h1 {
-  font-size: clamp(2rem, 4vw, 3.2rem);
+  font-size: clamp(1.75rem, 3vw, 2.2rem);
   line-height: 1.1;
   margin-bottom: 1rem;
 }
 h2 {
-  font-size: 1.8rem;
+  font-size: 1.5rem;
 }
 h3 {
   font-size: 1.3rem;
@@ -241,21 +241,21 @@ button.primary {
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  border: 1px solid var(--ink);
+  border: 1px solid var(--green);
   border-radius: 0.55rem;
   padding: 0.72rem 1rem;
-  background: var(--ink);
+  background: var(--green);
   color: white;
   text-decoration: none;
   font-weight: 650;
   font-size: 0.9rem;
   line-height: 1.2;
-  min-height: 42px;
+  min-height: 44px;
   white-space: normal;
 }
 .btn:hover,
 button.primary:hover {
-  background: #354c64;
+  background: #294f40;
 }
 .btn.secondary {
   background: var(--white);

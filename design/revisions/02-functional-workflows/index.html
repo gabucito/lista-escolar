@@ -1,0 +1,338 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>Lista Escolar · Propuestas de flujos y formularios</title>
+<style>
+:root{--ink:#24384a;--green:#365d49;--sage:#e8eddf;--paper:#faf7ef;--line:#dcded3;--muted:#596773;--white:#fffefa}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:24px}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+a{color:var(--green);text-underline-offset:4px}
+button,a{-webkit-tap-highlight-color:transparent}
+button{font:inherit;cursor:pointer}
+a:focus-visible,button:focus-visible{outline:3px solid #bc662e;outline-offset:4px}
+button:disabled{cursor:default;opacity:.42}
+button,.card-actions a,.jump-links a{min-height:44px}
+.topbar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;background:var(--ink);color:white;padding:18px max(24px,calc((100vw - 1320px)/2))}
+.brand{font-family:Georgia,serif;font-size:24px;font-weight:700}.topbar p{margin:0;color:#d7e0dd;font-size:13px}
+.download-all{display:inline-flex;align-items:center;gap:12px;min-height:44px;padding:8px 16px;border:1px solid #a8baad;border-radius:8px;color:white;font-size:14px;font-weight:650;text-decoration:none}.download-all:hover{background:#365747}
+main{max-width:1368px;margin:auto;padding:48px 24px 64px}
+.hero{max-width:1000px}.eyebrow{text-transform:uppercase;letter-spacing:.15em;font-weight:750;font-size:12px;color:var(--green);margin:0 0 12px}
+h1,h2,h3{font-family:Georgia,"Times New Roman",serif;line-height:1.2;margin:0}
+h1{font-size:clamp(32px,4.5vw,54px);max-width:920px;letter-spacing:-.025em}
+.intro{max-width:800px;color:var(--muted);font-size:18px;margin:22px 0 0}
+.notice{display:flex;gap:14px;align-items:flex-start;background:var(--sage);border:1px solid #d4dcc7;padding:18px 22px;border-radius:12px;margin:28px 0}.notice strong{white-space:nowrap}.notice p{margin:0}
+.jump-links{display:flex;flex-wrap:wrap;gap:10px;margin:28px 0 14px}.jump-links a{display:inline-flex;align-items:center;padding:8px 16px;background:var(--white);border:1px solid var(--line);border-radius:999px;text-decoration:none;font-size:14px;font-weight:650}
+.jump-links a:hover{background:var(--sage)}
+.review-tools{display:flex;align-items:center;justify-content:space-between;gap:16px;color:var(--muted);font-size:13px}.review-tools p{margin:0}.refresh{border:0;background:transparent;color:var(--green);text-decoration:underline;text-underline-offset:4px;padding:8px 0;font-size:13px}
+.workflow{padding-top:52px}.section-heading{display:flex;align-items:flex-end;justify-content:space-between;gap:32px;margin:0 0 24px}.section-heading h2{font-size:30px}.section-heading>p{max-width:550px;color:var(--muted);margin:0}
+.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px}.editor-cards{grid-template-columns:repeat(2,minmax(0,1fr))}
+.proposal{min-width:0;border:1px solid var(--line);background:var(--white);border-radius:14px;overflow:hidden;box-shadow:0 4px 14px #26384a06;scroll-margin-top:24px}
+.priority{border-color:#93aa82;box-shadow:0 5px 18px #365d4910}
+.thumbnail{position:relative;display:block;aspect-ratio:4/3;background:#edece5;overflow:hidden;text-decoration:none}
+.editor-cards .thumbnail{aspect-ratio:16/10}
+.thumbnail img{position:relative;display:block;width:100%;height:100%;object-fit:contain;object-position:center;background:#f0f0eb;opacity:0;transition:opacity .15s}
+.thumbnail.loaded img{opacity:1}.image-placeholder{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:8px;color:#687467;font-size:14px}.image-placeholder>span:first-child{font-family:Georgia,serif;font-size:54px;color:#abb5a1}
+.number,.priority-label{position:absolute;z-index:1;top:14px;border-radius:7px;padding:5px 10px;font-size:13px;font-weight:750;background:var(--ink);color:#fff}
+.number{left:14px}.priority-label{right:14px;background:#f8fbf3;color:#365d49;border:1px solid #91a77e}
+.card-content{padding:22px}.card-content h3{font-size:23px}.card-content>p{color:var(--muted);font-size:14px;margin:12px 0 16px;min-height:44px}
+.card-actions{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:6px 16px}.card-actions a{display:inline-flex;align-items:center;font-size:13px}.open-link{font-weight:750;text-decoration:none}.prompt-link{color:var(--muted)}
+footer{border-top:1px solid var(--line);margin-top:56px;padding-top:24px;color:var(--muted);font-size:13px}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.skip-link{position:absolute;top:12px;left:12px;z-index:5;transform:translateY(-200%);background:white;padding:10px 16px;border-radius:8px}.skip-link:focus{transform:none}
+dialog{border:0;border-radius:14px;padding:0;width:calc(100vw - 32px);max-width:1440px;height:calc(100dvh - 32px);max-height:none;background:var(--white);color:var(--ink);overflow:hidden}
+dialog::backdrop{background:#15212ee8}
+.dialog-shell{display:flex;flex-direction:column;height:100%;min-height:0}.dialog-header{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:16px 22px;border-bottom:1px solid var(--line)}.dialog-title{min-width:0}.dialog-counter{font-size:12px;font-weight:750;color:var(--green);letter-spacing:.08em}.dialog-title h2{font:700 22px/1.25 Georgia,serif;margin-top:4px}.dialog-close,.nav-button{border:1px solid var(--line);background:white;color:var(--ink);border-radius:8px;padding:8px 16px;font-weight:650;white-space:nowrap}
+.dialog-stage{position:relative;display:flex;align-items:center;justify-content:center;flex:1;min-height:0;padding:14px;background:#e9e9e3;overflow:auto}.dialog-stage img{display:block;max-width:100%;max-height:100%;object-fit:contain}.dialog-stage.loading img{visibility:hidden}.dialog-message{position:absolute;max-width:340px;padding:24px;text-align:center;color:var(--muted);background:var(--white);border-radius:10px}.dialog-message[hidden]{display:none}
+.dialog-bottom{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px 22px;border-top:1px solid var(--line)}.dialog-links{display:flex;flex-wrap:wrap;justify-content:center;gap:6px 18px;font-size:13px}.dialog-links a{display:inline-flex;align-items:center;min-height:40px}
+.dialog-links a[hidden]{display:none}
+@media(max-width:1000px){.cards{grid-template-columns:repeat(2,minmax(0,1fr))}.section-heading{align-items:flex-start;flex-direction:column;gap:14px}.section-heading>p{max-width:720px}}
+@media(max-width:600px){main{padding:32px 16px 40px}.topbar{padding:16px}.intro{font-size:16px}.notice{display:block;padding:16px}.notice strong{display:block;margin-bottom:4px}.review-tools{align-items:flex-start;flex-direction:column;gap:0}.workflow{padding-top:38px}.section-heading h2{font-size:26px}.cards{grid-template-columns:minmax(0,1fr);gap:18px}.card-content{padding:18px}.card-content>p{min-height:0}.jump-links{gap:8px}.jump-links a{font-size:13px;padding:8px 12px}.dialog-header{padding:12px;gap:10px}.dialog-title h2{font-size:17px}.dialog-close{padding:8px 12px}.dialog-bottom{flex-wrap:wrap;padding:10px 12px;gap:8px}.dialog-links{order:3;width:100%;font-size:12px}.nav-button{font-size:13px;padding:8px 14px}.dialog-stage{padding:6px}dialog{width:calc(100vw - 16px);height:calc(100dvh - 16px);border-radius:10px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.thumbnail img{transition:none}}
+</style>
+</head>
+<body>
+<a class="skip-link" href="#crear">Saltar a las propuestas</a>
+<header class="topbar"><div><div class="brand">Lista Escolar</div><p>Galería de revisión · Flujos y formularios</p></div><a class="download-all" href="lista-escolar-mockups.zip" download>Descargar todas las imágenes <span aria-hidden="true">↓</span></a></header>
+<main>
+  <p><a href="../03-implemented-workflows/index.html">Ver la comparación con la aplicación implementada →</a></p>
+  <div class="hero"><p class="eyebrow">Propuestas de diseño · 19 pantallas</p><h1>Todos los pasos de la app, a la vista.</h1><p class="intro">Esta galería reúne las propuestas para revisar cómo se encuentran los controles, se completan los formularios y se avanza en cada tarea.</p></div>
+  <div class="notice"><strong>Empieza por 01 y 02.</strong><p>El editor de escritorio y el de móvil priorizan la presencia del catálogo y la relación entre buscar un útil y agregarlo a la lista.</p></div>
+  <nav class="jump-links" aria-label="Grupos de propuestas"><a href="#crear">Crear y editar una lista</a><a href="#participar">Encontrar, usar y compartir</a><a href="#administrar">Administrar el catálogo y la comunidad</a><a href="#invitaciones">Completar una invitación</a></nav>
+  <div class="review-tools"><p>Abre una imagen para verla completa. Usa ← y → para recorrer las propuestas y Esc para cerrar.</p><button type="button" class="refresh" id="refresh-images">Actualizar imágenes</button></div>
+  <p class="sr-only" id="refresh-status" role="status"></p>
+  <noscript><p>Las imágenes y sus prompts se pueden abrir con los enlaces de cada tarjeta. Activa JavaScript para recorrerlas dentro de la galería.</p></noscript>
+  <section class="workflow" id="crear" aria-labelledby="crear-title"><div class="section-heading"><div><p class="eyebrow">01 — 04</p><h2 id="crear-title">Crear y editar una lista</h2></div><p>Comienza por las dos vistas del editor. Son el centro de esta revisión: catálogo, lista y acciones de edición deben resultar fáciles de encontrar.</p></div><div class="cards editor-cards"><article class="proposal priority" id="01-editor-escritorio" data-index="0">
+  <a class="thumbnail" href="01-editor-escritorio.png" data-open="0" aria-label="Ver propuesta 01: Editor de listas · escritorio">
+    <span class="image-placeholder" aria-hidden="true"><span>01</span><span>Imagen en preparación</span></span>
+    <img src="01-editor-escritorio.png" alt="Propuesta 01: Editor de listas · escritorio" loading="eager" decoding="async">
+    <span class="number">01</span><span class="priority-label">Revisar primero</span>
+  </a>
+  <div class="card-content"><h3>Editor de listas · escritorio</h3><p>Catálogo visible, lista editable y acciones principales en una misma vista.</p>
+    <div class="card-actions"><a class="open-link" href="01-editor-escritorio.png" data-open="0">Ver imagen completa <span aria-hidden="true">↗</span></a><a class="prompt-link" href="01-editor-escritorio.prompt.txt" target="_blank" rel="noopener">Ver prompt<span class="sr-only"> de la propuesta 01</span></a></div>
+  </div>
+</article>
+<article class="proposal priority" id="02-editor-movil" data-index="1">
+  <a class="thumbnail" href="02-editor-movil.png" data-open="1" aria-label="Ver propuesta 02: Editor de listas · móvil">
+    <span class="image-placeholder" aria-hidden="true"><span>02</span><span>Imagen en preparación</span></span>
+    <img src="02-editor-movil.png" alt="Propuesta 02: Editor de listas · móvil" loading="eager" decoding="async">
+    <span class="number">02</span><span class="priority-label">Revisar primero</span>
+  </a>
+  <div class="card-content"><h3>Editor de listas · móvil</h3><p>Agregar útiles y revisar la lista con controles al alcance de la mano.</p>
+    <div class="card-actions"><a class="open-link" href="02-editor-movil.png" data-open="1">Ver imagen completa <span aria-hidden="true">↗</span></a><a class="prompt-link" href="02-editor-movil.prompt.txt" target="_blank" rel="noopener">Ver prompt<span class="sr-only"> de la propuesta 02</span></a></div>
+  </div>
+</article>
+<article class="proposal" id="03-datos-y-util-personalizado" data-index="2">
+  <a class="thumbnail" href="03-datos-y-util-personalizado-v2.png" data-open="2" aria-label="Ver propuesta 03: Datos del curso y útil personalizado">
+    <span class="image-placeholder" aria-hidden="true"><span>03</span><span>Imagen en preparación</span></span>
+    <img src="03-datos-y-util-personalizado-v2.png" alt="Propuesta 03: Datos del curso y útil personalizado" loading="lazy" decoding="async">
+    <span class="number">03</span>
+  </a>
+  <div class="card-content"><h3>Datos del curso y útil personalizado</h3><p>Identificación del colegio, características del útil y elección de compartirlo.</p>
+    <div class="card-actions"><a class="open-link" href="03-datos-y-util-personalizado-v2.png" data-open="2">Ver imagen completa <span aria-hidden="true">↗</span></a><a class="prompt-link" href="03-datos-y-util-personalizado.prompt.txt" target="_blank" rel="noopener">Prompt inicial<span class="sr-only"> de la propuesta 03</span></a><a class="prompt-link" href="03-datos-y-util-personalizado.revision.prompt.txt" target="_blank" rel="noopener">Prompt de revisión<span class="sr-only"> de la propuesta 03</span></a></div>
+  </div>
+</article>
+<article class="proposal" id="04-importar-planilla" data-index="3">
+  <a class="thumbnail" href="04-importar-planilla-v2.png" data-open="3" aria-label="Ver propuesta 04: Importar una planilla">
+    <span class="image-placeholder" aria-hidden="true"><span>04</span><span>Imagen en preparación</span></span>
+    <img src="04-importar-planilla-v2.png" alt="Propuesta 04: Importar una planilla" loading="lazy" decoding="async">
+    <span class="number">04</span>
+  </a>
+  <div class="card-content"><h3>Importar una planilla</h3><p>Elegir columnas, revisar coincidencias y confirmar los artículos incluidos.</p>
+    <div class="card-actions"><a class="open-link" href="04-importar-planilla-v2.png" data-open="3">Ver imagen completa <span aria-hidden="true">↗</span></a><a class="prompt-link" href="04-importar-planilla.prompt.txt" target="_blank" rel="noopener">Prompt inicial<span class="sr-only"> de la propuesta 04</span></a><a class="prompt-link" href="04-importar-planilla.revision.prompt.txt" target="_blank" rel="noopener">Prompt de revisión<span class="sr-only"> de la propuesta 04</span></a></div>
+  </div>
+</article></div></section>
+<section class="workflow" id="participar" aria-labelledby="participar-title"><div class="section-heading"><div><p class="eyebrow">05 — 11</p><h2 id="participar-title">Encontrar, usar y compartir</h2></div><p>El recorrido de una familia o colaborador, desde encontrar la lista hasta conservar su avance y compartirla.</p></div><div class="cards"><article class="proposal" id="05-buscar-listas" data-index="4">
+  <a class="thumbnail" href="05-buscar-listas.png" data-open="4" aria-label="Ver propuesta 05: Buscar listas">
+    <span class="image-placeholder" aria-hidden="true"><span>05</span><span>Imagen en preparación</span></span>
+    <img src="05-buscar-listas.png" alt="Propuesta 05: Buscar listas" loading="lazy" decoding="async">
+    <span class="number">05</span>
+  </a>
+  <div class="card-content"><h3>Buscar listas</h3><p>Encontrar colegio, curso y año; distinguir los resultados por ubicación.</p>
+    <div class="card-actions"><a class="open-link" href="05-buscar-listas.png" data-open="4">Ver imagen completa <span aria-hidden="true">↗</span></a><a class="prompt-link" href="05-buscar-listas.prompt.txt" target="_blank" rel="noopener">Ver prompt<span class="sr-only"> de la propuesta 05</span></a></div>
+  </div>
+</article>
+<article class="proposal" id="06-mis-listas" data-index="5">
+  <a class="thumbnail" href="06-mis-listas.png" data-open="5" aria-label="Ver propuesta 06: Mis listas">
+    <span class="image-placeholder" aria-hidden="true"><span>06</span><span>Imagen en preparación</span></span>
+    <img src="06-mis-listas.png" alt="Propuesta 06: Mis listas" loading="lazy" decoding="async">
+    <span class="number">06</span>
+  </a>
+  <div class="card-content"><h3>Mis listas</h3><p>Retomar borradores, abrir listas propias y comenzar desde una plantilla.</p>
+    <div class="card-actions"><a class="open-link" href="06-mis-listas.png" data-open="5">Ver imagen completa <span aria-hidden="true">↗</span></a><a class="prompt-link" href="06-mis-listas.prompt.txt" target="_blank" rel="noopener">Ver prompt<span class="sr-only"> de la propuesta 06</span></a></div>
+  </div>
+</article>
+<article class="proposal" id="07-acceso" data-index="6">
+  <a class="thumbnail" href="07-acceso-v2.png" data-open="6" aria-label="Ver propuesta 07: Acceso y registro">
+    <span class="image-placeholder" aria-hidden="true"><span>07</span><span>Imagen en preparación</span></span>
+    <img src="07-acceso-v2.png" alt="Propuesta 07: Acceso y registro" loading="lazy" decoding="async">
+    <span class="number">07</span>
+  </a>
+  <div class="card-content"><h3>Acceso y registro</h3><p>Ingresar, crear una cuenta y continuar con la tarea pendiente.</p>
+    <div class="card-actions"><a class="open-link" href="07-acceso-v2.png" data-open="6">Ver imagen completa <span aria-hidden="true">↗</span></a><a class="prompt-link" href="07-acceso.prompt.txt" target="_blank" rel="noopener">Prompt inicial<span class="sr-only"> de la propuesta 07</span></a><a class="prompt-link" href="07-acceso.revision.prompt.txt" target="_blank" rel="noopener">Prompt de revisión<span class="sr-only"> de la propuesta 07</span></a></div>
+  </div>
+</article>
+<article class="proposal" id="08-lista-publicada" data-index="7">
+  <a class="thumbnail" href="08-lista-publicada-v2.png" data-open="7" aria-label="Ver propuesta 08: Lista publicada">
+    <span class="image-placeholder" aria-hidden="true"><span>08</span><span>Imagen en preparación</span></span>
+    <img src="08-lista-publicada-v2.png" alt="Propuesta 08: Lista publicada" loading="lazy" decoding="async">
+    <span class="number">08</span>
+  </a>
+  <div class="card-content"><h3>Lista publicada</h3><p>Consultar útiles, guardar el avance personal y revisar versiones.</p>
+    <div class="card-actions"><a class="open-link" href="08-lista-publicada-v2.png" data-open="7">Ver imagen completa <span aria-hidden="true">↗</span></a><a class="prompt-link" href="08-lista-publicada.prompt.txt" target="_blank" rel="noopener">Prompt inicial<span class="sr-only"> de la propuesta 08</span></a><a class="prompt-link" href="08-lista-publicada.revision.prompt.txt" target="_blank" rel="noopener">Prompt de revisión<span class="sr-only"> de la propuesta 08</span></a></div>
+  </div>
+</article>
+<article class="proposal" id="09-pdf" data-index="8">
+  <a class="thumbnail" href="09-pdf.png" data-open="8" aria-label="Ver propuesta 09: Preparar el PDF">
+    <span class="image-placeholder" aria-hidden="true"><span>09</span><span>Imagen en preparación</span></span>
+    <img src="09-pdf.png" alt="Propuesta 09: Preparar el PDF" loading="lazy" decoding="async">
+    <span class="number">09</span>
+  </a>
+  <div class="card-content"><h3>Preparar el PDF</h3><p>Comparar diseños, elegir papel y color, previsualizar y descargar.</p>
+    <div class="card-actions"><a class="open-link" href="09-pdf.png" data-open="8">Ver imagen completa <span aria-hidden="true">↗</span></a><a class="prompt-link" href="09-pdf.prompt.txt" target="_blank" rel="noopener">Ver prompt<span class="sr-only"> de la propuesta 09</span></a></div>
+  </div>
+</article>
+<article class="proposal" id="10-compartir" data-index="9">
+  <a class="thumbnail" href="10-compartir.png" data-open="9" aria-label="Ver propuesta 10: Compartir y colaborar">
+    <span class="image-placeholder" aria-hidden="true"><span>10</span><span>Imagen en preparación</span></span>
+    <img src="10-compartir.png" alt="Propuesta 10: Compartir y colaborar" loading="lazy" decoding="async">
+    <span class="number">10</span>
+  </a>
+  <div class="card-content"><h3>Compartir y colaborar</h3><p>Visibilidad, invitaciones, permisos y transferencia de propiedad.</p>
+    <div class="card-actions"><a class="open-link" href="10-compartir.png" data-open="9">Ver imagen completa <span aria-hidden="true">↗</span></a><a class="prompt-link" href="10-compartir.prompt.txt" target="_blank" rel="noopener">Ver prompt<span class="sr-only"> de la propuesta 10</span></a></div>
+  </div>
+</article>
+<article class="proposal" id="11-cuenta" data-index="10">
+  <a class="thumbnail" href="11-cuenta.png" data-open="10" aria-label="Ver propuesta 11: Mi cuenta">
+    <span class="image-placeholder" aria-hidden="true"><span>11</span><span>Imagen en preparación</span></span>
+    <img src="11-cuenta.png" alt="Propuesta 11: Mi cuenta" loading="lazy" decoding="async">
+    <span class="number">11</span>
+  </a>
+  <div class="card-content"><h3>Mi cuenta</h3><p>Perfil, preferencias de PDF y revisión de la eliminación de cuenta.</p>
+    <div class="card-actions"><a class="open-link" href="11-cuenta.png" data-open="10">Ver imagen completa <span aria-hidden="true">↗</span></a><a class="prompt-link" href="11-cuenta.prompt.txt" target="_blank" rel="noopener">Ver prompt<span class="sr-only"> de la propuesta 11</span></a></div>
+  </div>
+</article></div></section>
+<section class="workflow" id="administrar" aria-labelledby="administrar-title"><div class="section-heading"><div><p class="eyebrow">12 — 18</p><h2 id="administrar-title">Administrar el catálogo y la comunidad</h2></div><p>Formularios para mantener útiles, productos, reportes, plantillas y accesos administrativos.</p></div><div class="cards"><article class="proposal" id="12-admin-catalogo" data-index="11">
+  <a class="thumbnail" href="12-admin-catalogo-v2.png" data-open="11" aria-label="Ver propuesta 12: Administración · catálogo">
+    <span class="image-placeholder" aria-hidden="true"><span>12</span><span>Imagen en preparación</span></span>
+    <img src="12-admin-catalogo-v2.png" alt="Propuesta 12: Administración · catálogo" loading="lazy" decoding="async">
+    <span class="number">12</span>
+  </a>
+  <div class="card-content"><h3>Administración · catálogo</h3><p>Buscar, crear y revisar útiles genéricos, atributos y nombres alternativos.</p>
+    <div class="card-actions"><a class="open-link" href="12-admin-catalogo-v2.png" data-open="11">Ver imagen completa <span aria-hidden="true">↗</span></a><a class="prompt-link" href="12-admin-catalogo.prompt.txt" target="_blank" rel="noopener">Prompt inicial<span class="sr-only"> de la propuesta 12</span></a><a class="prompt-link" href="12-admin-catalogo.revision.prompt.txt" target="_blank" rel="noopener">Prompt de revisión<span class="sr-only"> de la propuesta 12</span></a></div>
+  </div>
+</article>
+<article class="proposal" id="13-admin-categorias" data-index="12">
+  <a class="thumbnail" href="13-admin-categorias.png" data-open="12" aria-label="Ver propuesta 13: Administración · categorías">
+    <span class="image-placeholder" aria-hidden="true"><span>13</span><span>Imagen en preparación</span></span>
+    <img src="13-admin-categorias.png" alt="Propuesta 13: Administración · categorías" loading="lazy" decoding="async">
+    <span class="number">13</span>
+  </a>
+  <div class="card-content"><h3>Administración · categorías</h3><p>Organizar categorías y subcategorías del catálogo compartido.</p>
+    <div class="card-actions"><a class="open-link" href="13-admin-categorias.png" data-open="12">Ver imagen completa <span aria-hidden="true">↗</span></a><a class="prompt-link" href="13-admin-categorias.prompt.txt" target="_blank" rel="noopener">Ver prompt<span class="sr-only"> de la propuesta 13</span></a></div>
+  </div>
+</article>
+<article class="proposal" id="14-admin-productos" data-index="13">
+  <a class="thumbnail" href="14-admin-productos.png" data-open="13" aria-label="Ver propuesta 14: Administración · productos">
+    <span class="image-placeholder" aria-hidden="true"><span>14</span><span>Imagen en preparación</span></span>
+    <img src="14-admin-productos.png" alt="Propuesta 14: Administración · productos" loading="lazy" decoding="async">
+    <span class="number">14</span>
+  </a>
+  <div class="card-content"><h3>Administración · productos</h3><p>Inspeccionar productos de origen y revisar sus vínculos con útiles genéricos.</p>
+    <div class="card-actions"><a class="open-link" href="14-admin-productos.png" data-open="13">Ver imagen completa <span aria-hidden="true">↗</span></a><a class="prompt-link" href="14-admin-productos.prompt.txt" target="_blank" rel="noopener">Ver prompt<span class="sr-only"> de la propuesta 14</span></a></div>
+  </div>
+</article>
+<article class="proposal" id="15-admin-reportes" data-index="14">
+  <a class="thumbnail" href="15-admin-reportes.png" data-open="14" aria-label="Ver propuesta 15: Administración · reportes">
+    <span class="image-placeholder" aria-hidden="true"><span>15</span><span>Imagen en preparación</span></span>
+    <img src="15-admin-reportes.png" alt="Propuesta 15: Administración · reportes" loading="lazy" decoding="async">
+    <span class="number">15</span>
+  </a>
+  <div class="card-content"><h3>Administración · reportes</h3><p>Revisar evidencia, registrar decisiones y atender solicitudes de privacidad.</p>
+    <div class="card-actions"><a class="open-link" href="15-admin-reportes.png" data-open="14">Ver imagen completa <span aria-hidden="true">↗</span></a><a class="prompt-link" href="15-admin-reportes.prompt.txt" target="_blank" rel="noopener">Ver prompt<span class="sr-only"> de la propuesta 15</span></a></div>
+  </div>
+</article>
+<article class="proposal" id="16-admin-plantillas" data-index="15">
+  <a class="thumbnail" href="16-admin-plantillas-v2.png" data-open="15" aria-label="Ver propuesta 16: Administración · plantillas">
+    <span class="image-placeholder" aria-hidden="true"><span>16</span><span>Imagen en preparación</span></span>
+    <img src="16-admin-plantillas-v2.png" alt="Propuesta 16: Administración · plantillas" loading="lazy" decoding="async">
+    <span class="number">16</span>
+  </a>
+  <div class="card-content"><h3>Administración · plantillas</h3><p>Crear y mantener listas iniciales por nivel escolar.</p>
+    <div class="card-actions"><a class="open-link" href="16-admin-plantillas-v2.png" data-open="15">Ver imagen completa <span aria-hidden="true">↗</span></a><a class="prompt-link" href="16-admin-plantillas.prompt.txt" target="_blank" rel="noopener">Prompt inicial<span class="sr-only"> de la propuesta 16</span></a><a class="prompt-link" href="16-admin-plantillas.revision.prompt.txt" target="_blank" rel="noopener">Prompt de revisión<span class="sr-only"> de la propuesta 16</span></a></div>
+  </div>
+</article>
+<article class="proposal" id="17-admin-colegios" data-index="16">
+  <a class="thumbnail" href="17-admin-colegios.png" data-open="16" aria-label="Ver propuesta 17: Administración · colegios">
+    <span class="image-placeholder" aria-hidden="true"><span>17</span><span>Imagen en preparación</span></span>
+    <img src="17-admin-colegios.png" alt="Propuesta 17: Administración · colegios" loading="lazy" decoding="async">
+    <span class="number">17</span>
+  </a>
+  <div class="card-content"><h3>Administración · colegios</h3><p>Asociar nombres alternativos considerando comuna y región.</p>
+    <div class="card-actions"><a class="open-link" href="17-admin-colegios.png" data-open="16">Ver imagen completa <span aria-hidden="true">↗</span></a><a class="prompt-link" href="17-admin-colegios.prompt.txt" target="_blank" rel="noopener">Ver prompt<span class="sr-only"> de la propuesta 17</span></a></div>
+  </div>
+</article>
+<article class="proposal" id="18-admin-cuentas" data-index="17">
+  <a class="thumbnail" href="18-admin-cuentas.png" data-open="17" aria-label="Ver propuesta 18: Administración · cuentas">
+    <span class="image-placeholder" aria-hidden="true"><span>18</span><span>Imagen en preparación</span></span>
+    <img src="18-admin-cuentas.png" alt="Propuesta 18: Administración · cuentas" loading="lazy" decoding="async">
+    <span class="number">18</span>
+  </a>
+  <div class="card-content"><h3>Administración · cuentas</h3><p>Crear y administrar los accesos al portal administrativo.</p>
+    <div class="card-actions"><a class="open-link" href="18-admin-cuentas.png" data-open="17">Ver imagen completa <span aria-hidden="true">↗</span></a><a class="prompt-link" href="18-admin-cuentas.prompt.txt" target="_blank" rel="noopener">Ver prompt<span class="sr-only"> de la propuesta 18</span></a></div>
+  </div>
+</article></div></section>
+<section class="workflow" id="invitaciones" aria-labelledby="invitaciones-title"><div class="section-heading"><div><p class="eyebrow">19 — 19</p><h2 id="invitaciones-title">Completar una invitación</h2></div><p>El paso de entrada para quienes reciben una invitación o solicitan permiso.</p></div><div class="cards"><article class="proposal" id="19-invitaciones" data-index="18">
+  <a class="thumbnail" href="19-invitaciones.png" data-open="18" aria-label="Ver propuesta 19: Aceptar invitaciones y solicitudes">
+    <span class="image-placeholder" aria-hidden="true"><span>19</span><span>Imagen en preparación</span></span>
+    <img src="19-invitaciones.png" alt="Propuesta 19: Aceptar invitaciones y solicitudes" loading="lazy" decoding="async">
+    <span class="number">19</span>
+  </a>
+  <div class="card-content"><h3>Aceptar invitaciones y solicitudes</h3><p>Entender el permiso ofrecido y completar el acceso a una lista.</p>
+    <div class="card-actions"><a class="open-link" href="19-invitaciones.png" data-open="18">Ver imagen completa <span aria-hidden="true">↗</span></a><a class="prompt-link" href="19-invitaciones.prompt.txt" target="_blank" rel="noopener">Ver prompt<span class="sr-only"> de la propuesta 19</span></a></div>
+  </div>
+</article></div></section>
+  <footer>Propuestas para revisión funcional y visual. Cada imagen conserva su prompt de diseño para que puedas revisar la intención y los detalles solicitados.</footer>
+</main>
+<dialog id="viewer" aria-labelledby="viewer-title" aria-describedby="viewer-help">
+  <div class="dialog-shell">
+    <header class="dialog-header"><div class="dialog-title"><div class="dialog-counter" id="viewer-counter"></div><h2 id="viewer-title"></h2></div><button type="button" class="dialog-close" id="close-viewer" autofocus>Cerrar <span aria-hidden="true">×</span></button></header>
+    <p class="sr-only" id="viewer-help">Usa las flechas izquierda y derecha para cambiar de propuesta. Pulsa Escape para volver a la galería.</p>
+    <div class="dialog-stage" id="viewer-stage"><p class="dialog-message" id="viewer-message" role="status"></p><img id="viewer-image" alt=""></div>
+    <div class="dialog-bottom"><button type="button" class="nav-button" id="previous-image">← Anterior</button><div class="dialog-links"><a id="original-image" target="_blank" rel="noopener">Abrir imagen original ↗</a><a id="original-prompt" target="_blank" rel="noopener">Ver prompt</a><a id="revision-prompt" target="_blank" rel="noopener" hidden>Prompt de revisión</a></div><button type="button" class="nav-button" id="next-image">Siguiente →</button></div>
+  </div>
+</dialog>
+<script>
+const proposals = [{"slug":"01-editor-escritorio","title":"Editor de listas · escritorio"},{"slug":"02-editor-movil","title":"Editor de listas · móvil"},{"slug":"03-datos-y-util-personalizado","title":"Datos del curso y útil personalizado"},{"slug":"04-importar-planilla","title":"Importar una planilla"},{"slug":"05-buscar-listas","title":"Buscar listas"},{"slug":"06-mis-listas","title":"Mis listas"},{"slug":"07-acceso","title":"Acceso y registro"},{"slug":"08-lista-publicada","title":"Lista publicada"},{"slug":"09-pdf","title":"Preparar el PDF"},{"slug":"10-compartir","title":"Compartir y colaborar"},{"slug":"11-cuenta","title":"Mi cuenta"},{"slug":"12-admin-catalogo","title":"Administración · catálogo"},{"slug":"13-admin-categorias","title":"Administración · categorías"},{"slug":"14-admin-productos","title":"Administración · productos"},{"slug":"15-admin-reportes","title":"Administración · reportes"},{"slug":"16-admin-plantillas","title":"Administración · plantillas"},{"slug":"17-admin-colegios","title":"Administración · colegios"},{"slug":"18-admin-cuentas","title":"Administración · cuentas"},{"slug":"19-invitaciones","title":"Aceptar invitaciones y solicitudes"}];
+const dialog = document.getElementById('viewer');
+const revisedProposals = new Set(['03-datos-y-util-personalizado', '04-importar-planilla', '07-acceso', '08-lista-publicada', '12-admin-catalogo', '16-admin-plantillas']);
+const imagePath = item => item.slug + (revisedProposals.has(item.slug) ? '-v2' : '') + '.png';
+const fullImage = document.getElementById('viewer-image');
+const stage = document.getElementById('viewer-stage');
+const message = document.getElementById('viewer-message');
+const previous = document.getElementById('previous-image');
+const next = document.getElementById('next-image');
+let current = 0;
+let returnFocus;
+let cacheTag = '';
+
+function showProposal(index) {
+  current = index;
+  const item = proposals[current], number = String(current + 1).padStart(2, '0');
+  document.getElementById('viewer-counter').textContent = number + ' / ' + proposals.length + ' · PROPUESTA DE DISEÑO';
+  document.getElementById('viewer-title').textContent = item.title;
+  document.getElementById('original-image').href = imagePath(item);
+  document.getElementById('original-prompt').href = item.slug + '.prompt.txt';
+  const revisionPrompt = document.getElementById('revision-prompt');
+  revisionPrompt.hidden = !revisedProposals.has(item.slug);
+  revisionPrompt.href = item.slug + '.revision.prompt.txt';
+  document.getElementById('original-prompt').textContent = revisedProposals.has(item.slug) ? 'Prompt inicial' : 'Ver prompt';
+  previous.disabled = current === 0;
+  next.disabled = current === proposals.length - 1;
+  message.textContent = 'Cargando la propuesta…';
+  message.hidden = false;
+  stage.classList.add('loading');
+  fullImage.alt = 'Propuesta ' + number + ': ' + item.title;
+  fullImage.src = imagePath(item) + cacheTag;
+}
+function closeViewer() { dialog.close(); }
+fullImage.addEventListener('load', () => { stage.classList.remove('loading'); message.hidden = true; });
+fullImage.addEventListener('error', () => { message.textContent = 'Esta imagen está en preparación. Puedes revisar el prompt o pasar a la siguiente propuesta.'; message.hidden = false; });
+
+document.querySelectorAll('[data-open]').forEach(link => {
+  link.addEventListener('click', event => {
+    if (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey || typeof dialog.showModal !== 'function') return;
+    event.preventDefault();
+    returnFocus = link;
+    showProposal(Number(link.dataset.open));
+    dialog.showModal();
+  });
+});
+document.querySelectorAll('.thumbnail img').forEach(img => {
+  const display = () => img.parentElement.classList.toggle('loaded', img.complete && img.naturalWidth > 0);
+  img.addEventListener('load', display); img.addEventListener('error', display); display();
+});
+document.getElementById('close-viewer').addEventListener('click', closeViewer);
+previous.addEventListener('click', () => { if (current > 0) showProposal(current - 1); });
+next.addEventListener('click', () => { if (current < proposals.length - 1) showProposal(current + 1); });
+dialog.addEventListener('keydown', event => {
+  if (event.key === 'ArrowLeft' && current > 0) { event.preventDefault(); showProposal(current - 1); }
+  else if (event.key === 'ArrowRight' && current < proposals.length - 1) { event.preventDefault(); showProposal(current + 1); }
+  else if (event.key === 'Home') { event.preventDefault(); showProposal(0); }
+  else if (event.key === 'End') { event.preventDefault(); showProposal(proposals.length - 1); }
+});
+dialog.addEventListener('close', () => { fullImage.removeAttribute('src'); returnFocus?.focus({ preventScroll: true }); });
+dialog.addEventListener('click', event => { if (event.target === dialog) closeViewer(); });
+document.getElementById('refresh-images').addEventListener('click', () => {
+  cacheTag = '?review=' + Date.now();
+  document.querySelectorAll('.thumbnail img').forEach((img, index) => {
+    img.parentElement.classList.remove('loaded'); img.src = imagePath(proposals[index]) + cacheTag;
+  });
+  document.getElementById('refresh-status').textContent = 'Se actualizaron las imágenes de las 19 propuestas.';
+});
+</script>
+</body>
+</html>

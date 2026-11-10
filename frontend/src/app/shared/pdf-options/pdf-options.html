@@ -1,0 +1,126 @@
+@if (showLauncher()) {
+  <div class="pdf-entry">
+    <div>
+      <strong>Prepara tu PDF</strong
+      ><small>Elige diseño, papel y color junto a la vista previa.</small>
+    </div>
+    <button class="btn secondary" (click)="open()">Preparar PDF</button>
+  </div>
+}
+@if (opened()) {
+  <div class="modal-backdrop pdf-backdrop">
+    <section
+      class="pdf-workspace"
+      appModal
+      (dismissed)="close()"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Vista previa del PDF"
+    >
+      <header class="pdf-workspace-head">
+        <div>
+          <h2>Preparar PDF</h2>
+          <span>{{
+            draft() ? 'Vista previa del borrador · Sin publicar' : 'Versión ' + version()
+          }}</span>
+        </div>
+        <button
+          type="button"
+          class="btn secondary"
+          (click)="close()"
+          aria-label="Cerrar vista previa"
+        >
+          Cerrar <span aria-hidden="true">×</span>
+        </button>
+      </header>
+      <div class="pdf-workspace-body">
+        <div class="pdf-preview">
+          <div class="preview-toolbar">
+            <span
+              >{{ model().paper === 'LETTER' ? 'Carta' : 'A4' }} ·
+              {{ model().color ? 'Color' : 'Blanco y negro' }}</span
+            >
+            @if (rawUrl()) {
+              <a [href]="rawUrl()" target="_blank" rel="noopener">Abrir PDF en otra pestaña ↗</a>
+            }
+          </div>
+          @if (previewChanged()) {
+            <p class="preview-update" role="status">
+              Cambiaste las opciones. Actualiza la vista previa para ver el resultado.
+            </p>
+          }
+          @if (rawUrl()) {
+            <app-pdf-preview [url]="rawUrl()" />
+          } @else {
+            <div class="pdf-placeholder" role="status">
+              <span aria-hidden="true">▤</span>
+              <p>
+                {{
+                  busy()
+                    ? 'Preparando la vista previa…'
+                    : 'Actualiza la vista previa para ver tu documento.'
+                }}
+              </p>
+            </div>
+          }
+        </div>
+        <aside class="pdf-settings">
+          <h3>Opciones de impresión</h3>
+          @if (api.error()) {
+            <p class="notice error" role="alert">{{ api.error() }}</p>
+          }
+          @if (api.notice()) {
+            <p class="notice success" role="status">{{ api.notice() }}</p>
+          }
+          <fieldset [disabled]="busy()">
+            <legend>Diseño de la lista</legend>
+            <div class="pdf-layouts" role="group" aria-label="Diseño del PDF">
+              @for (layout of layouts; track layout.value) {
+                <button
+                  type="button"
+                  class="pdf-choice"
+                  [class.selected]="model().layout === layout.value"
+                  [attr.aria-pressed]="model().layout === layout.value"
+                  (click)="choose(layout.value)"
+                >
+                  <svg viewBox="0 0 60 58" aria-hidden="true">
+                    <rect x="8" y="2" width="44" height="53" fill="#fff" stroke="#96aa96" />
+                    <path [attr.d]="layout.path" stroke="#719178" stroke-width="4" fill="none" />
+                  </svg>
+                  {{ layout.name }}
+                </button>
+              }
+            </div>
+            <label class="paper-field"
+              >Papel<select [formField]="fields.paper">
+                <option value="LETTER">Carta</option>
+                <option value="A4">A4</option>
+              </select></label
+            >
+            <label class="check"
+              ><input type="checkbox" [formField]="fields.color" />En color</label
+            >
+            <p class="print-note">Las casillas quedan vacías para marcar en papel.</p>
+            @if (session.user()) {
+              <label class="check remember"
+                ><input type="checkbox" [formField]="downloadFields.remember" />Guardar mis
+                preferencias al descargar</label
+              >
+              <button type="button" class="text-button save-defaults" (click)="savePreferences()">
+                Guardar estas preferencias
+              </button>
+            }
+          </fieldset>
+          <div class="pdf-actions">
+            <button class="btn" [disabled]="busy()" (click)="generate(false)">
+              {{ busy() ? 'Preparando…' : 'Descargar PDF' }}
+            </button>
+            <button class="btn secondary" [disabled]="busy()" (click)="generate(true)">
+              Actualizar vista previa
+            </button>
+          </div>
+        </aside>
+      </div>
+    </section>
+  </div>
+}

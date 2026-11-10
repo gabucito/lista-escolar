@@ -2,6 +2,8 @@ pub mod admin;
 pub mod assets;
 pub mod auth;
 pub mod catalog;
+pub mod catalog_browse;
+pub mod category_attributes;
 pub mod community;
 pub mod config;
 pub mod error;

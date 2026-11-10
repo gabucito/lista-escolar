@@ -1,0 +1,49 @@
+{
+  "created_at": "2026-11-10",
+  "status": "selected-b-m1-implemented",
+  "generator": "Built-in image_gen.imagegen",
+  "selected_desktop": "B · Comparar y agregar",
+  "desktop_reference": "../09-sidenav-design-exploration/02-comparar-y-agregar.png",
+  "mobile_references": [
+    "../08-shared-catalog-sidenav/390-notebook-filters.png",
+    "../08-shared-catalog-sidenav/390-initial-categories.png"
+  ],
+  "recommended_mobile": "M1 · Filas legibles",
+  "mobile_selection_by_user": "M1 · Filas legibles",
+  "images": [
+    {
+      "title": "M1 · Filas legibles",
+      "file": "01-movil-filas-legibles-v3.png",
+      "prompts": [
+        "01-movil-filas-legibles.prompt.txt",
+        "01-movil-filas-legibles.refinement.prompt.txt",
+        "01-movil-filas-legibles.cleanup.prompt.txt"
+      ],
+      "earlier_versions": [
+        "01-movil-filas-legibles.png",
+        "01-movil-filas-legibles-v2.png"
+      ],
+      "width": 1536,
+      "height": 1024,
+      "sha256": "4aa7acdc2e01204e47e1809cde99e60a0190f284e8ef37578866dd5b14b146eb",
+      "original": "/home/gabucito/.codex/generated_images/01a1c343-f58b-76c1-9606-e1d7048899fb/exec-cfffac0a-0740-4339-86a7-73241e4cf78d.png"
+    },
+    {
+      "title": "M2 · Panel deslizante",
+      "file": "02-movil-panel-deslizante-v2.png",
+      "prompts": [
+        "02-movil-panel-deslizante.prompt.txt",
+        "02-movil-panel-deslizante.refinement.prompt.txt"
+      ],
+      "earlier_versions": [
+        "02-movil-panel-deslizante.png"
+      ],
+      "width": 1536,
+      "height": 1024,
+      "sha256": "c51bad16e8419bd592638f45537e02ca33e516472d34087f71772611ec517326",
+      "original": "/home/gabucito/.codex/generated_images/01a1c343-f58b-76c1-9606-e1d7048899fb/exec-c367dfab-8bf7-4dbf-a99d-3811651acc4d.png"
+    }
+  ],
+  "implementation_gallery": "../11-implemented-responsive-comparison/index.html",
+  "implemented_at": "2026-11-10"
+}

@@ -1,0 +1,40 @@
+{
+  "created_at": "2026-11-10",
+  "status": "implemented-browser-captures",
+  "source": "Local Angular/Rust app with isolated QA PostgreSQL",
+  "screenshots": [
+    {
+      "file": "1366-initial-categories.png",
+      "source": ".local/qa/catalog-sidenav/1366-initial-categories.png"
+    },
+    {
+      "file": "1366-notebook-five-results.png",
+      "source": ".local/qa/catalog-sidenav/1366-notebook-five-results.png"
+    },
+    {
+      "file": "1024-initial-categories.png",
+      "source": ".local/qa/catalog-sidenav/1024-initial-categories.png"
+    },
+    {
+      "file": "1024-notebook-five-results.png",
+      "source": ".local/qa/catalog-sidenav/1024-notebook-five-results.png"
+    },
+    {
+      "file": "390-initial-categories.png",
+      "source": ".local/qa/catalog-sidenav/390-initial-categories.png"
+    },
+    {
+      "file": "390-notebook-filters.png",
+      "source": ".local/qa/catalog-sidenav/390-notebook-filters.png"
+    },
+    {
+      "file": "320-initial-categories.png",
+      "source": ".local/qa/catalog-sidenav/320-initial-categories.png"
+    },
+    {
+      "file": "320-notebook-filters.png",
+      "source": ".local/qa/catalog-sidenav/320-notebook-filters.png"
+    }
+  ],
+  "validation": "../../../docs/VALIDATION.md"
+}

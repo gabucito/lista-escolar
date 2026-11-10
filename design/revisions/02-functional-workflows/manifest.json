@@ -1,0 +1,147 @@
+{
+  "created": "2026-11-10",
+  "tool": "built-in image_gen",
+  "use_case": "ui-mockup",
+  "kind": "design proposals",
+  "images": [
+    {
+      "id": "01-editor-escritorio",
+      "title": "Editor de listas · escritorio",
+      "purpose": "Catálogo amplio y lista editada visibles al mismo tiempo.",
+      "file": "01-editor-escritorio.png",
+      "prompt": "01-editor-escritorio.prompt.txt"
+    },
+    {
+      "id": "02-editor-movil",
+      "title": "Editor de listas · móvil",
+      "purpose": "Selector de útiles a pantalla completa y retorno claro a la lista.",
+      "file": "02-editor-movil.png",
+      "prompt": "02-editor-movil.prompt.txt"
+    },
+    {
+      "id": "03-datos-y-util-personalizado",
+      "title": "Datos de la lista y útil personalizado",
+      "purpose": "Formularios enfocados fuera del espacio principal del catálogo.",
+      "file": "03-datos-y-util-personalizado-v2.png",
+      "prompt": "03-datos-y-util-personalizado.prompt.txt",
+      "revision_prompt": "03-datos-y-util-personalizado.revision.prompt.txt"
+    },
+    {
+      "id": "04-importar-planilla",
+      "title": "Importar y revisar planilla",
+      "purpose": "Revisión por filas, errores concretos, columnas y paginación.",
+      "file": "04-importar-planilla-v2.png",
+      "prompt": "04-importar-planilla.prompt.txt",
+      "revision_prompt": "04-importar-planilla.revision.prompt.txt"
+    },
+    {
+      "id": "05-buscar-listas",
+      "title": "Buscar listas",
+      "purpose": "Filtros y resultados visibles desde el primer tramo de la página.",
+      "file": "05-buscar-listas.png",
+      "prompt": "05-buscar-listas.prompt.txt"
+    },
+    {
+      "id": "06-mis-listas",
+      "title": "Mis listas",
+      "purpose": "Acceso directo a borradores, listas compartidas y plantillas.",
+      "file": "06-mis-listas.png",
+      "prompt": "06-mis-listas.prompt.txt"
+    },
+    {
+      "id": "07-acceso",
+      "title": "Ingresar y crear cuenta",
+      "purpose": "Formularios breves, validación junto al campo y acción clara.",
+      "file": "07-acceso-v2.png",
+      "prompt": "07-acceso.prompt.txt",
+      "revision_prompt": "07-acceso.revision.prompt.txt"
+    },
+    {
+      "id": "08-lista-publicada",
+      "title": "Lista publicada",
+      "purpose": "Checklist, comentarios y reporte organizados por tarea.",
+      "file": "08-lista-publicada-v2.png",
+      "prompt": "08-lista-publicada.prompt.txt",
+      "revision_prompt": "08-lista-publicada.revision.prompt.txt"
+    },
+    {
+      "id": "09-pdf",
+      "title": "Configurar y descargar PDF",
+      "purpose": "Vista previa grande con opciones compactas junto al documento.",
+      "file": "09-pdf.png",
+      "prompt": "09-pdf.prompt.txt"
+    },
+    {
+      "id": "10-compartir",
+      "title": "Compartir y administrar acceso",
+      "purpose": "Visibilidad, invitaciones y colaboradores con acciones diferenciadas.",
+      "file": "10-compartir.png",
+      "prompt": "10-compartir.prompt.txt"
+    },
+    {
+      "id": "19-invitaciones",
+      "title": "Aceptar invitación y solicitar acceso",
+      "purpose": "Contexto de la lista, cuenta destinataria y permiso antes de confirmar.",
+      "file": "19-invitaciones.png",
+      "prompt": "19-invitaciones.prompt.txt"
+    },
+    {
+      "id": "11-cuenta",
+      "title": "Cuenta y preferencias",
+      "purpose": "Perfil e impresión separados de la revisión de eliminación.",
+      "file": "11-cuenta.png",
+      "prompt": "11-cuenta.prompt.txt"
+    },
+    {
+      "id": "12-admin-catalogo",
+      "title": "Administración · catálogo",
+      "purpose": "Resultados y revisión del útil en el mismo espacio de trabajo.",
+      "file": "12-admin-catalogo-v2.png",
+      "prompt": "12-admin-catalogo.prompt.txt",
+      "revision_prompt": "12-admin-catalogo.revision.prompt.txt"
+    },
+    {
+      "id": "13-admin-categorias",
+      "title": "Administración · categorías",
+      "purpose": "Árbol de categorías junto al formulario de edición.",
+      "file": "13-admin-categorias.png",
+      "prompt": "13-admin-categorias.prompt.txt"
+    },
+    {
+      "id": "14-admin-productos",
+      "title": "Administración · productos y vínculos",
+      "purpose": "Comparación de características antes de aprobar un equivalente.",
+      "file": "14-admin-productos.png",
+      "prompt": "14-admin-productos.prompt.txt"
+    },
+    {
+      "id": "15-admin-reportes",
+      "title": "Administración · reportes",
+      "purpose": "Evidencia del caso y decisión visibles con límites claros.",
+      "file": "15-admin-reportes.png",
+      "prompt": "15-admin-reportes.prompt.txt"
+    },
+    {
+      "id": "16-admin-plantillas",
+      "title": "Administración · plantillas",
+      "purpose": "Edición compacta de útiles, cantidades e instrucciones.",
+      "file": "16-admin-plantillas-v2.png",
+      "prompt": "16-admin-plantillas.prompt.txt",
+      "revision_prompt": "16-admin-plantillas.revision.prompt.txt"
+    },
+    {
+      "id": "17-admin-colegios",
+      "title": "Administración · colegios",
+      "purpose": "Nombre canónico, alternativa y localidad agrupados.",
+      "file": "17-admin-colegios.png",
+      "prompt": "17-admin-colegios.prompt.txt"
+    },
+    {
+      "id": "18-admin-cuentas",
+      "title": "Administración · acceso y cuentas",
+      "purpose": "Ingreso administrativo separado y creación de administrador.",
+      "file": "18-admin-cuentas.png",
+      "prompt": "18-admin-cuentas.prompt.txt"
+    }
+  ]
+}

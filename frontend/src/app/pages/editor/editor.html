@@ -1,38 +1,6 @@
-<div class="breadcrumb"><a routerLink="/mis-listas">← Mis listas</a></div>
-<header class="page-head editor-page-head">
-  <div>
-    <p class="eyebrow">Un útil a la vez</p>
-    <h1>
-      {{
-        mobile()
-          ? draft()?.current_version
-            ? 'Editar lista'
-            : 'Crear lista'
-          : draft()?.current_version
-            ? 'Editar tu lista'
-            : 'Crea la lista de tu curso'
-      }}
-    </h1>
-    <p class="editor-description">
-      Los cambios se guardan como borrador. Publica cuando esté lista para compartir.
-    </p>
-  </div>
-  <div class="actions">
-    @if (id()) {
-      <a class="btn secondary" [routerLink]="['/listas', id(), 'compartir']">Compartir</a>
-    }
-    <button
-      class="btn desktop-publish"
-      [disabled]="!ready() || busy() || readOnly() || draft()?.hidden || conflict()"
-      (click)="publish()"
-    >
-      {{ busy() ? 'Publicando…' : 'Publicar lista' }}
-    </button>
-  </div>
-</header>
 @if (accessLost()) {
   <div class="empty">
-    <h2>Ya no tienes acceso a este borrador</h2>
+    <h1>Ya no tienes acceso a este borrador</h1>
     <p>
       Los datos se han retirado de esta pantalla. Ingresa con una cuenta autorizada o solicita
       acceso al propietario.
@@ -42,19 +10,68 @@
 } @else if (!ready()) {
   <div class="loading" role="status">Preparando el borrador…</div>
 } @else {
-  @if (readOnly()) {
-    <div class="notice info">
-      Esta lista está archivada. Su propietario puede restaurarla desde Compartir.
+  <header class="workspace-heading">
+    <div class="list-identity">
+      <a routerLink="/mis-listas" class="back-link" aria-label="Volver a Mis listas">←</a>
+      <div>
+        <h1>
+          {{ model().school || 'Nueva lista escolar'
+          }}<span class="identity-course">
+            · {{ model().class_name || 'Completa el curso' }} · {{ model().school_year }}</span
+          >
+        </h1>
+        <div class="identity-status">
+          <span>{{
+            draft()?.visibility === 'private'
+              ? 'Privada'
+              : draft()?.current_version
+                ? 'Pública'
+                : 'Borrador · pública al publicar'
+          }}</span>
+          @if (draft()?.current_version) {
+            <a [routerLink]="['/listas', id()]">Ver versión {{ draft()?.current_version }}</a>
+          }
+          <a [routerLink]="['/listas', id(), 'compartir']">Compartir</a>
+          <button
+            class="text-button"
+            [disabled]="readOnly() || conflict() || busy()"
+            (click)="saveManually()"
+          >
+            Guardar ahora
+          </button>
+        </div>
+      </div>
+      <button class="btn quiet edit-details" (click)="openPanel('metadata')">Editar datos</button>
     </div>
+    <div class="desktop-workspace-actions">
+      <span class="save-state" role="status" [class.error]="saveState() === 'No se guardó'">{{
+        saveState() === 'Guardado' ? '✓ Guardado' : saveState()
+      }}</span>
+      <button class="btn secondary" [disabled]="busy() || conflict()" (click)="previewPdf()">
+        Vista previa
+      </button>
+      <button
+        class="btn"
+        [disabled]="busy() || readOnly() || draft()?.hidden || conflict()"
+        (click)="publish()"
+      >
+        {{ busy() ? 'Publicando…' : 'Publicar lista' }}
+      </button>
+    </div>
+  </header>
+  @if (readOnly()) {
+    <p class="notice info">
+      Esta lista está archivada. Su propietario puede restaurarla desde Compartir.
+    </p>
   }
   @if (draft()?.hidden) {
-    <div class="notice error">
+    <p class="notice error">
       La lista está oculta por moderación. Puedes preparar correcciones, pero no publicar hasta que
       se resuelva la revisión.
-    </div>
+    </p>
   }
   @if (conflict()) {
-    <section class="panel danger-zone" role="alert">
+    <section class="conflict-panel" role="alert">
       <h2>Hay cambios de otra persona</h2>
       <p>Tus cambios siguen en este editor. Compara el borrador guardado antes de decidir.</p>
       @if (latest(); as server) {
@@ -63,376 +80,171 @@
           <p>
             <strong>{{ server.content.school }}</strong> · {{ server.content.class_name }}
           </p>
+          <p>{{ server.content.instructions }}</p>
           <ul>
             @for (item of server.content.items; track item.id) {
-              <li>{{ item.quantity }} {{ item.unit }} · {{ item.name }} · {{ item.note }}</li>
+              <li>{{ item.quantity }} {{ item.unit }} · {{ item.name }}</li>
             }
           </ul>
-          <p>{{ server.content.instructions }}</p>
         </details>
       }
-      <div class="form-actions">
-        <button class="btn secondary" (click)="resolve(true)">Cargar borrador del servidor</button
-        ><button class="btn" (click)="resolve(false)">
-          Reaplicar mis cambios sobre el borrador actual
-        </button>
+      <div class="actions">
+        <button class="btn secondary" (click)="resolve(true)">Cargar versión del servidor</button
+        ><button class="btn" (click)="resolve(false)">Reaplicar mis cambios</button>
       </div>
     </section>
   }
-  <div class="editor-toolbar">
-    <span class="save-state" [class.error]="saveState() === 'No se guardó'"
-      ><span class="dot"></span>{{ saveState() }}</span
-    >
-    <div class="actions">
-      <span class="badge">{{
-        draft()?.visibility === 'private'
-          ? 'Privada'
-          : draft()?.current_version
-            ? 'Pública'
-            : 'Pública al publicar'
-      }}</span>
-      @if (draft()?.current_version) {
-        <a [routerLink]="['/listas', id()]">Ver versión {{ draft()?.current_version }}</a>
-      }
-      <button class="text-button" [disabled]="readOnly() || conflict()" (click)="saveManually()">
-        Guardar ahora
-      </button>
-    </div>
-  </div>
-  <div class="editor-layout">
-    <div>
-      <section class="panel editor-school" id="editor-details" tabindex="-1">
-        <details
-          class="responsive-disclosure school-disclosure"
-          [open]="!mobile() || !draft()?.content?.school"
-        >
-          <summary class="school-summary">
-            <span
-              ><small>Colegio</small
-              ><strong>{{ model().school || 'Completa el colegio' }}</strong></span
-            ><span
-              ><small>Curso</small
-              ><strong>{{ model().class_name || 'Completa el curso' }}</strong></span
-            ><span
-              ><small>Año escolar</small><strong>{{ model().school_year }}</strong></span
-            ><span class="summary-hint">Editar datos ⌄</span>
-          </summary>
-          <h2 class="disclosure-heading">El colegio y el curso</h2>
-          <div class="fields">
-            <label
-              >Colegio<input [formField]="fields.school" placeholder="Nombre del colegio" /></label
-            ><label
-              >Curso<input [formField]="fields.class_name" placeholder="Ej. 4° básico A" /></label
-            ><label>Año escolar<input type="number" [formField]="fields.school_year" /></label
-            ><label
-              >Comuna <small>Opcional</small
-              ><input
-                [formField]="fields.comuna"
-                list="editor-comunas"
-                (change)="localityChanged()" /></label
-            ><label
-              >Región <small>Opcional</small
-              ><input [formField]="fields.region" list="editor-regions" /></label
-            ><datalist id="editor-comunas">
-              @for (locality of localities; track locality.name) {
-                <option [value]="locality.name"></option>
-              }</datalist
-            ><datalist id="editor-regions">
-              @for (region of regions; track region) {
-                <option [value]="region"></option>
-              }</datalist
-            ><label
-              >Logo del colegio <small>PNG, JPG o WebP · máximo 2 MiB</small
-              ><input
-                type="file"
-                accept="image/png,image/jpeg,image/webp"
-                [disabled]="readOnly()"
-                (change)="uploadLogo($event)"
-            /></label>
-            @if (model().logo_id) {
-              <div class="actions">
-                <img
-                  class="school-logo"
-                  [src]="'/api/assets/' + model().logo_id"
-                  alt="Logo del colegio"
-                /><button class="text-button" [disabled]="readOnly()" (click)="removeLogo()">
-                  Quitar logo
-                </button>
-              </div>
-            }
-          </div>
-        </details>
-      </section>
-      <nav class="mobile-jumps" aria-label="Secciones del editor">
-        <button (click)="jumpTo('editor-details')" aria-label="Datos">▤<span>Datos</span></button
-        ><button (click)="jumpTo('editor-items')" aria-label="Útiles">☷<span>Útiles</span></button
-        ><button (click)="jumpTo('editor-add')" aria-label="Agregar">＋<span>Agregar</span></button
-        ><button (click)="jumpTo('editor-pdf')" aria-label="PDF">▧<span>PDF</span></button>
-      </nav>
-      <section class="panel" id="editor-items" tabindex="-1">
-        <div class="section-row" style="margin-top: 0">
-          <h2>Útiles de la lista</h2>
-          <span class="badge">{{ model().items.length }} útiles</span>
-        </div>
+  <button class="btn mobile-add" [disabled]="editingBlocked()" (click)="openPicker()">
+    ＋ Agregar útiles
+  </button>
+  <div class="editor-workbench">
+    @if (!mobile()) {
+      <ng-container [ngTemplateOutlet]="catalogPane" />
+    }
+    <section class="list-pane" id="editor-items" tabindex="-1" aria-labelledby="items-heading">
+      <header class="pane-heading">
+        <h2 id="items-heading">Mi lista</h2>
+        <span>{{ model().items.length }} {{ model().items.length === 1 ? 'útil' : 'útiles' }}</span>
+      </header>
+      <div class="list-scroll">
         @if (!model().items.length) {
-          <p class="muted">
-            Busca un útil en el catálogo o agrega uno personalizado para comenzar.
-          </p>
-        }
-        @for (item of fields.items; track $index; let i = $index) {
-          <div class="item-editor">
-            <div class="item-top">
-              <label>Útil<input [formField]="item.name" /></label
-              ><label>Cantidad<input [formField]="item.quantity" inputmode="decimal" /></label
-              ><label
-                >Unidad<select [formField]="item.unit">
-                  @for (unit of units; track unit) {
-                    <option [value]="unit">{{ unit }}</option>
-                  }
-                </select></label
-              >
-            </div>
-            @if (attributes(model().items[i].attributes)) {
-              <small>{{ attributes(model().items[i].attributes) }}</small>
-            }
-            <div class="item-bottom">
-              <label>Categoría<input [formField]="item.category" list="categories" /></label
-              ><label
-                >Nota opcional<input
-                  [formField]="item.note"
-                  placeholder="Tamaño, color, indicaciones…"
-              /></label>
-              <div class="order-actions">
-                <button
-                  class="icon-button"
-                  [disabled]="i === 0 || readOnly()"
-                  (click)="move(i, -1)"
-                  [attr.aria-label]="'Subir ' + model().items[i].name"
-                >
-                  ↑</button
-                ><button
-                  class="icon-button"
-                  [disabled]="i === model().items.length - 1 || readOnly()"
-                  (click)="move(i, 1)"
-                  [attr.aria-label]="'Bajar ' + model().items[i].name"
-                >
-                  ↓</button
-                ><button
-                  class="icon-button danger-text"
-                  [disabled]="readOnly()"
-                  (click)="remove(i)"
-                  [attr.aria-label]="'Quitar ' + model().items[i].name"
-                >
-                  ×
-                </button>
-              </div>
-            </div>
-          </div>
-        }
-        <datalist id="categories">
-          @for (category of categories(); track category.id) {
-            <option [value]="category.name"></option>
-          }
-        </datalist>
-      </section>
-      <section class="panel">
-        <h2>Antes de preparar la mochila</h2>
-        <label
-          >Indicaciones generales<textarea
-            [formField]="fields.instructions"
-            rows="4"
-            placeholder="Ej. Marcar todos los útiles con el nombre del estudiante."
-          ></textarea>
-        </label>
-      </section>
-      <section class="panel">
-        <h2>Importar desde una planilla</h2>
-        <p class="muted">
-          Excel o CSV, hasta 10 MiB. Revisarás las columnas y cada útil antes de agregarlo.
-        </p>
-        <div class="fields">
-          <label
-            >Archivo<input
-              type="file"
-              accept=".csv,.xlsx"
-              [disabled]="readOnly()"
-              (change)="chooseFile($event)" /></label
-          ><label
-            >Codificación CSV<select [formField]="uploadFields.encoding">
-              <option value="utf-8">UTF-8</option>
-              <option value="windows-1252">Windows-1252</option>
-            </select></label
-          ><label
-            >Separador CSV<select [formField]="uploadFields.delimiter">
-              <option value="">Detectar</option>
-              <option value=";">Punto y coma</option>
-              <option value=",">Coma</option>
-              <option value="&#9;">Tabulación</option>
-            </select></label
-          >
-        </div>
-        <button
-          class="btn secondary spaced"
-          [disabled]="!importFile() || importing() || readOnly() || conflict()"
-          (click)="uploadImport()"
-        >
-          {{ importing() ? 'Leyendo archivo…' : 'Revisar archivo' }}
-        </button>
-      </section>
-    </div>
-    <aside class="editor-aside">
-      <section class="panel soft" id="editor-add" tabindex="-1">
-        <details class="responsive-disclosure" [open]="!mobile()">
-          <summary>Catálogo de útiles <span aria-hidden="true">⌄</span></summary>
-          <h2 class="disclosure-heading">Encuentra un útil</h2>
-          <label class="visually-hidden" for="catalog-search">Buscar en catálogo</label
-          ><input
-            id="catalog-search"
-            [formField]="searchFields.q"
-            placeholder="Cuaderno, lápiz, regla…"
-          />
-          <div class="fields spaced">
-            <label
-              >Categoría del catálogo<select
-                [formField]="searchFields.category"
-                (change)="searchFields.subcategory().value.set('')"
-              >
-                <option value="">Todas</option>
-                @for (category of categories(); track category.id) {
-                  <option [value]="category.slug">{{ category.name }}</option>
-                }
-              </select></label
-            >
-            @if (browseSubcategories().length) {
-              <label
-                >Subcategoría<select [formField]="searchFields.subcategory">
-                  <option value="">Todas</option>
-                  @for (sub of browseSubcategories(); track sub.id) {
-                    <option [value]="sub.name">{{ sub.name }}</option>
-                  }
-                </select></label
-              >
+          <div class="list-empty">
+            <span aria-hidden="true">＋</span>
+            <h3>Empieza con el primer útil</h3>
+            <p>
+              Busca en el catálogo o crea uno personalizado. Puedes agregar el mismo útil varias
+              veces.
+            </p>
+            @if (mobile()) {
+              <button class="btn secondary" (click)="openPicker()">Buscar útiles</button>
             }
           </div>
-          <div class="catalog-results">
-            @if (catalogBusy()) {
-              <p class="muted">Buscando…</p>
-            }
-            @for (item of visibleCatalog(); track item.id) {
-              <button class="catalog-result" [disabled]="readOnly()" (click)="add(item)">
-                <span
-                  ><strong>{{ item.name }}</strong
-                  ><small
-                    >{{ item.category
-                    }}{{ item.subcategory ? ' · ' + item.subcategory : '' }}</small
+        }
+        @for (entry of model().items; track entry.id; let i = $index) {
+          @let item = fields.items[i];
+          <article class="supply-row" [attr.aria-label]="'Útil ' + (i + 1) + ': ' + entry.name">
+            <div class="supply-main">
+              <app-category-icon class="list-item-icon" [slug]="categorySlug(entry.category)" />
+              <label class="supply-name"
+                ><span class="visually-hidden">Útil</span
+                ><textarea
+                  [formField]="item.name"
+                  rows="1"
+                  (keydown.enter)="$event.preventDefault()"
+                ></textarea>
+              </label>
+              <div class="supply-amount">
+                <div class="quantity-control">
+                  <button
+                    class="quantity-step"
+                    [disabled]="editingBlocked()"
+                    (click)="stepQuantity(i, -1)"
+                    [attr.aria-label]="'Reducir cantidad de ' + entry.name"
                   >
-                  @if (attributes(item.attributes)) {
-                    <small>{{ attributes(item.attributes) }}</small>
-                  }
-                  @if (item.review_status === 'pending') {
-                    <span class="badge warm">Pendiente de revisión</span>
-                  }</span
-                ><span aria-hidden="true">＋</span>
-              </button>
-            }
-            @if (!catalogBusy() && !visibleCatalog().length) {
-              <p class="muted">No encontramos ese útil. Puedes agregarlo abajo.</p>
-            }
-          </div>
-        </details>
-      </section>
-      <section class="panel">
-        <details class="responsive-disclosure" [open]="!mobile()">
-          <summary>Agregar un útil personalizado <span aria-hidden="true">⌄</span></summary>
-          <h3 class="disclosure-heading">¿Falta un útil?</h3>
-          <div class="stack">
-            <label>Nombre<input [formField]="customFields.name" /></label>
-            <div class="fields">
-              <label
-                >Cantidad<input [formField]="customFields.quantity" inputmode="decimal" /></label
-              ><label
-                >Unidad<select [formField]="customFields.unit">
-                  @for (unit of units; track unit) {
-                    <option [value]="unit">{{ unit }}</option>
-                  }
-                </select></label
-              >
-            </div>
-            <label
-              >Categoría<select [formField]="customFields.category_id" (change)="categoryChanged()">
-                @for (category of categories(); track category.id) {
-                  <option [value]="'' + category.id">{{ category.name }}</option>
-                }
-              </select></label
-            >
-            @if (customSubcategories().length) {
-              <label
-                >Subcategoría del útil<select
-                  [formField]="customFields.subcategory_id"
-                  (change)="subcategoryChanged()"
-                >
-                  <option value="">Sin subcategoría</option>
-                  @for (sub of customSubcategories(); track sub.id) {
-                    <option [value]="'' + sub.id">{{ sub.name }}</option>
-                  }
-                </select></label
-              >
-            }
-            @for (attribute of attributeFields.rows; track $index; let a = $index) {
-              <div>
-                <label class="check"
-                  ><input type="checkbox" [formField]="attribute.include" />Agregar
-                  {{ customAttributes().rows[a].name }}</label
-                >
-                @if (customAttributes().rows[a].include) {
-                  @if (customAttributes().rows[a].data_type === 'boolean') {
-                    <label class="check"
-                      ><input type="checkbox" [formField]="attribute.checked" />Sí</label
-                    >
-                  } @else {
-                    <label
-                      >{{ customAttributes().rows[a].name }} {{ customAttributes().rows[a].unit
-                      }}<input
-                        [formField]="attribute.text"
-                        [attr.inputmode]="
-                          customAttributes().rows[a].data_type === 'number' ? 'decimal' : 'text'
-                        "
-                    /></label>
-                  }
-                }
+                    −
+                  </button>
+                  <label
+                    ><span class="visually-hidden">Cantidad</span
+                    ><input
+                      [formField]="item.quantity"
+                      inputmode="decimal"
+                      [attr.aria-invalid]="
+                        quantityIssue(entry.quantity, entry.unit) ? 'true' : null
+                      "
+                  /></label>
+                  <button
+                    class="quantity-step"
+                    [disabled]="editingBlocked()"
+                    (click)="stepQuantity(i, 1)"
+                    [attr.aria-label]="'Aumentar cantidad de ' + entry.name"
+                  >
+                    ＋
+                  </button>
+                </div>
+                <small>{{ entry.unit }}</small>
               </div>
+              <button
+                class="remove-supply"
+                [disabled]="editingBlocked()"
+                (click)="remove(i)"
+                [attr.aria-label]="'Quitar ' + entry.name"
+              >
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M4 6h16M9 6V3h6v3M6 6l1 15h10l1-15M10 10v7M14 10v7" />
+                </svg>
+              </button>
+            </div>
+            @if (quantityIssue(entry.quantity, entry.unit)) {
+              <small class="field-error">{{ quantityIssue(entry.quantity, entry.unit) }}</small>
             }
-            <label>Nota<input [formField]="customFields.note" /></label
-            ><label class="check"
-              ><input type="checkbox" [formField]="customFields.share" />Compartir con el
-              catálogo</label
-            ><small
-              >Si lo compartes, aparecerá como pendiente de revisión. De lo contrario, queda solo en
-              tu lista.</small
-            ><button class="btn secondary" [disabled]="readOnly()" (click)="addCustom()">
-              ＋ Agregar útil
-            </button>
-          </div>
-        </details>
-      </section>
-      <section class="panel" id="editor-pdf" tabindex="-1">
-        <details class="responsive-disclosure" [open]="!mobile()">
-          <summary>Diseña tu PDF <span aria-hidden="true">⌄</span></summary>
-          <h3 class="disclosure-heading">Así se verá en papel</h3>
-          <app-pdf-options [listId]="id()" [draft]="true" [beforeGenerate]="saveBeforePdf" />
-        </details>
-      </section>
-    </aside>
+            @if (comparisonSummary(entry.attributes, [], entry.name); as summary) {
+              <p class="supply-attributes">{{ summary }}</p>
+            }
+            <details class="supply-details">
+              <summary>{{ entry.note ? 'Nota: ' + entry.note : 'Nota y detalles' }}</summary>
+              <div class="supply-details-body">
+                <label class="supply-unit"
+                  ><span>Unidad</span
+                  ><select [formField]="item.unit">
+                    @for (unit of units; track unit) {
+                      <option [value]="unit">{{ unit }}</option>
+                    }
+                  </select></label
+                >
+
+                <label
+                  >Nota opcional<input
+                    [formField]="item.note"
+                    placeholder="Tamaño, color, indicaciones…"
+                /></label>
+                <label>Categoría<input [formField]="item.category" list="categories" /></label>
+                <div
+                  class="reorder-actions"
+                  role="group"
+                  [attr.aria-label]="'Orden de ' + entry.name"
+                >
+                  <button
+                    class="btn secondary small"
+                    [disabled]="i === 0 || editingBlocked()"
+                    (click)="move(i, -1)"
+                    [attr.aria-label]="'Subir ' + entry.name"
+                  >
+                    ↑ Subir
+                  </button>
+                  <button
+                    class="btn secondary small"
+                    [disabled]="i === model().items.length - 1 || editingBlocked()"
+                    (click)="move(i, 1)"
+                    [attr.aria-label]="'Bajar ' + entry.name"
+                  >
+                    ↓ Bajar
+                  </button>
+                </div>
+              </div>
+            </details>
+          </article>
+        }
+      </div>
+      <footer class="list-feedback" aria-live="polite">
+        @if (lastAdded(); as added) {
+          <span>✓ {{ added.name }} agregado.</span
+          ><button class="text-button" [disabled]="editingBlocked()" (click)="undoAdd()">
+            Deshacer
+          </button>
+        } @else {
+          <span>Los cambios se guardan como borrador.</span>
+        }
+      </footer>
+    </section>
   </div>
-}
-@if (ready() && !accessLost()) {
-  <div class="mobile-action-bar" role="region" aria-label="Acciones del borrador">
-    <span class="mobile-save-state" [class.error]="saveState() === 'No se guardó'">{{
+  <div class="editor-mobile-actions" role="region" aria-label="Acciones del borrador">
+    <span class="mobile-save-state" role="status" [class.error]="saveState() === 'No se guardó'">{{
       saveState() === 'Guardado' ? '✓ Guardado' : saveState()
-    }}</span
-    ><button class="btn secondary" [disabled]="busy() || conflict()" (click)="previewPdf()">
-      Vista previa</button
-    ><button
+    }}</span>
+    <button class="btn secondary" [disabled]="busy() || conflict()" (click)="previewPdf()">
+      Vista previa
+    </button>
+    <button
       class="btn"
       [disabled]="busy() || readOnly() || draft()?.hidden || conflict()"
       (click)="publish()"
@@ -440,191 +252,1049 @@
       {{ busy() ? 'Publicando…' : 'Publicar lista' }}
     </button>
   </div>
+  <app-pdf-options
+    [listId]="id()"
+    [draft]="true"
+    [beforeGenerate]="saveBeforePdf"
+    [showLauncher]="false"
+  />
+  <datalist id="categories">
+    @for (category of categories(); track category.id) {
+      <option [value]="category.name"></option>
+    }
+  </datalist>
 }
-@if (importPreview(); as preview) {
-  <div class="modal-backdrop">
+
+<ng-template #catalogPane>
+  <section
+    class="catalog-pane"
+    [class.drawer-open]="!mobile() && filtersOpen()"
+    [attr.aria-labelledby]="
+      mobile() && filtersOpen()
+        ? categoryChooserOpen()
+          ? 'category-chooser-heading'
+          : 'catalog-filter-heading'
+        : 'catalog-heading'
+    "
+    (focusin)="rememberCatalogFocus($event)"
+    (keydown)="catalogKeydown($event)"
+  >
+    @if (filtersOpen()) {
+      <aside
+        id="catalog-sidenav"
+        class="catalog-sidenav attribute-drawer"
+        [attr.aria-labelledby]="
+          categoryChooserOpen() ? 'category-chooser-heading' : 'catalog-filter-heading'
+        "
+      >
+        @if (!mobile()) {
+          <header class="attribute-panel-heading">
+            @if (categoryChooserOpen()) {
+              <h2 id="category-chooser-heading" tabindex="-1">Categorías</h2>
+            } @else {
+              <h2 id="catalog-filter-heading" tabindex="-1">{{ catalogScope() }}</h2>
+            }
+            <button
+              type="button"
+              class="drawer-close"
+              (click)="showCatalogResults()"
+              [attr.aria-label]="
+                mobile()
+                  ? 'Volver a los útiles'
+                  : categoryChooserOpen()
+                    ? 'Ocultar categorías'
+                    : 'Ocultar características'
+              "
+            >
+              <span aria-hidden="true">{{ mobile() ? '←' : '«' }}</span>
+            </button>
+          </header>
+        }
+        @if (categoryChooserOpen()) {
+          <div class="attribute-panel-body category-chooser-body">
+            <label
+              >Buscar categoría<input
+                id="category-chooser-search"
+                [formField]="categorySearchFields.q"
+                placeholder="Buscar por nombre"
+            /></label>
+            <div class="category-options" role="group" aria-label="Categorías del catálogo">
+              <button
+                type="button"
+                class="category-option"
+                [class.selected]="!search().category"
+                [attr.aria-pressed]="!search().category"
+                (click)="chooseCatalogCategory('')"
+              >
+                <app-category-icon slug="catalogo" /><span class="category-name"
+                  >Todo el catálogo</span
+                ><span class="category-arrow" aria-hidden="true">›</span>
+              </button>
+              @for (category of matchingCategories(); track category.id) {
+                <button
+                  type="button"
+                  class="category-option"
+                  [class.selected]="search().category === category.slug"
+                  [attr.aria-pressed]="search().category === category.slug"
+                  (click)="chooseCatalogCategory(category.slug)"
+                >
+                  <app-category-icon [slug]="category.slug" /><span class="category-name">{{
+                    category.name
+                  }}</span
+                  ><span class="category-arrow" aria-hidden="true">›</span>
+                </button>
+              }
+            </div>
+            @if (!matchingCategories().length) {
+              <p role="status">No hay categorías con ese nombre.</p>
+            }
+          </div>
+        } @else {
+          <button
+            type="button"
+            class="text-button category-back"
+            aria-label="Volver a categorías"
+            (click)="openCategoryChooser()"
+          >
+            <span>← Categorías</span><strong>{{ catalogScope() }}</strong>
+          </button>
+          <div class="attribute-panel-body">
+            @if (catalogError()) {
+              <p class="notice error" role="alert">{{ catalogError() }}</p>
+            }
+            <div class="facet-fields" [attr.aria-busy]="catalogBusy()">
+              @for (facet of visibleCatalogFacets(); track facet.key) {
+                <fieldset class="facet-group">
+                  <legend>{{ facet.name }}</legend>
+                  @if (mobile() && facet.data_type === 'text') {
+                    <div class="facet-select-heading">
+                      @if (facetSelection().values[facet.key]) {
+                        <button
+                          type="button"
+                          class="text-button facet-reset"
+                          (click)="removeAttributeFilter(facet.key)"
+                          [attr.aria-label]="'Limpiar ' + facet.name"
+                        >
+                          Limpiar
+                        </button>
+                      }
+                    </div>
+                    <select
+                      [id]="'facet-' + facet.key"
+                      [attr.aria-label]="facet.name"
+                      [formField]="facetFields.values[facet.key]"
+                      (change)="catalogAttributeChanged(facet.key, $event)"
+                    >
+                      <option value="">Cualquiera</option>
+                      @for (choice of facet.values; track encodeChoice(choice.value)) {
+                        <option
+                          [value]="encodeChoice(choice.value)"
+                          [disabled]="facetChoiceUnavailable(facet, choice.value, choice.count)"
+                        >
+                          {{ attributeChoice(choice.value, facet.unit) }} ({{ choice.count }})
+                        </option>
+                      }
+                    </select>
+                  } @else {
+                    <label
+                      class="facet-choice"
+                      [class.selected]="!facetSelection().values[facet.key]"
+                    >
+                      <input
+                        type="radio"
+                        [id]="'facet-' + facet.key + '-any'"
+                        value=""
+                        [formField]="facetFields.values[facet.key]"
+                        (change)="catalogAttributeChanged(facet.key, $event)"
+                      />
+                      <span>Cualquiera</span>
+                    </label>
+                    @for (
+                      choice of facet.values;
+                      track encodeChoice(choice.value);
+                      let i = $index
+                    ) {
+                      <label
+                        class="facet-choice"
+                        [class.selected]="
+                          facetSelection().values[facet.key] === encodeChoice(choice.value)
+                        "
+                        [class.unavailable]="
+                          facetChoiceUnavailable(facet, choice.value, choice.count)
+                        "
+                      >
+                        @if (facetChoiceUnavailable(facet, choice.value, choice.count)) {
+                          <input
+                            type="radio"
+                            disabled
+                            [attr.aria-label]="attributeChoice(choice.value, facet.unit)"
+                          />
+                        } @else {
+                          <input
+                            type="radio"
+                            [id]="'facet-' + facet.key + '-' + i"
+                            [value]="encodeChoice(choice.value)"
+                            [formField]="facetFields.values[facet.key]"
+                            (change)="catalogAttributeChanged(facet.key, $event)"
+                            [attr.aria-label]="attributeChoice(choice.value, facet.unit)"
+                          />
+                        }
+                        <span>{{ attributeChoice(choice.value, facet.unit) }}</span
+                        ><small aria-hidden="true">{{ choice.count }}</small>
+                      </label>
+                    }
+                  }
+                </fieldset>
+              }
+            </div>
+            @if (!catalogBusy() && !visibleCatalogFacets().length) {
+              <p class="filter-empty">
+                Todavía no hay características disponibles. Puedes buscar por nombre o crear un útil
+                personalizado.
+              </p>
+            }
+            @if (activeAttributes().length) {
+              <button
+                type="button"
+                class="text-button clear-attributes"
+                (click)="clearAttributeFilters()"
+              >
+                Limpiar características
+              </button>
+            }
+          </div>
+        }
+        @if (mobile() && !categoryChooserOpen()) {
+          <footer class="attribute-panel-footer">
+            <span role="status">{{
+              catalogBusy()
+                ? 'Actualizando…'
+                : catalogCountLabel() + (catalogTotal() === 1 ? ' encontrado' : ' encontrados')
+            }}</span>
+            <button
+              type="button"
+              class="btn"
+              [disabled]="catalogBusy()"
+              (click)="showCatalogResults()"
+            >
+              Ver {{ catalogCountLabel() }}
+            </button>
+          </footer>
+        }
+      </aside>
+    }
+    @if (!mobile() || !filtersOpen()) {
+      <div class="catalog-workspace">
+        <div class="catalog-tools">
+          <div class="catalog-breadcrumb-row">
+            @if (!mobile()) {
+              <h2 id="catalog-heading">{{ catalogScope() }}</h2>
+            }
+            <nav class="catalog-breadcrumb" aria-label="Ubicación en el catálogo">
+              <button
+                type="button"
+                (click)="openCategoryChooser()"
+                aria-controls="catalog-sidenav"
+                [attr.aria-expanded]="filtersOpen() && categoryChooserOpen()"
+              >
+                {{ mobile() ? catalogScope() : 'Catálogo' }}
+              </button>
+            </nav>
+            @if (mobile() || !filtersOpen()) {
+              <button
+                id="catalog-filter-toggle"
+                type="button"
+                class="btn secondary catalog-filter-toggle"
+                (click)="showCatalogFilters()"
+              >
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M3 7h18M3 17h18M8 4v6M16 14v6" />
+                </svg>
+                {{ selectedCategory() ? 'Filtros' : 'Categorías'
+                }}{{ activeAttributes().length ? ' (' + activeAttributes().length + ')' : '' }}
+              </button>
+            } @else {
+              <button
+                id="catalog-category-toggle"
+                type="button"
+                class="text-button category-toggle"
+                (click)="openCategoryChooser()"
+                aria-controls="catalog-sidenav"
+                [attr.aria-expanded]="categoryChooserOpen()"
+              >
+                Cambiar categoría
+              </button>
+            }
+          </div>
+          <label class="catalog-search"
+            ><span class="visually-hidden">Buscar en catálogo</span>
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <circle cx="10.5" cy="10.5" r="6.5" />
+              <path d="m16 16 5 5" />
+            </svg>
+            <input
+              id="catalog-search"
+              [formField]="searchFields.q"
+              placeholder="Buscar útiles o características"
+            />
+          </label>
+          @if (activeAttributes().length) {
+            <div class="active-filters" aria-label="Características seleccionadas">
+              @for (filter of activeAttributes(); track filter.key) {
+                <button
+                  type="button"
+                  (click)="removeAttributeFilter(filter.key)"
+                  [attr.aria-label]="'Quitar filtro ' + filter.name + ': ' + filter.label"
+                >
+                  {{ filter.label }} <span aria-hidden="true">×</span>
+                </button>
+              }
+            </div>
+          }
+          <div class="catalog-title-row">
+            @if (mobile()) {
+              <h2 id="catalog-heading" class="visually-hidden">Resultados del catálogo</h2>
+            }
+            <span class="catalog-count" aria-live="polite">{{
+              catalogBusy() ? 'Buscando…' : catalogCountLabel()
+            }}</span>
+            @if (hasCatalogFilters()) {
+              <button
+                class="text-button clear-catalog-filters"
+                type="button"
+                (click)="clearCatalogFilters()"
+              >
+                Limpiar filtros
+              </button>
+            }
+          </div>
+        </div>
+        <div class="catalog-scroll" id="catalog-results" [attr.aria-busy]="catalogBusy()">
+          @if (catalogBusy()) {
+            <p class="catalog-loading" role="status">Buscando…</p>
+          }
+          @if (catalogError()) {
+            <div class="catalog-error">
+              <p class="notice error" role="alert">{{ catalogError() }}</p>
+              <button class="btn secondary" (click)="findCatalog()">Reintentar búsqueda</button>
+            </div>
+          }
+          <div
+            class="catalog-grid"
+            [class.compare-one]="comparisonColumns().length === 1"
+            [class.compare-two]="comparisonColumns().length === 2"
+          >
+            @if (visibleCatalog().length) {
+              <div class="comparison-heading" aria-hidden="true">
+                <span>Útil</span>
+                @for (column of comparisonColumns(); track column.key) {
+                  <span [attr.data-attribute]="column.key">{{ comparisonLabel(column) }}</span>
+                }
+                <span></span>
+              </div>
+            }
+            @for (item of visibleCatalog(); track item.id) {
+              <article
+                class="catalog-result"
+                [class.just-added]="lastAdded()?.catalogId === item.id"
+              >
+                <div class="catalog-identity">
+                  <app-category-icon class="supply-symbol" [slug]="item.category_slug" />
+                  <div class="catalog-description">
+                    <strong>{{ item.name }}</strong>
+                    @if (
+                      comparisonSummary(item.attributes, comparisonColumns(), item.name) ||
+                      !comparisonColumns().length
+                    ) {
+                      <small>{{
+                        comparisonSummary(item.attributes, comparisonColumns(), item.name) ||
+                          item.category
+                      }}</small>
+                    }
+                    @if (item.review_status === 'pending') {
+                      <small>Pendiente de revisión</small>
+                    }
+                  </div>
+                </div>
+                <div class="comparison-values">
+                  @for (column of comparisonColumns(); track column.key) {
+                    <span class="comparison-value" [attr.data-attribute]="column.key"
+                      ><span class="comparison-label">{{ comparisonLabel(column) }}: </span
+                      >{{ comparisonValue(item.attributes, column) }}</span
+                    >
+                  }
+                </div>
+                <button
+                  class="btn add-catalog-item"
+                  [id]="'add-' + item.id"
+                  [disabled]="editingBlocked() || catalogBusy()"
+                  (click)="add(item)"
+                  [attr.aria-label]="'Agregar ' + item.name"
+                >
+                  <span aria-hidden="true">＋</span> Agregar
+                </button>
+              </article>
+            }
+          </div>
+          @if (!catalogBusy() && !catalogError() && !visibleCatalog().length) {
+            <div class="catalog-empty">
+              <h3>No hay útiles con esos filtros</h3>
+              <p>Cambia una característica, limpia los filtros o crea un útil personalizado.</p>
+              @if (hasCatalogFilters()) {
+                <button type="button" class="btn secondary" (click)="clearCatalogFilters()">
+                  Ver todo el catálogo
+                </button>
+              }
+              <button
+                class="btn secondary"
+                [disabled]="editingBlocked()"
+                (click)="openPanel('custom')"
+              >
+                Crear útil personalizado
+              </button>
+            </div>
+          }
+          @if (catalog().length < catalogTotal()) {
+            <div class="catalog-pagination">
+              <span>{{ catalog().length }} de {{ catalogTotal() }} útiles</span
+              ><button
+                id="catalog-load-more"
+                type="button"
+                class="btn secondary"
+                [attr.aria-disabled]="catalogBusy()"
+                (click)="loadMoreCatalog()"
+              >
+                {{ catalogBusy() ? 'Cargando…' : 'Ver más útiles' }}
+              </button>
+            </div>
+          }
+        </div>
+        <footer class="catalog-footer">
+          <div class="catalog-secondary-actions">
+            <button
+              class="btn secondary"
+              [disabled]="editingBlocked()"
+              (click)="openPanel('custom')"
+            >
+              ＋ Útil personalizado</button
+            ><button
+              class="btn secondary"
+              [disabled]="editingBlocked() || conflict()"
+              (click)="openPanel('upload')"
+            >
+              Importar Excel o CSV
+            </button>
+          </div>
+          @if (mobile()) {
+            @if (lastAdded(); as added) {
+              <div class="picker-feedback" aria-live="polite">
+                <span>✓ {{ added.name }} agregado.</span
+                ><button class="text-button" (click)="undoAdd()">Deshacer</button>
+              </div>
+            }
+            <button class="btn picker-done" (click)="closePanel()">
+              Ver mi lista · {{ model().items.length }}
+              {{ model().items.length === 1 ? 'útil' : 'útiles' }} →
+            </button>
+          }
+        </footer>
+      </div>
+    }
+  </section>
+</ng-template>
+
+@if (panel(); as activePanel) {
+  <div
+    class="modal-backdrop editor-overlay"
+    [class.picker-overlay]="activePanel === 'picker'"
+    [class.import-overlay]="activePanel === 'import'"
+  >
     <section
-      class="modal"
+      class="modal editor-dialog"
+      [class.picker-dialog]="activePanel === 'picker'"
+      [class.import-dialog]="activePanel === 'import'"
       appModal
-      (dismissed)="cancelImport()"
+      (dismissed)="closePanel()"
       role="dialog"
       aria-modal="true"
-      aria-labelledby="import-title"
+      [attr.aria-label]="
+        activePanel === 'picker'
+          ? 'Agregar útiles'
+          : activePanel === 'metadata'
+            ? 'Datos de la lista'
+            : activePanel === 'custom'
+              ? 'Útil personalizado'
+              : activePanel === 'upload'
+                ? 'Importar desde una planilla'
+                : 'Revisar importación'
+      "
     >
-      <div class="modal-head">
-        <h2 id="import-title">Revisar importación</h2>
+      <header class="dialog-heading" (keydown)="activePanel === 'picker' && catalogKeydown($event)">
+        <h2
+          [id]="
+            activePanel === 'picker' && filtersOpen()
+              ? categoryChooserOpen()
+                ? 'category-chooser-heading'
+                : 'catalog-filter-heading'
+              : activePanel === 'import'
+                ? 'import-title'
+                : 'editor-dialog-title'
+          "
+          tabindex="-1"
+        >
+          {{
+            activePanel === 'picker'
+              ? filtersOpen()
+                ? categoryChooserOpen()
+                  ? 'Categorías'
+                  : 'Características'
+                : 'Agregar útiles'
+              : activePanel === 'metadata'
+                ? 'Datos de la lista'
+                : activePanel === 'custom'
+                  ? 'Útil personalizado'
+                  : activePanel === 'upload'
+                    ? 'Importar desde una planilla'
+                    : mapped()
+                      ? 'Revisa antes de agregar'
+                      : 'Relaciona las columnas'
+          }}
+        </h2>
         <button
           class="modal-close"
-          aria-label="Cancelar importación"
-          [disabled]="importing()"
-          (click)="cancelImport()"
+          [attr.aria-label]="activePanel === 'import' ? 'Cancelar importación' : 'Cerrar panel'"
+          [disabled]="importing() || customBusy() || metadataBusy()"
+          (click)="closePanel()"
         >
           ×
         </button>
-      </div>
+      </header>
       @if (api.error()) {
-        <p class="notice error" role="alert">{{ api.error() }}</p>
+        <p class="notice error dialog-error" role="alert">{{ api.error() }}</p>
       }
-      <p class="muted">
-        El archivo no cambia tu lista hasta que confirmes. Los útiles repetidos se conservan como
-        filas independientes; las filas completamente vacías se omiten. Las cantidades aceptan coma
-        o punto decimal. No convertimos cajas, paquetes ni medidas: revisa la cantidad y la unidad
-        de cada útil.
-      </p>
-      <div class="fields three">
-        <label
-          >Hoja<select [formField]="mappingFields.sheet" (change)="mapped.set(false)">
-            @for (sheet of preview.sheets; track $index) {
-              <option [value]="'' + $index">{{ sheet.name }}</option>
-            }
-          </select></label
-        ><label
-          >Nombre del útil<select [formField]="mappingFields.name" (change)="mapped.set(false)">
-            @for (col of importColumns(); track col.index) {
-              <option [value]="col.index">{{ col.label }}</option>
-            }
-          </select></label
-        ><label
-          >Cantidad<select [formField]="mappingFields.quantity" (change)="mapped.set(false)">
-            @for (col of importColumns(); track col.index) {
-              <option [value]="col.index">{{ col.label }}</option>
-            }
-          </select></label
-        ><label
-          >Unidad<select [formField]="mappingFields.unit" (change)="mapped.set(false)">
-            <option value="-1">Sin columna · unidad</option>
-            @for (col of importColumns(); track col.index) {
-              <option [value]="col.index">{{ col.label }}</option>
-            }
-          </select></label
-        ><label
-          >Nota<select [formField]="mappingFields.note" (change)="mapped.set(false)">
-            <option value="-1">Sin columna</option>
-            @for (col of importColumns(); track col.index) {
-              <option [value]="col.index">{{ col.label }}</option>
-            }
-          </select></label
-        ><label class="check"
-          ><input
-            type="checkbox"
-            [formField]="mappingFields.header"
-            (change)="mapped.set(false)"
-          />Primera fila tiene títulos</label
-        >
-      </div>
-      <div class="form-actions">
-        <button class="btn secondary" [disabled]="importing()" (click)="mapImport()">
-          Aplicar columnas y revisar
-        </button>
-      </div>
-      @if (mapped()) {
-        <p class="spaced">
-          {{ reviewedCount() }} de {{ includedCount() }} filas incluidas revisadas. Confirma las
-          coincidencias y revisa cantidades, envases y notas.
-        </p>
-        <div class="import-pagination" role="group" aria-label="Páginas de revisión">
-          <button
-            class="btn secondary small"
-            aria-label="Página anterior"
-            [disabled]="importPage() === 0 || importing()"
-            (click)="setImportPage(importPage() - 1)"
-          >
-            ← Anterior
-          </button>
-          <span aria-live="polite">Página {{ importPage() + 1 }} de {{ importPageCount() }}</span>
-          <button
-            class="btn secondary small"
-            aria-label="Página siguiente"
-            [disabled]="importPage() >= importPageCount() - 1 || importing()"
-            (click)="setImportPage(importPage() + 1)"
-          >
-            Siguiente →
-          </button>
-        </div>
-        <div class="stack">
-          @for (i of importPageRows(); track i) {
-            @let row = importFields.items[i];
-            <section class="panel" style="margin: 0">
-              <div class="actions">
-                <label class="check"
-                  ><input type="checkbox" [formField]="row.include" />Fila
-                  {{ importModel().items[i].source_row }}</label
-                >
-                @if (importModel().items[i].duplicate) {
-                  <span class="badge warm">Nombre repetido: revisar</span>
-                }
+      @switch (activePanel) {
+        @case ('picker') {
+          <ng-container [ngTemplateOutlet]="catalogPane" />
+        }
+        @case ('metadata') {
+          <form class="dialog-form" (submit)="$event.preventDefault(); saveMetadata()">
+            <div class="dialog-body">
+              <p class="muted">Completa el colegio y el curso para publicar.</p>
+              <h3 class="form-section-title">Datos obligatorios</h3>
+              <div class="fields">
+                <label class="wide"
+                  >Colegio<input
+                    [formField]="metadataFields.school"
+                    placeholder="Nombre del colegio" /></label
+                ><label
+                  >Curso<input
+                    [formField]="metadataFields.class_name"
+                    placeholder="Ej. 4° básico A" /></label
+                ><label
+                  >Año escolar<input type="number" [formField]="metadataFields.school_year"
+                /></label>
               </div>
-              @if (importModel().items[i].include) {
-                <div class="fields spaced">
-                  <label
-                    >Coincidencia del catálogo<select
-                      [formField]="row.catalog_id"
-                      (change)="selectImportCatalog(i)"
-                    >
-                      <option value="">Útil personalizado</option>
-                      @for (item of catalog(); track item.id) {
-                        <option [value]="item.id">{{ item.name }}</option>
-                      }
-                    </select></label
-                  ><label>Nombre<input [formField]="row.name" (input)="unreviewImport(i)" /></label
-                  ><label
-                    >Cantidad<input
-                      [formField]="row.quantity"
-                      (input)="unreviewImport(i)"
-                      inputmode="decimal" /></label
-                  ><label
-                    >Unidad<select [formField]="row.unit" (change)="unreviewImport(i)">
-                      @for (unit of units; track unit) {
-                        <option [value]="unit">{{ unit }}</option>
-                      }
-                    </select></label
-                  ><label
-                    >Categoría<input
-                      [formField]="row.category"
-                      (input)="unreviewImport(i)"
-                      list="categories" /></label
-                  ><label>Nota<input [formField]="row.note" (input)="unreviewImport(i)" /></label>
-                  @if (!importModel().items[i].catalog_id) {
-                    <label class="check"
-                      ><input
-                        type="checkbox"
-                        [formField]="row.share_with_catalog"
-                        (change)="unreviewImport(i)"
-                      />Compartir este útil con el catálogo</label
-                    >
-                    @if (importModel().items[i].share_with_catalog) {
-                      <label
-                        >Categoría del catálogo<select
-                          [formField]="row.category_id"
-                          (change)="unreviewImport(i)"
-                        >
-                          @for (category of categories(); track category.id) {
-                            <option [value]="'' + category.id">{{ category.name }}</option>
-                          }
-                        </select></label
-                      >
-                    }
-                  }
-                  <label class="check wide"
-                    ><input type="checkbox" [formField]="row.reviewed" />Revisé este útil, su
-                    cantidad, unidad y nota</label
+              <h3 class="form-section-title">Datos opcionales</h3>
+              <div class="fields">
+                <label
+                  >Comuna<input
+                    [formField]="metadataFields.comuna"
+                    list="editor-comunas"
+                    (change)="localityChanged()" /></label
+                ><label
+                  >Región<input [formField]="metadataFields.region" list="editor-regions" /></label
+                ><label class="wide"
+                  >Logo del colegio <small>PNG, JPG o WebP · máximo 2 MiB</small
+                  ><input
+                    type="file"
+                    accept="image/png,image/jpeg,image/webp"
+                    [disabled]="readOnly() || metadataBusy()"
+                    (change)="uploadLogo($event)"
+                /></label>
+              </div>
+              <datalist id="editor-comunas">
+                @for (locality of localities; track locality.name) {
+                  <option [value]="locality.name"></option>
+                }</datalist
+              ><datalist id="editor-regions">
+                @for (region of regions; track region) {
+                  <option [value]="region"></option>
+                }
+              </datalist>
+              @if (metadata().logo_id) {
+                <div class="logo-review">
+                  <img [src]="'/api/assets/' + metadata().logo_id" alt="Logo del colegio" /><button
+                    type="button"
+                    class="text-button"
+                    [disabled]="readOnly() || metadataBusy()"
+                    (click)="removeLogo()"
                   >
+                    Quitar logo
+                  </button>
                 </div>
               }
-            </section>
+              <details class="instructions-details" [open]="!!metadata().instructions">
+                <summary>Indicaciones generales</summary>
+                <label
+                  ><span class="visually-hidden">Indicaciones generales</span
+                  ><textarea
+                    [formField]="metadataFields.instructions"
+                    rows="4"
+                    placeholder="Ej. Marcar todos los útiles con el nombre del estudiante."
+                  ></textarea>
+                </label>
+              </details>
+            </div>
+            <footer class="dialog-actions">
+              <button
+                type="button"
+                class="btn secondary"
+                [disabled]="metadataBusy()"
+                (click)="closePanel()"
+              >
+                Cancelar</button
+              ><button
+                class="btn"
+                type="submit"
+                [disabled]="metadataBusy() || readOnly() || conflict()"
+              >
+                {{ metadataBusy() ? 'Guardando…' : 'Guardar datos' }}
+              </button>
+            </footer>
+          </form>
+        }
+        @case ('custom') {
+          <form class="dialog-form" (submit)="$event.preventDefault(); addCustom()">
+            <div class="dialog-body stack">
+              <label
+                >Nombre<input [formField]="customFields.name" placeholder="Nombre del útil"
+              /></label>
+              <div class="fields">
+                <label
+                  >Cantidad<input [formField]="customFields.quantity" inputmode="decimal" /></label
+                ><label
+                  >Unidad<select [formField]="customFields.unit">
+                    @for (unit of units; track unit) {
+                      <option [value]="unit">{{ unit }}</option>
+                    }
+                  </select></label
+                >
+              </div>
+              <label
+                >Categoría<select
+                  [formField]="customFields.category_id"
+                  (change)="categoryChanged()"
+                >
+                  <option value="">Sin categoría · Otros</option>
+                  @for (category of categories(); track category.id) {
+                    <option [value]="'' + category.id">{{ category.name }}</option>
+                  }
+                </select></label
+              >
+              @if (attributeFields.rows.length) {
+                <section class="custom-attributes" aria-label="Características del útil">
+                  <h3>Características <small>Opcional</small></h3>
+                  @for (attribute of attributeFields.rows; track $index; let a = $index) {
+                    @let definition = customAttributes().rows[a];
+                    @if (visibleCustomAttributeKeys().has(definition.key)) {
+                      <label class="attribute-entry"
+                        >{{ definition.name
+                        }}{{ definition.unit ? ' (' + definition.unit + ')' : '' }}
+                        @if (definition.options.length || definition.data_type === 'boolean') {
+                          <select
+                            [formField]="attribute.text"
+                            (change)="customAttributeChanged(definition.key, $event)"
+                          >
+                            <option value="">Sin especificar</option>
+                            @if (definition.data_type === 'boolean') {
+                              <option value="true">Sí</option>
+                              <option value="false">No</option>
+                            }
+                            @for (option of definition.options; track option) {
+                              <option [value]="option">{{ option }}</option>
+                            }
+                          </select>
+                        } @else {
+                          <input
+                            [formField]="attribute.text"
+                            [attr.inputmode]="
+                              definition.data_type === 'number' ? 'decimal' : 'text'
+                            "
+                          />
+                        }
+                      </label>
+                    }
+                  }
+                </section>
+              }
+              <label
+                >Nota <small>Opcional · solo para esta lista</small
+                ><textarea [formField]="customFields.note" rows="2"></textarea>
+              </label>
+              <div class="community-option">
+                <label class="check"
+                  ><input type="checkbox" [formField]="customFields.share" />Compartir con el
+                  catálogo</label
+                ><small
+                  >Si lo compartes, la categoría es obligatoria y aparecerá como pendiente de
+                  revisión. De lo contrario, queda solo en tu lista.</small
+                >
+              </div>
+            </div>
+            <footer class="dialog-actions">
+              <button
+                class="btn secondary"
+                type="button"
+                [disabled]="customBusy()"
+                (click)="closePanel()"
+              >
+                Cancelar</button
+              ><button class="btn" type="submit" [disabled]="customBusy() || editingBlocked()">
+                {{ customBusy() ? 'Agregando…' : 'Agregar útil' }}
+              </button>
+            </footer>
+          </form>
+        }
+        @case ('upload') {
+          <div class="dialog-body stack">
+            <p class="muted">
+              Excel o CSV, hasta 10 MiB. Revisarás las columnas y cada útil antes de agregarlo.
+            </p>
+            <ol class="import-steps">
+              <li class="current">1 Archivo</li>
+              <li>2 Columnas</li>
+              <li>3 Revisar</li>
+            </ol>
+            <label class="file-upload"
+              >Archivo<input
+                type="file"
+                accept=".csv,.xlsx"
+                [disabled]="readOnly() || importing()"
+                (change)="chooseFile($event)"
+            /></label>
+            <div class="fields">
+              <label
+                >Codificación CSV<select [formField]="uploadFields.encoding">
+                  <option value="utf-8">UTF-8</option>
+                  <option value="windows-1252">Windows-1252</option>
+                </select></label
+              ><label
+                >Separador CSV<select [formField]="uploadFields.delimiter">
+                  <option value="">Detectar</option>
+                  <option value=";">Punto y coma</option>
+                  <option value=",">Coma</option>
+                  <option value="&#9;">Tabulación</option>
+                </select></label
+              >
+            </div>
+            <p class="muted">
+              Las cantidades aceptan coma o punto decimal. Las cajas, paquetes y medidas no se
+              convierten.
+            </p>
+          </div>
+          <footer class="dialog-actions">
+            <button class="btn secondary" [disabled]="importing()" (click)="closePanel()">
+              Cancelar</button
+            ><button
+              class="btn"
+              [disabled]="!importFile() || importing() || readOnly() || conflict()"
+              (click)="uploadImport()"
+            >
+              {{ importing() ? 'Leyendo archivo…' : 'Revisar archivo' }}
+            </button>
+          </footer>
+        }
+        @case ('import') {
+          @if (importPreview(); as preview) {
+            <div class="import-intro">
+              <ol class="import-steps">
+                <li>✓ Archivo</li>
+                <li [class.current]="!mapped()">{{ mapped() ? '✓' : '2' }} Columnas</li>
+                <li [class.current]="mapped()">3 Revisar</li>
+              </ol>
+              <p>{{ importFile()?.name }} · {{ preview.sheets[+mapping().sheet].name }}</p>
+            </div>
+            @if (!mapped()) {
+              <div class="dialog-body">
+                <p>
+                  Relaciona las columnas del archivo. Si no hay una columna de unidad, propondremos
+                  «unidad» para que la revises.
+                </p>
+                <div class="fields three">
+                  <label
+                    >Hoja<select [formField]="mappingFields.sheet">
+                      @for (sheet of preview.sheets; track $index) {
+                        <option [value]="'' + $index">{{ sheet.name }}</option>
+                      }
+                    </select></label
+                  ><label
+                    >Nombre del útil<select [formField]="mappingFields.name">
+                      @for (col of importColumns(); track col.index) {
+                        <option [value]="col.index">{{ col.label }}</option>
+                      }
+                    </select></label
+                  ><label
+                    >Cantidad<select [formField]="mappingFields.quantity">
+                      @for (col of importColumns(); track col.index) {
+                        <option [value]="col.index">{{ col.label }}</option>
+                      }
+                    </select></label
+                  ><label
+                    >Unidad<select [formField]="mappingFields.unit">
+                      <option value="-1">Sin columna · unidad</option>
+                      @for (col of importColumns(); track col.index) {
+                        <option [value]="col.index">{{ col.label }}</option>
+                      }
+                    </select></label
+                  ><label
+                    >Nota<select [formField]="mappingFields.note">
+                      <option value="-1">Sin columna</option>
+                      @for (col of importColumns(); track col.index) {
+                        <option [value]="col.index">{{ col.label }}</option>
+                      }
+                    </select></label
+                  ><label class="check"
+                    ><input type="checkbox" [formField]="mappingFields.header" />Primera fila tiene
+                    títulos</label
+                  >
+                </div>
+                <p class="muted">
+                  Las filas completamente vacías se omiten. Las demás conservan su número de fila
+                  original.
+                </p>
+              </div>
+              <footer class="dialog-actions">
+                <button class="btn secondary" [disabled]="importing()" (click)="cancelImport()">
+                  Cancelar</button
+                ><button class="btn" [disabled]="importing()" (click)="mapImport()">
+                  {{ importing() ? 'Buscando coincidencias…' : 'Aplicar columnas y revisar' }}
+                </button>
+              </footer>
+            } @else {
+              <div class="import-overview">
+                <div class="import-counts">
+                  <span class="badge">{{ importPageRows().length }} filas en esta página</span>
+                  @if (invalidImportCount()) {
+                    <span class="badge invalid">{{ invalidImportCount() }} por corregir</span>
+                  }
+                  @if (duplicateImportCount()) {
+                    <span class="badge warm">{{ duplicateImportCount() }} posibles duplicados</span>
+                  }
+                </div>
+                <button
+                  class="btn secondary small"
+                  [disabled]="importing()"
+                  (click)="mapped.set(false)"
+                >
+                  Cambiar columnas</button
+                ><label class="import-filter"
+                  >Mostrar<select
+                    [formField]="importFilterFields.value"
+                    (change)="importPage.set(0)"
+                  >
+                    <option value="all">Todas</option>
+                    <option value="pending">Pendientes de revisión</option>
+                    <option value="invalid">Por corregir</option>
+                    <option value="duplicate">Posibles duplicados</option>
+                  </select></label
+                >
+                <p>
+                  Cada fila incluida requiere revisión. Las cantidades aceptan coma o punto decimal.
+                  Las cantidades y los envases <strong>no se convierten</strong>.
+                </p>
+              </div>
+              <div class="import-table-scroll" id="import-rows">
+                <table class="import-table">
+                  <thead>
+                    <tr>
+                      <th scope="col">Fila</th>
+                      <th scope="col">Incluir</th>
+                      <th scope="col">Útil original → seleccionado</th>
+                      <th scope="col">Cantidad</th>
+                      <th scope="col">Unidad</th>
+                      <th scope="col">Estado</th>
+                      <th scope="col">Revisé</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @for (i of importPageRows(); track importModel().items[i].id) {
+                      @let row = importFields.items[i]; @let value = importModel().items[i];
+                      <tr class="import-review-row" [class.excluded]="!value.include">
+                        <th scope="row">{{ value.source_row }}</th>
+                        <td>
+                          <label class="check"
+                            ><input type="checkbox" [formField]="row.include" /><span
+                              class="visually-hidden"
+                              >Incluir fila {{ value.source_row }}</span
+                            ></label
+                          >
+                        </td>
+                        <td class="import-supply">
+                          <span class="original-supply">{{
+                            value.source_name || 'Sin nombre en el archivo'
+                          }}</span>
+                          @if (value.include) {
+                            <label
+                              ><span class="visually-hidden">Coincidencia del catálogo</span
+                              ><select
+                                [formField]="row.catalog_id"
+                                (change)="selectImportCatalog(i)"
+                              >
+                                <option value="">Útil personalizado</option>
+                                @for (item of importCatalog(); track item.id) {
+                                  <option [value]="item.id">
+                                    {{ item.name
+                                    }}{{
+                                      attributes(item.attributes)
+                                        ? ' · ' + attributes(item.attributes)
+                                        : ''
+                                    }}
+                                  </option>
+                                }
+                              </select></label
+                            >
+                            <details class="import-row-details">
+                              <summary>Nombre, categoría y nota</summary>
+                              <div class="stack">
+                                <label
+                                  >Nombre<input
+                                    [formField]="row.name"
+                                    (input)="unreviewImport(i)" /></label
+                                ><label
+                                  >Categoría<input
+                                    [formField]="row.category"
+                                    (input)="unreviewImport(i)"
+                                    list="categories" /></label
+                                ><label
+                                  >Nota<input [formField]="row.note" (input)="unreviewImport(i)"
+                                /></label>
+                                @if (!value.catalog_id) {
+                                  <label class="check"
+                                    ><input
+                                      type="checkbox"
+                                      [formField]="row.share_with_catalog"
+                                      (change)="unreviewImport(i)"
+                                    />Compartir este útil con el catálogo</label
+                                  >
+                                  @if (value.share_with_catalog) {
+                                    <label
+                                      >Categoría del catálogo<select
+                                        [formField]="row.category_id"
+                                        (change)="unreviewImport(i)"
+                                      >
+                                        @for (category of categories(); track category.id) {
+                                          <option [value]="'' + category.id">
+                                            {{ category.name }}
+                                          </option>
+                                        }
+                                      </select></label
+                                    >
+                                  }
+                                }
+                              </div>
+                            </details>
+                          }
+                        </td>
+                        <td>
+                          @if (value.include) {
+                            <label
+                              ><span class="visually-hidden">Cantidad</span
+                              ><input
+                                [formField]="row.quantity"
+                                (input)="unreviewImport(i)"
+                                inputmode="decimal"
+                                [attr.aria-invalid]="
+                                  quantityIssue(value.quantity, value.unit) ? 'true' : null
+                                "
+                            /></label>
+                          }
+                        </td>
+                        <td>
+                          @if (value.include) {
+                            <label
+                              ><span class="visually-hidden">Unidad</span
+                              ><select [formField]="row.unit" (change)="unreviewImport(i)">
+                                @for (unit of units; track unit) {
+                                  <option [value]="unit">{{ unit }}</option>
+                                }
+                              </select></label
+                            >
+                          }
+                        </td>
+                        <td class="import-row-status">
+                          @if (!value.include) {
+                            <span>Excluida</span>
+                          } @else if (importIssue(value)) {
+                            <span class="field-error">{{ importIssue(value) }}</span>
+                          } @else if (value.reviewed) {
+                            <span class="reviewed-label">✓ Revisada</span>
+                          } @else if (value.duplicate) {
+                            <span>Posible duplicado</span>
+                          } @else {
+                            <span>{{
+                              value.catalog_id
+                                ? 'Confirma la coincidencia'
+                                : 'Revisa el útil personalizado'
+                            }}</span>
+                          }
+                        </td>
+                        <td>
+                          @if (value.include) {
+                            <label class="check"
+                              ><input type="checkbox" [formField]="row.reviewed" /><span
+                                class="visually-hidden"
+                                >Revisé este útil, su cantidad, unidad y nota</span
+                              ></label
+                            >
+                          }
+                        </td>
+                      </tr>
+                    } @empty {
+                      <tr>
+                        <td colspan="7">No hay filas con este filtro.</td>
+                      </tr>
+                    }
+                  </tbody>
+                </table>
+              </div>
+              <footer class="import-footer">
+                <div class="import-pagination" role="group" aria-label="Páginas de revisión">
+                  <span aria-live="polite"
+                    >Página {{ importPage() + 1 }} de {{ importPageCount() }}</span
+                  ><button
+                    class="btn secondary small"
+                    aria-label="Página anterior"
+                    [disabled]="importPage() === 0 || importing()"
+                    (click)="setImportPage(importPage() - 1)"
+                  >
+                    ← Anterior</button
+                  ><button
+                    class="btn secondary small"
+                    aria-label="Página siguiente"
+                    [disabled]="importPage() >= importPageCount() - 1 || importing()"
+                    (click)="setImportPage(importPage() + 1)"
+                  >
+                    Siguiente →
+                  </button>
+                </div>
+                <span class="review-progress"
+                  >{{ reviewedCount() }} de {{ includedCount() }} filas incluidas revisadas</span
+                >
+                <div class="import-confirm-actions">
+                  <button class="btn secondary" [disabled]="importing()" (click)="cancelImport()">
+                    Cancelar</button
+                  ><button
+                    class="btn"
+                    [disabled]="importing() || !includedCount()"
+                    (click)="confirmImport()"
+                  >
+                    {{ importing() ? 'Importando…' : 'Agregar ' + includedCount() + ' útiles' }}
+                  </button>
+                </div>
+              </footer>
+            }
           }
-        </div>
-        <div class="form-actions">
-          <button
-            class="btn"
-            [disabled]="importing() || !includedCount()"
-            (click)="confirmImport()"
-          >
-            {{ importing() ? 'Importando…' : 'Agregar ' + includedCount() + ' útiles' }}</button
-          ><button class="btn quiet" [disabled]="importing()" (click)="cancelImport()">
-            Cancelar
-          </button>
-        </div>
+        }
       }
     </section>
   </div>

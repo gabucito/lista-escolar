@@ -1,0 +1,159 @@
+<header class="mine-heading">
+  <div>
+    <h1>Mis listas</h1>
+    <p class="muted">Organiza tus listas, colabora y sigue las de tu comunidad.</p>
+  </div>
+  <a routerLink="/crear" class="btn">＋ Crear lista</a>
+</header>
+<div class="mine-workspace">
+  <section aria-label="Mis listas escolares">
+    <div class="mine-toolbar">
+      <div class="filter-tabs" role="group" aria-label="Tipo de listas">
+        @for (section of sections; track section.key) {
+          <button
+            type="button"
+            [class.active]="selected() === section.key"
+            [attr.aria-pressed]="selected() === section.key"
+            (click)="selected.set(section.key)"
+          >
+            {{ section.label }} <span>{{ count(section.key) }}</span>
+          </button>
+        }
+      </div>
+      <label
+        >Estado<select [formField]="filterFields.status">
+          <option value="all">Todos los estados</option>
+          <option value="published">Publicadas</option>
+          <option value="draft">Sin publicar</option>
+          <option value="archived">Archivadas</option>
+        </select></label
+      >
+    </div>
+    @if (transfers().length) {
+      <section class="transfer-offers panel soft">
+        <h2>Propiedad pendiente de aceptar</h2>
+        @for (transfer of transfers(); track transfer.id) {
+          <div class="share-row">
+            <div>
+              <strong>{{ transfer.school || 'Lista escolar' }}</strong>
+              <p class="muted">{{ transfer.owner_name }} quiere transferirte esta lista.</p>
+            </div>
+            <button class="btn secondary small" (click)="accept(transfer.id)">
+              Aceptar propiedad
+            </button>
+          </div>
+        }
+      </section>
+    }
+    @if (loading()) {
+      <div class="loading" role="status">Cargando tus listas…</div>
+    } @else if (visibleLists().length) {
+      <div class="list-stack">
+        @for (list of visibleLists(); track list.id) {
+          <article class="mine-row">
+            <div class="row-heading">
+              <div>
+                <h2>{{ list.school || 'Borrador sin nombre' }}</h2>
+                <p>
+                  {{ list.class_name || 'Curso por completar' }}
+                  @if (list.school_year) {
+                    · {{ list.school_year }}
+                  }
+                </p>
+              </div>
+              <span class="badge" [class.warm]="!list.current_version || list.archived">{{
+                list.archived
+                  ? 'Archivada'
+                  : list.hidden
+                    ? 'Retirada'
+                    : list.current_version
+                      ? 'Publicada'
+                      : 'Borrador'
+              }}</span>
+            </div>
+            <p class="muted locality">
+              {{ list.comuna }}{{ list.comuna && list.region ? ' · ' : '' }}{{ list.region }}
+            </p>
+            <div class="row-footer">
+              <small
+                >{{
+                  list.role === 'owner'
+                    ? 'Propietario'
+                    : list.role === 'editor'
+                      ? 'Puede editar'
+                      : list.role === 'viewer'
+                        ? 'Puede leer'
+                        : 'Siguiendo'
+                }}
+                · {{ list.visibility === 'private' ? 'Privada' : 'Pública' }}
+                @if (list.current_version) {
+                  · Versión {{ list.current_version }}
+                }
+                · {{ date(list.published_at) }}</small
+              >
+              <div class="actions">
+                @if (list.role === 'owner' || list.role === 'editor') {
+                  <a class="btn secondary small" [routerLink]="['/editar', list.id]">{{
+                    list.archived ? 'Ver borrador' : 'Editar'
+                  }}</a>
+                }
+                @if (list.current_version) {
+                  <a class="btn quiet small" [routerLink]="['/listas', list.id]">Ver lista</a>
+                }
+                @if (list.role === 'owner' || list.role === 'editor') {
+                  <a class="text-button" [routerLink]="['/listas', list.id, 'compartir']"
+                    >Compartir</a
+                  >
+                }
+              </div>
+            </div>
+          </article>
+        }
+      </div>
+    } @else {
+      <div class="empty">
+        <h2>
+          {{ lists().length ? 'No hay listas en esta vista' : 'Tu primera lista empieza aquí' }}
+        </h2>
+        <p>
+          {{
+            lists().length
+              ? 'Prueba otra pestaña o cambia el filtro de estado.'
+              : 'Crea una lista desde cero o usa una de las plantillas disponibles.'
+          }}
+        </p>
+        <a routerLink="/crear" class="btn secondary">Crear mi primera lista</a>
+      </div>
+    }
+  </section>
+  <aside>
+    <section class="panel templates-panel">
+      <h2>Plantillas por nivel</h2>
+      <p class="muted">Un punto de partida para adaptar a tu curso. No son listas oficiales.</p>
+      @for (template of templates(); track template.id) {
+        <article class="template-card">
+          <div>
+            <span class="badge">{{ template.grade }}</span>
+            <h3>{{ template.name }}</h3>
+            <small>{{ template.content.items.length }} útiles para comenzar</small>
+          </div>
+          <button
+            class="btn secondary small"
+            [disabled]="!!creating()"
+            (click)="fromTemplate(template.id)"
+          >
+            {{ creating() === template.id ? 'Creando…' : 'Usar plantilla' }}
+          </button>
+        </article>
+      }
+      @if (!loading() && !templates().length) {
+        <p class="muted">Todavía no hay plantillas compartidas.</p>
+      }
+    </section>
+    <section class="community-box">
+      <h2>¿Buscas una lista?</h2>
+      <p>Encuentra las listas publicadas por otras familias y colegios.</p>
+      <a routerLink="/" class="btn secondary">Buscar en la comunidad</a>
+    </section>
+  </aside>
+</div>

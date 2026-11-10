@@ -52,7 +52,7 @@ for attempt in {1..300}; do
   sleep .2
 done
 cd qa
-run npx playwright test functional.spec.ts admin-account.spec.ts pdf-boundaries.spec.ts mobile.spec.ts import-scale.spec.ts
-run npx playwright test ui.spec.ts ui-admin.spec.ts --output ../.local/qa/ui-test-results --reporter=list
+run npx playwright test functional.spec.ts admin-account.spec.ts pdf-boundaries.spec.ts mobile.spec.ts import-scale.spec.ts editor-workspace.spec.ts catalog-browse.spec.ts catalog-expansion.spec.ts
+run npx playwright test ui.spec.ts ui-admin.spec.ts pdf-workspace.spec.ts user-workflows.spec.ts --output ../.local/qa/ui-test-results --reporter=list
 run node render-pdfs.mjs
 printf 'Pruebas completadas. Evidencia: %s/.local/qa/. La inspección visual se registra en docs/VALIDATION.md.\n' "$project_dir"

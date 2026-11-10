@@ -2,7 +2,8 @@
 @if (loading()) {
   <div class="loading" role="status">Abriendo la lista…</div>
 } @else if (detail(); as d) {
-  <header class="page-head">
+  <app-pdf-options #pdfOptions [listId]="d.id" [version]="d.version" [showLauncher]="false" />
+  <header class="published-heading">
     <div class="list-title">
       @if (d.content.logo_id) {
         <img
@@ -11,8 +12,7 @@
           alt="Logo del colegio"
         />
       }
-      <div>
-        <p class="eyebrow">Lista de útiles escolares</p>
+      <div class="school-identity">
         <h1>{{ d.content.school }}</h1>
         <div class="list-subtitle">
           {{ d.content.class_name }} · Año escolar {{ d.content.school_year }}
@@ -25,12 +25,12 @@
         }
       </div>
     </div>
-    <div class="actions">
-      <button class="btn secondary mobile-only" (click)="showPdf()">Descargar PDF</button>
+    <div class="actions heading-actions">
       @if (d.role === 'owner' || d.role === 'editor') {
         <a class="btn secondary" [routerLink]="['/editar', d.id]">Editar borrador</a
-        ><a class="btn secondary" [routerLink]="['/listas', d.id, 'compartir']">Compartir</a>
+        ><a class="btn quiet" [routerLink]="['/listas', d.id, 'compartir']">Compartir</a>
       }
+      <button class="btn" (click)="pdfOptions.open()">Descargar PDF</button>
     </div>
   </header>
   @if (d.archived) {
@@ -46,14 +46,14 @@
       >.
     </div>
   }
-  <div class="editor-toolbar">
-    <div class="actions">
+  <div class="published-toolbar">
+    <div class="version-owner">
       <span class="badge">{{ d.visibility === 'private' ? 'Privada' : 'Pública' }}</span
       ><span class="muted"
         >Responsable: {{ d.owner_id ? d.owner_name : 'Sin responsable activo' }}</span
       >
     </div>
-    <label class="field"
+    <label
       >Versión<select [formField]="versionFields.version" (change)="changeVersion()">
         @for (version of d.versions; track version.number) {
           <option [value]="'' + version.number">
@@ -63,102 +63,135 @@
       </select></label
     >
   </div>
-  <div class="split">
-    <section>
-      <div class="panel">
-        @if (session.user()) {
-          <div class="section-row" style="margin-top: 0">
-            <h2>Mi avance</h2>
-            <span>{{ completed() }} de {{ d.content.items.length }} útiles</span>
+  <div class="participation-toolbar">
+    <div class="actions">
+      <button
+        class="btn secondary small"
+        [disabled]="d.archived && !d.voted"
+        [attr.aria-pressed]="d.voted"
+        (click)="toggleVote()"
+      >
+        {{ d.voted ? '♥ Quitar mi voto' : '♡ Votar esta versión' }} · {{ d.votes }}</button
+      ><button
+        class="btn secondary small"
+        [disabled]="d.archived && !d.following"
+        [attr.aria-pressed]="d.following"
+        (click)="follow()"
+      >
+        {{ d.following ? '✓ Siguiendo · dejar de seguir' : '＋ Seguir esta lista' }}
+      </button>
+    </div>
+    <button
+      class="text-button more-actions-toggle"
+      aria-controls="list-secondary-actions"
+      [attr.aria-expanded]="moreActions()"
+      (click)="moreActions.set(!moreActions())"
+    >
+      {{ moreActions() ? 'Menos acciones' : 'Más acciones' }}
+    </button>
+    <div class="secondary-actions" id="list-secondary-actions" [class.expanded]="moreActions()">
+      <button class="text-button" (click)="shareLink()">Copiar enlace</button>
+      <button class="text-button" (click)="copy()">Usar como base para otra lista</button>
+      <button class="text-button report-link" (click)="report()">Reportar un problema</button>
+    </div>
+  </div>
+  <div class="published-workspace">
+    <section class="panel checklist-panel" aria-label="Lista de útiles y avance personal">
+      @if (session.user()) {
+        <div class="section-row" style="margin-top: 0">
+          <h2>Mi avance</h2>
+          <span>{{ completed() }} de {{ d.content.items.length }} útiles</span>
+        </div>
+        <div
+          class="progress-bar"
+          role="progressbar"
+          aria-label="Útiles conseguidos"
+          [attr.aria-valuenow]="completed()"
+          [attr.aria-valuemin]="0"
+          [attr.aria-valuemax]="d.content.items.length"
+        >
+          <span
+            [style.width.%]="
+              d.content.items.length ? (completed() / d.content.items.length) * 100 : 0
+            "
+          ></span>
+        </div>
+        @if (progress()?.changes?.details_changed) {
+          <div class="review-note">
+            Cambiaron los datos del colegio o las indicaciones generales. Revísalos antes de
+            continuar.
           </div>
-          <div
-            class="progress-bar"
-            role="progressbar"
-            aria-label="Útiles conseguidos"
-            [attr.aria-valuenow]="completed()"
-            [attr.aria-valuemin]="0"
-            [attr.aria-valuemax]="d.content.items.length"
-          >
-            <span
-              [style.width.%]="
-                d.content.items.length ? (completed() / d.content.items.length) * 100 : 0
-              "
-            ></span>
-          </div>
-          @if (progress()?.changes?.details_changed) {
-            <div class="review-note">
-              Cambiaron los datos del colegio o las indicaciones generales. Revísalos antes de
-              continuar.
-            </div>
-          }
-          @if (progress()?.changes?.added?.length || progress()?.changes?.changed?.length) {
-            <p class="review-note">
-              Esta versión agrega {{ progress()?.changes?.added?.length || 0 }} útiles y modifica
-              {{ progress()?.changes?.changed?.length || 0 }}. Revisa las indicaciones marcadas
-              junto a cada útil.
-            </p>
-          }
-          @if (progress()?.changes?.removed?.length) {
-            <p class="review-note">
-              Se retiraron {{ progress()?.changes?.removed?.length }} útiles de una versión
-              anterior.
-            </p>
-          }
-        } @else {
-          <p class="muted">
-            <a routerLink="/ingresar" [queryParams]="{ next: '/listas/' + d.id }">Ingresa</a> para
-            marcar tus útiles y guardar tu avance personal.
+        }
+        @if (progress()?.changes?.added?.length || progress()?.changes?.changed?.length) {
+          <p class="review-note">
+            Esta versión agrega {{ progress()?.changes?.added?.length || 0 }} útiles y modifica
+            {{ progress()?.changes?.changed?.length || 0 }}. Revisa las indicaciones marcadas junto
+            a cada útil.
           </p>
         }
-        @for (group of groups(); track group.name) {
-          <section class="checklist-group">
-            <h2>{{ group.name }}</h2>
-            @for (row of group.items; track row.item.id) {
-              <div class="checklist-item" [class.done]="progressModel().items[row.index]?.checked">
-                @if (session.user() && progressFields.items[row.index]) {
-                  <input
-                    type="checkbox"
-                    [formField]="progressFields.items[row.index].checked"
-                    [attr.aria-label]="'Ya tengo ' + row.item.name"
-                    (change)="mark(row.index)"
-                  />
-                } @else {
-                  <span
-                    class="icon-button"
-                    style="min-width: 16px; min-height: 16px; width: 16px; height: 16px; padding: 0"
-                    aria-hidden="true"
-                  ></span>
+        @if (progress()?.changes?.removed?.length) {
+          <p class="review-note">
+            Se retiraron {{ progress()?.changes?.removed?.length }} útiles de una versión anterior.
+          </p>
+        }
+      } @else {
+        <p class="muted">
+          <a routerLink="/ingresar" [queryParams]="{ next: '/listas/' + d.id }">Ingresa</a> para
+          marcar tus útiles y guardar tu avance personal.
+        </p>
+      }
+      @for (group of groups(); track group.name) {
+        <section class="checklist-group">
+          <h2>
+            {{ group.name }} <span>{{ group.items.length }}</span>
+          </h2>
+          @for (row of group.items; track row.item.id) {
+            <div class="checklist-item" [class.done]="progressModel().items[row.index]?.checked">
+              @if (session.user() && progressFields.items[row.index]) {
+                <input
+                  type="checkbox"
+                  [formField]="progressFields.items[row.index].checked"
+                  [attr.aria-label]="'Ya tengo ' + row.item.name"
+                  (change)="mark(row.index)"
+                />
+              } @else {
+                <span class="empty-checkbox" aria-hidden="true"></span>
+              }
+              <div class="item-copy">
+                <div class="item-name">{{ row.item.name }}</div>
+                @if (attributes(row.item.attributes)) {
+                  <small>{{ attributes(row.item.attributes) }}</small>
                 }
-                <div class="item-copy">
-                  <div class="item-name">{{ row.item.name }}</div>
-                  @if (attributes(row.item.attributes)) {
-                    <small>{{ attributes(row.item.attributes) }}</small>
-                  }
-                  @if (row.item.note) {
-                    <small>{{ row.item.note }}</small>
-                  }
-                  @if (progressModel().items[row.index]?.review) {
-                    <div class="review-note spaced">
-                      Nuevo o modificado: revisa la cantidad y sus indicaciones.
-                      <button class="text-button" (click)="mark(row.index, true)">
-                        Ya revisé este cambio
-                      </button>
-                    </div>
-                  }
-                </div>
-                <span class="quantity">{{ row.item.quantity }} {{ row.item.unit }}</span>
+                @if (row.item.note) {
+                  <small>{{ row.item.note }}</small>
+                }
+                @if (progressModel().items[row.index]?.review) {
+                  <div class="review-note spaced">
+                    Nuevo o modificado: revisa la cantidad y sus indicaciones.
+                    <button class="text-button" (click)="mark(row.index, true)">
+                      Ya revisé este cambio
+                    </button>
+                  </div>
+                }
               </div>
-            }
-          </section>
-        }
-        @if (d.content.instructions) {
-          <h3>Antes de preparar la mochila</h3>
+              <span class="quantity">{{ row.item.quantity }} {{ row.item.unit }}</span>
+            </div>
+          }
+        </section>
+      }
+    </section>
+    <aside class="published-aside">
+      @if (d.content.instructions) {
+        <section class="panel instructions-panel">
+          <h2>Antes de preparar la mochila</h2>
           <div class="list-instructions">{{ d.content.instructions }}</div>
-        }
-      </div>
-      <section class="panel">
+        </section>
+      }
+      <section class="panel comments-panel" id="list-comments">
         <div class="section-row" style="margin-top: 0">
-          <h2>Comentarios</h2>
+          <h2>
+            Comentarios <span class="comment-count">{{ comments().length }}</span>
+          </h2>
           <span class="badge">Versión {{ d.version }}</span>
         </div>
         @if (!d.comments_enabled || d.archived) {
@@ -171,6 +204,7 @@
               >Comparte una observación<textarea
                 [formField]="commentFields.body"
                 placeholder="¿Hay alguna indicación que convenga aclarar?"
+                rows="3"
               ></textarea></label
             ><button
               class="btn secondary spaced"
@@ -209,31 +243,9 @@
           <p class="muted spaced">Todavía no hay comentarios en esta versión.</p>
         }
       </section>
-    </section>
-    <aside>
-      <section class="panel" id="published-pdf" tabindex="-1">
-        <h3>Llévala contigo</h3>
-        <app-pdf-options [listId]="d.id" [version]="d.version" />
-      </section>
-      <section class="panel">
-        <h3>Compartir y participar</h3>
-        <div class="sidebar-actions">
-          <button class="btn secondary" [disabled]="d.archived && !d.voted" (click)="toggleVote()">
-            {{ d.voted ? '♥ Quitar mi voto' : '♡ Votar esta versión' }} · {{ d.votes }}</button
-          ><button class="btn secondary" [disabled]="d.archived && !d.following" (click)="follow()">
-            {{ d.following ? '✓ Siguiendo · dejar de seguir' : '＋ Seguir esta lista' }}</button
-          ><button class="btn quiet" (click)="shareLink()">Copiar enlace</button
-          ><button class="btn quiet" (click)="copy()">Usar como base para otra lista</button
-          ><button class="text-button" (click)="report()">Reportar un problema</button>
-        </div>
-        <p class="muted spaced" style="font-size: 0.78rem">
-          Los votos son opiniones de la comunidad. No certifican que esta lista sea oficial ni esté
-          completa.
-        </p>
-      </section>
-      <p class="muted" style="font-size: 0.8rem">
+      <p class="list-provenance">
         Publicada el {{ date(d.published_at) }}. Tu avance es personal y no modifica la lista
-        compartida.
+        compartida. Los votos no certifican que sea oficial ni esté completa.
       </p>
     </aside>
   </div>
@@ -248,18 +260,17 @@
       } @else {
         Lista de útiles
       }</span
-    ><button class="btn secondary" (click)="showPdf()">Descargar PDF</button>
+    ><button class="btn secondary" (click)="pdfOptions.open()">Descargar PDF</button>
   </div>
   @if (reporting()) {
-    <div class="modal-backdrop">
+    <div class="modal-backdrop report-backdrop">
       <section
-        class="modal"
+        class="modal report-drawer"
         appModal
         (dismissed)="reporting.set(false)"
         role="dialog"
         aria-modal="true"
         aria-labelledby="report-title"
-        style="max-width: 540px"
       >
         <div class="modal-head">
           <h2 id="report-title">Reportar contenido</h2>

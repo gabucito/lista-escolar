@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>C revisada · Categorías y atributos</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; background: #f8f7f1; color: #263b4c; font: 16px/1.5 system-ui, sans-serif; }
+    main { max-width: 1640px; margin: auto; padding: 28px; }
+    h1, h2 { font-family: Georgia, serif; line-height: 1.2; }
+    h1 { font-size: clamp(26px, 4vw, 38px); margin: 14px 0; }
+    h2 { margin: 0 0 8px; }
+    p { max-width: 1080px; }
+    a { color: #285a47; text-underline-offset: 3px; }
+    a:focus-visible, button:focus-visible { outline: 3px solid #ab5b1b; outline-offset: 4px; }
+    .principle { padding: 14px 18px; border-left: 4px solid #35624f; background: #e8eedc; }
+    .choices, .links { display: flex; flex-wrap: wrap; gap: 16px; margin: 20px 0; }
+    button { padding: 12px 18px; border: 1px solid #719080; border-radius: 7px; color: #263b4c; background: white; font: inherit; font-weight: 600; cursor: pointer; }
+    button[aria-pressed="true"] { background: #35624f; color: white; }
+    .viewer { padding: 16px; border: 1px solid #d6dfce; border-radius: 10px; background: white; }
+    img { display: block; width: 100%; height: auto; border: 1px solid #e2e6dc; border-radius: 5px; }
+    .examples { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; margin-top: 24px; }
+    .examples article { background: white; border: 1px solid #d6dfce; border-radius: 10px; padding: 16px; }
+    footer { margin-top: 24px; padding-top: 16px; border-top: 1px solid #d6dfce; }
+    @media (max-width: 800px) { main { padding: 16px; } .examples { grid-template-columns: 1fr; } .viewer { padding: 10px; } }
+  </style>
+</head>
+<body>
+  <main>
+    <a href="../05-catalog-navigation/">← Comparación inicial A / B / C</a>
+    <h1>Opción C · Categorías y atributos</h1>
+    <p>La opción elegida, refinada con una regla común para todo el catálogo: elegir una categoría y filtrar por sus características. Los tipos dejan de ser un nivel de navegación.</p>
+    <p class="principle"><strong>Categoría → atributos relevantes.</strong> Sin fila de subcategorías. Drawer a la izquierda, útiles al centro y la lista a la derecha. “Tipo” se combina con formato, hojas, largo u otras características cuando corresponda.</p>
+    <div class="choices" role="group" aria-label="Elegir ejemplo de categoría">
+      <button type="button" data-choice="0" aria-pressed="true">Cuadernos</button>
+      <button type="button" data-choice="1" aria-pressed="false">Geometría</button>
+    </div>
+    <section class="viewer" aria-labelledby="selected-title">
+      <div aria-live="polite"><h2 id="selected-title">Cuadernos · Tipo como atributo</h2><p id="selected-description">Cuadriculado y Universitario son filtros combinables. La ruta se mantiene en Catálogo / Cuadernos.</p></div>
+      <div class="links"><a id="full-link" href="01-cuadernos.png" target="_blank" rel="noopener">Abrir a tamaño completo ↗</a><a id="prompt-link" href="01-cuadernos.prompt.txt">Prompt exacto</a><a href="README.md">Modelo e interacciones</a></div>
+      <a id="image-link" href="01-cuadernos.png" target="_blank" rel="noopener"><img id="selected-image" src="01-cuadernos.png" alt="Opción C revisada: cuadernos sin subcategorías; tipo de cuaderno, formato, hojas y cuadrícula en el drawer izquierdo"></a>
+    </section>
+    <div class="examples">
+      <article><h2>Cuadernos</h2><p>Tipo de cuaderno, formato y número de hojas. Cuadrícula y orientación aparecen cuando son relevantes. Se conservan las diferencias entre Croquis, Liso, Composición y Caligrafía.</p><a href="01-cuadernos.png" target="_blank" rel="noopener"><img loading="lazy" src="01-cuadernos.png" alt="Vista completa del mockup de cuadernos"></a></article>
+      <article><h2>Geometría</h2><p>Tipo: Regla, Escuadra, Transportador o Compás. Al elegir Regla se muestra Largo. La lista preparada permanece visible al cambiar de categoría.</p><a href="02-geometria.png" target="_blank" rel="noopener"><img loading="lazy" src="02-geometria.png" alt="Vista completa del mockup de geometría con tipo Regla y largo 30 centímetros"></a></article>
+    </div>
+    <footer><p>Mockups generados con imagegen a partir de la opción C · 10 de noviembre de 2026. Son propuestas de diseño; la migración del catálogo todavía no está implementada.</p><p><a href="manifest.json">Imágenes y prompts</a> · <a href="../04-catalog-browsing/">Aplicación implementada anteriormente</a></p></footer>
+  </main>
+  <script>
+    const choices = [
+      ['01-cuadernos', 'Cuadernos · Tipo como atributo', 'Cuadriculado y Universitario son filtros combinables. La ruta se mantiene en Catálogo / Cuadernos.', 'Opción C revisada: cuadernos sin subcategorías; tipo de cuaderno, formato, hojas y cuadrícula en el drawer izquierdo'],
+      ['02-geometria', 'Geometría · Atributos según la categoría', 'El drawer se adapta a Geometría: Tipo y Largo. La ruta permanece en Catálogo / Geometría, y los útiles de la lista se conservan.', 'Opción C revisada: geometría sin subcategorías, con atributos Tipo y Largo; una regla de 30 centímetros como resultado']
+    ];
+    document.querySelectorAll('[data-choice]').forEach(button => button.addEventListener('click', () => {
+      const [file, title, description, alt] = choices[Number(button.dataset.choice)];
+      document.querySelectorAll('[data-choice]').forEach(other => other.setAttribute('aria-pressed', String(other === button)));
+      document.getElementById('selected-title').textContent = title;
+      document.getElementById('selected-description').textContent = description;
+      document.getElementById('selected-image').src = file + '.png';
+      document.getElementById('selected-image').alt = alt;
+      document.getElementById('image-link').href = file + '.png';
+      document.getElementById('full-link').href = file + '.png';
+      document.getElementById('prompt-link').href = file + '.prompt.txt';
+    }));
+  </script>
+</body>
+</html>

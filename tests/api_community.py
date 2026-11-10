@@ -66,11 +66,12 @@ def run_community(ctx):
 
     def admin_catalog_corrections():
         categories = viewer.request("GET", "/catalog/categories")
-        first, second = categories[:2]
+        first = next(c for c in categories if c['slug'] == 'escritura')
+        second = next(c for c in categories if c['slug'] == 'cuadernos')
         subcategory = first["subcategories"][0]["id"]
         alias = f"Alternativa directa {tag}"
         request = {"name": f"Genérico administrado {tag}", "category_id": first["id"], "subcategory_id": subcategory,
-                   "attributes": {"numero_hojas": 100, "incluye_goma": False}, "aliases": [alias, "  " + alias.upper() + "  "], "approve": True}
+                   "attributes": {"dureza_grafito": "HB", "incluye_goma": False}, "aliases": [alias, "  " + alias.upper() + "  "], "approve": True}
         viewer.request("POST", "/admin/catalog", request, expected=401)
         viewer.request("GET", "/admin/attributes", expected=401)
         assert any(row["key"] == "numero_hojas" and row["data_type"] == "number" for row in admin.request("GET", "/admin/attributes"))
@@ -103,10 +104,10 @@ def run_community(ctx):
         assert stored() == original
         next_alias = f"Nombre corregido alternativo {tag}"
         admin.request("PATCH", f"/admin/catalog/{identity}", {"action": "update", "name": f"Genérico corregido {tag}",
-                      "category_id": second["id"], "subcategory_id": None, "attributes": {"numero_hojas": 80, "incluye_goma": True}, "aliases": [next_alias]})
+                      "category_id": second["id"], "subcategory_id": None, "attributes": {"numero_hojas": 80, "tipo_cuaderno": "Rayado"}, "aliases": [next_alias]})
         revised = stored()
         assert revised["review_status"] == "approved" and revised["category_id"] == second["id"] and revised["subcategory_id"] is None
-        assert revised["attributes"]["numero_hojas"]["value"] == 80 and revised["attributes"]["incluye_goma"]["value"] is True
+        assert revised["attributes"]["numero_hojas"]["value"] == 80 and revised["attributes"]["tipo_cuaderno"]["value"] == 'Rayado'
         assert revised["aliases"] == [next_alias.lower()]
         assert all(row["id"] != identity for row in viewer.request("GET", "/catalog?q=" + quote(alias)))
         assert owner.request("GET", f"/lists/{published}")["content"] == content
@@ -147,14 +148,20 @@ def run_community(ctx):
     def taxonomy():
         category = admin.request("POST", "/admin/categories", {"name": "Categoría QA", "slug": f"qa-{tag}"})["id"]
         subcategory = admin.request("POST", "/admin/subcategories", {"name": "Subcategoría QA", "slug": "primera", "category_id": category})["id"]
+        assigned = admin.request("POST", "/admin/catalog", {"name": "Protección de categoría " + tag, "category_id": category, "subcategory_id": subcategory, "approve": True})['id']
         admin.request("DELETE", f"/admin/categories/{category}", expected=409)
         admin.request("PATCH", f"/admin/categories/{category}", {"name": "Categoría corregida", "slug": f"qa-editada-{tag}"})
         admin.request("PATCH", f"/admin/subcategories/{subcategory}", {"name": "Subcategoría corregida", "slug": "segunda", "category_id": category})
         row = next(row for row in viewer.request("GET", "/catalog/categories") if row["id"] == category)
         assert row["subcategories"][0]["slug"] == "segunda"
         admin.request("POST", "/admin/categories", {"name": "Inválida", "slug": "A--B"}, expected=400)
+        ctx.sql(f"DELETE FROM catalog.items WHERE id='{assigned}'")
         admin.request("DELETE", f"/admin/subcategories/{subcategory}")
         admin.request("DELETE", f"/admin/categories/{category}")
+        empty = admin.request("POST", "/admin/categories", {"name":"Vacía QA", "slug":"vacia-"+tag})['id']
+        admin.request("POST", "/admin/subcategories", {"name":"Clasificación anterior", "slug":"anterior", "category_id":empty})
+        admin.request("DELETE",f"/admin/categories/{empty}")
+        assert all(c['id'] != empty for c in viewer.request('GET','/catalog/categories'))
 
     def feedback_and_archiving():
         identity = new_list()
@@ -181,7 +188,15 @@ def run_community(ctx):
 
     def following_and_revocation():
         identity = new_list()
+        def mine(client):
+            return next(row for row in client.request("GET", "/lists/mine") if row["id"] == identity)
+        assert mine(owner)["following"] is False
+        owner.request("POST", f"/lists/{identity}/follow", {"following": True})
+        assert mine(owner)["role"] == "owner" and mine(owner)["following"] is True
+        owner.request("POST", f"/lists/{identity}/follow", {"following": False})
+        assert mine(owner)["following"] is False
         viewer.request("POST", f"/lists/{identity}/follow", {"following": True})
+        assert mine(viewer)["following"] is True
         change(identity)
         assert ctx.sql(f"SELECT count(*) FROM app.notifications WHERE list_id='{identity}' AND user_id='{viewer.user['id']}' AND status='local'").strip() == "1"
         owner.request("PATCH", f"/lists/{identity}/settings", {"visibility": "private"})
@@ -190,6 +205,7 @@ def run_community(ctx):
         assert ctx.sql(f"SELECT count(*) FROM app.notifications WHERE list_id='{identity}' AND status='canceled'").strip() == "1"
         invite(identity, viewer)
         assert not viewer.request("GET", f"/lists/{identity}")["following"]
+        assert mine(viewer)["following"] is False
         viewer.request("POST", f"/lists/{identity}/follow", {"following": True})
         stale = owner.request("POST", f"/lists/{identity}/access", {"email": viewer.user["email"], "role": "editor"})
         owner.request("DELETE", f"/lists/{identity}/access/{viewer.user['id']}")

@@ -1,96 +1,48 @@
-import { Component, inject, input, signal, effect, untracked, OnDestroy } from '@angular/core';
+import {
+  Component,
+  computed,
+  inject,
+  input,
+  signal,
+  effect,
+  untracked,
+  OnDestroy,
+} from '@angular/core';
 import { form, FormField } from '@angular/forms/signals';
-import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { PdfPreview } from '../pdf-preview/pdf-preview';
 import { Modal } from '../modal';
 import { Pdf } from '../../core/pdf';
 import { Api } from '../../core/api';
 import { Session } from '../../core/session';
 import { PdfPreferences, User } from '../../core/models';
+
 @Component({
   selector: 'app-pdf-options',
-  imports: [FormField, Modal],
-  template: `<div class="pdf-options">
-      <div class="pdf-layouts" role="group" aria-label="Diseño del PDF">
-        @for (layout of layouts; track layout.value) {
-          <button
-            type="button"
-            class="pdf-choice"
-            [class.selected]="model().layout === layout.value"
-            [attr.aria-pressed]="model().layout === layout.value"
-            (click)="choose(layout.value)"
-          >
-            <svg viewBox="0 0 60 58" aria-hidden="true">
-              <rect x="8" y="2" width="44" height="53" fill="#fff" stroke="#96aa96" />
-              <path [attr.d]="layout.path" stroke="#719178" stroke-width="4" fill="none" /></svg
-            >{{ layout.name }}
-          </button>
-        }
-      </div>
-      <div class="fields">
-        <label
-          >Papel<select [formField]="fields.paper">
-            <option value="LETTER">Carta</option>
-            <option value="A4">A4</option>
-          </select></label
-        ><label class="check"><input type="checkbox" [formField]="fields.color" />En color</label>
-      </div>
-      <small>El PDF tiene casillas vacías para marcar en papel.</small>
-      <div class="actions">
-        <button class="btn secondary small" [disabled]="busy()" (click)="generate(true)">
-          Vista previa</button
-        ><button class="btn small" [disabled]="busy()" (click)="generate(false)">
-          {{ busy() ? 'Preparando…' : '↓ Descargar PDF' }}
-        </button>
-      </div>
-      @if (session.user()) {
-        <button class="text-button" (click)="savePreferences()">Guardar estas preferencias</button>
-      }
-    </div>
-    @if (previewUrl()) {
-      <div class="modal-backdrop">
-        <section
-          class="modal"
-          appModal
-          (dismissed)="close()"
-          role="dialog"
-          aria-modal="true"
-          aria-label="Vista previa del PDF"
-        >
-          <div class="modal-head">
-            <h2>Tu PDF</h2>
-            <button class="modal-close" aria-label="Cerrar vista previa" (click)="close()">
-              ×
-            </button>
-          </div>
-          @if (api.error()) {
-            <p class="notice error" role="alert">{{ api.error() }}</p>
-          }
-          <iframe
-            title="Vista previa del PDF"
-            [src]="previewUrl()"
-            style="width:100%;height:70vh;border:0"
-          ></iframe>
-          <p>
-            <a [href]="rawUrl()" target="_blank" rel="noopener">Abrir PDF en una nueva pestaña</a>
-          </p>
-        </section>
-      </div>
-    }`,
+  imports: [FormField, Modal, PdfPreview],
+  templateUrl: './pdf-options.html',
+  styleUrl: './pdf-options.scss',
 })
 export class PdfOptions implements OnDestroy {
   readonly listId = input.required<string>();
   readonly version = input(0);
   readonly draft = input(false);
+  readonly showLauncher = input(true);
   readonly beforeGenerate = input<(() => Promise<void>) | undefined>(undefined);
   readonly session = inject(Session);
   readonly api = inject(Api);
   private pdf = inject(Pdf);
-  private sanitizer = inject(DomSanitizer);
+  private generationSequence = 0;
+  readonly opened = signal(false);
   readonly busy = signal(false);
-  readonly previewUrl = signal<SafeResourceUrl | undefined>(undefined);
   readonly rawUrl = signal('');
   readonly model = signal<PdfPreferences>({ layout: 'columns', paper: 'LETTER', color: true });
   readonly fields = form(this.model);
+  readonly downloadOptions = signal({ remember: false });
+  readonly downloadFields = form(this.downloadOptions);
+  private renderedOptions = signal('');
+  readonly previewChanged = computed(
+    () => !!this.rawUrl() && this.renderedOptions() !== JSON.stringify(this.model()),
+  );
   readonly layouts: { value: PdfPreferences['layout']; name: string; path: string }[] = [
     {
       value: 'columns',
@@ -125,6 +77,12 @@ export class PdfOptions implements OnDestroy {
         untracked(() => this.close());
       }
     });
+    let previousTarget = '';
+    effect(() => {
+      const target = [this.listId(), this.version(), this.draft()].join(':');
+      if (previousTarget && target !== previousTarget) untracked(() => this.close());
+      previousTarget = target;
+    });
     effect(() => {
       const prefs = this.session.user()?.preferences;
       if (prefs)
@@ -138,27 +96,41 @@ export class PdfOptions implements OnDestroy {
   choose(layout: PdfPreferences['layout']) {
     this.model.update((m) => ({ ...m, layout }));
   }
+  open() {
+    return this.generate(true);
+  }
   async generate(preview: boolean) {
+    if (this.busy()) return;
     this.api.clear();
+    if (preview) this.opened.set(true);
     this.busy.set(true);
+    const sequence = ++this.generationSequence;
+    const preferences = { ...this.model() };
     try {
       await this.beforeGenerate()?.();
+      if (sequence !== this.generationSequence) return;
       const url = await this.pdf.generate(
         this.listId(),
         this.version(),
-        this.model(),
+        preferences,
         preview,
         this.draft(),
       );
+      if (sequence !== this.generationSequence) {
+        if (url) URL.revokeObjectURL(url);
+        return;
+      }
       if (preview) {
-        this.close();
+        this.releasePreview();
         this.rawUrl.set(url);
-        this.previewUrl.set(this.sanitizer.bypassSecurityTrustResourceUrl(url));
+        this.renderedOptions.set(JSON.stringify(preferences));
+      } else if (this.downloadOptions().remember) {
+        await this.savePreferences();
       }
     } catch (error) {
-      this.api.fail(error);
+      if (sequence === this.generationSequence) this.api.fail(error);
     } finally {
-      this.busy.set(false);
+      if (sequence === this.generationSequence) this.busy.set(false);
     }
   }
   async savePreferences() {
@@ -175,10 +147,15 @@ export class PdfOptions implements OnDestroy {
       this.api.fail(error);
     }
   }
-  close() {
+  private releasePreview() {
     if (this.rawUrl()) URL.revokeObjectURL(this.rawUrl());
     this.rawUrl.set('');
-    this.previewUrl.set(undefined);
+  }
+  close() {
+    this.generationSequence++;
+    this.opened.set(false);
+    this.busy.set(false);
+    this.releasePreview();
   }
   ngOnDestroy() {
     this.close();

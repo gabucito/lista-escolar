@@ -1,0 +1,120 @@
+<header class="search-heading">
+  <div>
+    <h1>Encuentra la lista de tu curso</h1>
+    <p class="muted">Busca por colegio, curso o ubicación y prepara tus útiles.</p>
+  </div>
+  <a routerLink="/crear" class="btn secondary">＋ Crear lista</a>
+</header>
+<form class="search-filters panel" (submit)="search(); $event.preventDefault()">
+  <div class="primary-filters">
+    <label
+      >Colegio<input
+        [formField]="fields.school"
+        placeholder="Ej. Colegio Los Andes"
+        autocomplete="off"
+    /></label>
+    <label>Curso<input [formField]="fields.class_name" placeholder="Ej. 5° básico" /></label>
+    <label
+      >Año escolar<input [formField]="fields.school_year" inputmode="numeric" placeholder="Todos"
+    /></label>
+    <button class="btn" type="submit" [disabled]="loading()">Buscar listas</button>
+  </div>
+  <div class="mobile-filter-actions">
+    <button
+      type="button"
+      class="text-button"
+      aria-controls="location-filters"
+      [attr.aria-expanded]="showLocation()"
+      (click)="showLocation.set(!showLocation())"
+    >
+      {{ model().comuna || model().region ? 'Ubicación activa' : 'Filtrar por ubicación' }}</button
+    ><button type="button" class="text-button" (click)="clearFilters()">Limpiar filtros</button>
+  </div>
+  <div class="location-filters" id="location-filters" [class.expanded]="showLocation()">
+    <label
+      >Comuna<input
+        [formField]="fields.comuna"
+        list="search-comunas"
+        placeholder="Cualquier comuna"
+    /></label>
+    <label
+      >Región<input
+        [formField]="fields.region"
+        list="search-regions"
+        placeholder="Cualquier región"
+    /></label>
+    <button type="button" class="text-button desktop-clear" (click)="clearFilters()">
+      Limpiar filtros
+    </button>
+  </div>
+  <datalist id="search-comunas">
+    @for (locality of localities; track locality.name) {
+      <option [value]="locality.name"></option>
+    }
+  </datalist>
+  <datalist id="search-regions">
+    @for (region of regions; track region) {
+      <option [value]="region"></option>
+    }
+  </datalist>
+</form>
+<div class="results-toolbar">
+  <div>
+    <h2>{{ searched() ? 'Resultados de búsqueda' : 'Listas de la comunidad' }}</h2>
+    <p class="muted" aria-live="polite">
+      {{ lists().length }} {{ lists().length === 1 ? 'lista disponible' : 'listas disponibles' }} ·
+      Versiones publicadas más recientes
+    </p>
+  </div>
+  <label
+    >Ordenar<select [formField]="fields.sort" (change)="search()">
+      <option value="recent">Más recientes</option>
+      <option value="votes">Más relevantes</option>
+    </select></label
+  >
+</div>
+@if (loading()) {
+  <div class="loading" role="status">Buscando listas…</div>
+} @else if (lists().length) {
+  <div class="list-stack search-results">
+    @for (list of lists(); track list.id) {
+      <article class="result-row">
+        <div class="result-symbol" aria-hidden="true">▤</div>
+        <div class="result-copy">
+          <h3>
+            <a [routerLink]="['/listas', list.id]">{{ list.school }}</a>
+          </h3>
+          <p class="course">{{ list.class_name }} · {{ list.school_year }}</p>
+          <p class="muted location">
+            {{ list.comuna }}{{ list.comuna && list.region ? ' · ' : '' }}{{ list.region }}
+          </p>
+          <small
+            >Versión {{ list.current_version }} · {{ date(list.published_at) }} ·
+            {{ list.owner_name || 'Sin responsable activo' }}</small
+          >
+        </div>
+        <div class="result-action">
+          <span class="vote-count" [attr.aria-label]="list.votes + ' votos'"
+            >♡ {{ list.votes }}</span
+          ><a class="btn secondary small" [routerLink]="['/listas', list.id]"
+            >Ver lista <span aria-hidden="true">→</span></a
+          >
+        </div>
+      </article>
+    }
+  </div>
+} @else {
+  <div class="empty">
+    <h2>
+      {{ searched() ? 'Aún no encontramos esa lista' : 'Todo gran año empieza con una lista' }}
+    </h2>
+    <p>
+      {{
+        searched()
+          ? 'Prueba otro colegio, curso o año, o limpia los filtros para ver todas las listas.'
+          : 'Las listas publicadas por la comunidad aparecerán aquí. Puedes comenzar con la de tu curso.'
+      }}
+    </p>
+    <a routerLink="/crear" class="btn secondary">＋ Crear una lista</a>
+  </div>
+}

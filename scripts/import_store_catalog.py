@@ -31,6 +31,23 @@ TABLES = {
 COPY_HEADER = re.compile(rb"COPY public\.([a-z_]+) \(([^\n]+)\) FROM stdin;\r?$")
 ESCAPES = {"b": "\b", "f": "\f", "n": "\n", "r": "\r", "t": "\t", "v": "\v", "\\": "\\"}
 
+# Parser classification tokens are part of existing canonical identities. They
+# remain stable even though the catalog now represents types as attributes.
+# These values match migration 005; edited/deleted assignments are validated
+# against the target database instead of being silently recreated by an import.
+TYPE_ATTRIBUTES = {
+    "cuadernos": ("tipo_cuaderno", {
+        "cuadriculados": "Cuadriculado", "rayados": "Rayado", "composicion": "Composición",
+        "caligrafia": "Caligrafía", "croquis": "Croquis", "lisos": "Liso",
+    }),
+    "escritura": ("tipo_escritura", {"grafito": "Grafito"}),
+    "arte-y-dibujo": ("tipo_arte", {
+        "lapices-colores": "Lápices de colores", "croqueras": "Croquera", "blocks": "Block",
+    }),
+    "geometria": ("tipo_geometria", {"reglas": "Regla"}),
+    "pegado-y-corte": ("tipo_pegado_corte", {"pegamentos": "Pegamento"}),
+}
+
 
 def decode_copy(value: bytes) -> str:
     """Decode common PostgreSQL COPY text escapes without damaging UTF-8."""
@@ -305,14 +322,21 @@ def product_suggestion(name: str) -> dict | None:
             attributes["cuadricula_mm"] = notebook["spacing"]
         if notebook["orientation"] is not None:
             attributes["orientacion"] = notebook["orientation"]
-        return {
+        suggestion = {
             "key": notebook["key"], "name": notebook["name"], "category": "cuadernos",
             "subcategory": notebook["subcategory"], "attributes": attributes,
             "method": "explicit_notebook_attributes",
         }
-    return (color_pencil_suggestion(name) or graphite_pencil_suggestion(name)
-            or sketchbook_suggestion(name) or drawing_block_suggestion(name)
-            or ruler_suggestion(name) or glue_stick_suggestion(name))
+    else:
+        suggestion = (color_pencil_suggestion(name) or graphite_pencil_suggestion(name)
+                      or sketchbook_suggestion(name) or drawing_block_suggestion(name)
+                      or ruler_suggestion(name) or glue_stick_suggestion(name))
+    if suggestion is None:
+        return None
+    type_key, types = TYPE_ATTRIBUTES[suggestion["category"]]
+    type_value = types[suggestion.pop("subcategory")]
+    suggestion["attributes"] = {type_key: type_value, **suggestion["attributes"]}
+    return suggestion
 
 
 def copy_text(value: object) -> str:
@@ -389,7 +413,7 @@ def build_suggestions(products_path: Path, destination: Path) -> tuple[int, int,
                 continue
             keys.add(str(suggestion["key"]))
             values_out = [
-                suggestion["key"], suggestion["name"], suggestion["category"], suggestion["subcategory"],
+                suggestion["key"], suggestion["name"], suggestion["category"],
                 json.dumps(suggestion["attributes"], ensure_ascii=False, sort_keys=True),
                 suggestion["method"], values[0].decode("ascii"),
             ]
@@ -401,7 +425,12 @@ def build_suggestions(products_path: Path, destination: Path) -> tuple[int, int,
 
 
 def sql_script(temp_dir: Path, single_user: bool = False) -> str:
-    lines = ([] if single_user else ["\\set ON_ERROR_STOP on"]) + ["BEGIN;"]
+    lines = ([] if single_user else ["\\set ON_ERROR_STOP on"]) + ["BEGIN;", """DO $$ BEGIN
+        IF to_regclass('catalog.category_attributes') IS NULL
+           OR to_regclass('catalog.category_type_attributes') IS NULL THEN
+            RAISE EXCEPTION 'Apply migration 005 (category attributes) before importing the store catalog';
+        END IF;
+        END $$;"""]
 
     def copy_from(table: str, columns: str, path: Path) -> str:
         if single_user:
@@ -415,30 +444,45 @@ def sql_script(temp_dir: Path, single_user: bool = False) -> str:
         lines.append(copy_from(f"stage_{table}", f"({columns})", temp_dir / (table + ".tsv")))
         lines.append(f"INSERT INTO store_snapshot.{table} ({columns}) SELECT {columns} FROM stage_{table} ON CONFLICT ({conflict}) DO NOTHING;")
     lines.extend([
-        "CREATE TEMP TABLE stage_candidates (key text, name text, category text, subcategory text, attributes jsonb, method text, product_id uuid);",
+        "CREATE TEMP TABLE stage_candidates (key text, name text, category text, attributes jsonb, method text, product_id uuid);",
         copy_from("stage_candidates", "", temp_dir / "candidates.tsv"),
         """DO $$ BEGIN
            IF EXISTS (SELECT 1 FROM stage_candidates n
                LEFT JOIN catalog.categories c ON c.slug = n.category
-               LEFT JOIN catalog.subcategories s ON s.category_id = c.id AND s.slug = n.subcategory
-               WHERE c.id IS NULL OR s.id IS NULL) THEN
-               RAISE EXCEPTION 'A proposed catalog category or subcategory is missing';
+               LEFT JOIN catalog.category_type_attributes t ON t.category_id = c.id
+               LEFT JOIN catalog.attribute_definitions a ON a.id = t.attribute_id
+               WHERE c.id IS NULL OR a.id IS NULL OR NOT n.attributes ? a.key) THEN
+               RAISE EXCEPTION 'A proposed catalog category or type assignment is missing';
            END IF;
            IF EXISTS (SELECT 1 FROM stage_candidates n CROSS JOIN LATERAL jsonb_each(n.attributes) e
-               LEFT JOIN catalog.attribute_definitions a ON a.key = e.key WHERE a.id IS NULL) THEN
-               RAISE EXCEPTION 'A proposed catalog attribute is missing';
+               JOIN catalog.categories c ON c.slug = n.category
+               JOIN catalog.category_type_attributes t ON t.category_id = c.id
+               JOIN catalog.attribute_definitions type_definition ON type_definition.id = t.attribute_id
+               LEFT JOIN catalog.attribute_definitions a ON a.key = e.key
+               LEFT JOIN catalog.category_attributes ca ON ca.category_id = c.id AND ca.attribute_id = a.id
+               WHERE a.id IS NULL OR ca.attribute_id IS NULL
+                  OR jsonb_typeof(e.value) IS DISTINCT FROM CASE a.data_type WHEN 'text' THEN 'string' ELSE a.data_type END
+                  OR (a.data_type = 'text' AND (btrim(e.value #>> '{}') = '' OR
+                      (cardinality(ca.options) > 0 AND NOT (e.value #>> '{}') = ANY(ca.options))))
+                  OR (a.data_type = 'number' AND CASE WHEN jsonb_typeof(e.value) = 'number'
+                      THEN (e.value #>> '{}')::numeric <= 0 OR (e.value #>> '{}')::numeric > 1000000 ELSE true END)
+                  OR (cardinality(ca.applies_to_types) > 0 AND
+                      NOT (n.attributes->>type_definition.key) = ANY(ca.applies_to_types))) THEN
+               RAISE EXCEPTION 'A proposed catalog attribute is missing, invalid or not applicable to its type';
            END IF;
            IF EXISTS (SELECT 1 FROM stage_candidates n JOIN catalog.items i ON i.canonical_key = n.key
                JOIN catalog.categories c ON c.id = i.category_id
-               JOIN catalog.subcategories s ON s.id = i.subcategory_id
-               WHERE c.slug <> n.category OR s.slug <> n.subcategory) THEN
-               RAISE EXCEPTION 'An existing catalog key belongs to a different category';
+               LEFT JOIN catalog.category_type_attributes t ON t.category_id = i.category_id
+               LEFT JOIN catalog.attribute_definitions a ON a.id = t.attribute_id
+               LEFT JOIN catalog.item_attributes type_value ON type_value.item_id = i.id AND type_value.attribute_id = t.attribute_id
+               WHERE c.slug <> n.category OR a.key IS NULL
+                  OR type_value.text_value IS DISTINCT FROM n.attributes->>a.key) THEN
+               RAISE EXCEPTION 'An existing catalog key has a different or unclassified catalog type; review it before importing';
            END IF;
            END $$;""",
-        """INSERT INTO catalog.items (category_id, subcategory_id, name, canonical_key, review_status)
-           SELECT DISTINCT c.id, s.id, n.name, n.key, 'pending'
+        """INSERT INTO catalog.items (category_id, name, canonical_key, review_status)
+           SELECT DISTINCT c.id, n.name, n.key, 'pending'
            FROM stage_candidates n JOIN catalog.categories c ON c.slug = n.category
-           JOIN catalog.subcategories s ON s.category_id = c.id AND s.slug = n.subcategory
            ON CONFLICT (canonical_key) DO NOTHING;""",
         """INSERT INTO catalog.item_attributes (item_id, attribute_id, data_type, text_value, number_value, boolean_value)
            SELECT DISTINCT i.id, a.id, a.data_type,
@@ -481,7 +525,7 @@ def main() -> None:
         counts = extract_sections(args.dump, temp_dir)
         item_count, match_count, methods = build_suggestions(temp_dir / "products.tsv", temp_dir / "candidates.tsv")
         print("Catalog-only source rows:", json.dumps(counts, ensure_ascii=False, sort_keys=True), flush=True)
-        print(f"Suggestions: {item_count} generic items, {match_count} product matches; all pending review.", flush=True)
+        print(f"Suggestions: {item_count} generic identities, {match_count} product matches; new items and matches require review.", flush=True)
         print("Suggestion methods:", json.dumps(methods, ensure_ascii=False, sort_keys=True), flush=True)
         if not args.dry_run:
             sql_path = temp_dir / "import.sql"

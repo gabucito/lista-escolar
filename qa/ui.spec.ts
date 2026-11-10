@@ -51,8 +51,8 @@ for (const viewport of [{ name: 'desktop', width: 1440, height: 1000 }, { name: 
       await expect(page.locator('main h1')).toBeVisible();
       if (route === 'search') await expect(page.locator(`a[href="/listas/${listId}"]`).first()).toBeVisible();
       if (route === 'editor') {
-        await expect(page.locator('.item-editor')).toHaveCount(10);
-        await expect(page.locator('.catalog-result')).not.toHaveCount(0);
+        await expect(page.locator('.supply-row')).toHaveCount(10);
+        if (viewport.width > 720) await expect(page.locator('.catalog-result')).not.toHaveCount(0);
       }
       if (route === 'published') await expect(page.locator('.checklist-item')).toHaveCount(10);
       if (route === 'sharing') await expect(page.getByRole('button', { name: 'Crear invitación' })).toBeVisible();

@@ -24,6 +24,14 @@ pub fn routes() -> Router<AppState> {
         .route("/admin/dashboard", get(dashboard))
         .route("/admin/catalog", get(catalog_items).post(create_item))
         .route("/admin/attributes", get(attribute_definitions))
+        .route(
+            "/admin/categories/{id}/attributes",
+            patch(crate::category_attributes::configure),
+        )
+        .route(
+            "/admin/categories/{id}/types",
+            post(crate::category_attributes::change_type),
+        )
         .route("/admin/catalog/{id}", patch(review_item))
         .route("/admin/products", get(products))
         .route(
@@ -231,8 +239,33 @@ async fn review_item(
             None => None,
         };
         let category_id = input.category_id.unwrap_or(source.get("category_id"));
-        let subcategory_id = input.subcategory_id.unwrap_or(source.get("subcategory_id"));
-        catalog::validate_classification(&mut tx, category_id, subcategory_id).await?;
+        let changed_classification = input.category_id.is_some()
+            || input.subcategory_id.is_some()
+            || input.attributes.is_some();
+        let (subcategory_id, attributes) = if changed_classification {
+            let supplied = input
+                .attributes
+                .unwrap_or(crate::category_attributes::item_values(&mut tx, id).await?);
+            let legacy = input.subcategory_id.unwrap_or_default();
+            let (legacy, attributes) = crate::category_attributes::prepare(
+                &mut tx,
+                category_id,
+                legacy,
+                supplied,
+                Some(id),
+            )
+            .await?;
+            (
+                if input.subcategory_id == Some(None) {
+                    None
+                } else {
+                    legacy
+                },
+                Some(attributes),
+            )
+        } else {
+            (source.get("subcategory_id"), None)
+        };
         let status = match input.action.as_str() {
             "approve" => "approved".to_owned(),
             "reject" => "rejected".to_owned(),
@@ -240,7 +273,7 @@ async fn review_item(
         };
         sqlx::query("UPDATE catalog.items SET review_status=$2,name=COALESCE($3,name),category_id=$4,subcategory_id=$5,updated_at=now() WHERE id=$1")
             .bind(id).bind(status).bind(name).bind(category_id).bind(subcategory_id).execute(&mut *tx).await?;
-        if let Some(attributes) = input.attributes {
+        if let Some(attributes) = attributes {
             catalog::replace_attributes(&mut tx, id, attributes).await?;
         }
         if let Some(aliases) = input.aliases {
@@ -753,6 +786,7 @@ async fn create_category(
             .bind(slug)
             .fetch_one(&mut *tx)
             .await?;
+    crate::category_attributes::ensure_type(&mut tx, id).await?;
     audit(
         &mut tx,
         admin.id,
@@ -803,12 +837,20 @@ async fn delete_category(
         .fetch_optional(&mut *tx)
         .await?
         .ok_or_else(ApiError::not_found)?;
-    let used:bool=sqlx::query_scalar("SELECT EXISTS(SELECT 1 FROM catalog.items WHERE category_id=$1) OR EXISTS(SELECT 1 FROM catalog.subcategories WHERE category_id=$1)").bind(id).fetch_one(&mut *tx).await?;
+    let used: bool =
+        sqlx::query_scalar("SELECT EXISTS(SELECT 1 FROM catalog.items WHERE category_id=$1)")
+            .bind(id)
+            .fetch_one(&mut *tx)
+            .await?;
     if used {
-        return Err(ApiError::conflict(
-            "La categoría tiene artículos o subcategorías",
-        ));
+        return Err(ApiError::conflict("La categoría tiene útiles asignados"));
     }
+    sqlx::query("DELETE FROM catalog.subcategory_attributes WHERE subcategory_id IN (SELECT id FROM catalog.subcategories WHERE category_id=$1)")
+        .bind(id).execute(&mut *tx).await?;
+    sqlx::query("DELETE FROM catalog.subcategories WHERE category_id=$1")
+        .bind(id)
+        .execute(&mut *tx)
+        .await?;
     sqlx::query("DELETE FROM catalog.categories WHERE id=$1")
         .bind(id)
         .execute(&mut *tx)
@@ -847,6 +889,7 @@ async fn create_subcategory(
     .bind(slug)
     .fetch_one(&mut *tx)
     .await?;
+    crate::category_attributes::register_legacy(&mut tx, id).await?;
     audit(
         &mut tx,
         admin.id,
@@ -900,6 +943,7 @@ async fn update_subcategory(
         .bind(slug)
         .execute(&mut *tx)
         .await?;
+    crate::category_attributes::register_legacy(&mut tx, id).await?;
     audit(
         &mut tx,
         admin.id,

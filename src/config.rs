@@ -66,25 +66,32 @@ pub async fn migrate(pool: &sqlx::PgPool) -> Result<(), sqlx::Error> {
         .await?;
     sqlx::raw_sql("CREATE SCHEMA IF NOT EXISTS app; CREATE TABLE IF NOT EXISTS app.schema_migrations (version bigint PRIMARY KEY, checksum text NOT NULL, applied_at timestamptz NOT NULL DEFAULT now())")
         .execute(&mut *tx).await?;
-    let script = include_str!("../db/003_application.sql");
-    let checksum = format!("{:x}", Sha256::digest(script));
-    let existing: Option<String> =
-        sqlx::query_scalar("SELECT checksum FROM app.schema_migrations WHERE version=3")
-            .fetch_optional(&mut *tx)
-            .await?;
-    if let Some(existing) = existing {
-        if existing != checksum {
-            return Err(sqlx::Error::Protocol(
-                "Application migration 3 changed after application; add a new migration instead."
-                    .into(),
-            ));
+    for (version, script) in [
+        (3_i64, include_str!("../db/003_application.sql")),
+        (4_i64, include_str!("../db/004_notebook_catalog.sql")),
+        (5_i64, include_str!("../db/005_category_attributes.sql")),
+        (6_i64, include_str!("../db/006_catalog_expansion.sql")),
+    ] {
+        let checksum = format!("{:x}", Sha256::digest(script));
+        let existing: Option<String> =
+            sqlx::query_scalar("SELECT checksum FROM app.schema_migrations WHERE version=$1")
+                .bind(version)
+                .fetch_optional(&mut *tx)
+                .await?;
+        if let Some(existing) = existing {
+            if existing != checksum {
+                return Err(sqlx::Error::Protocol(format!(
+                    "Application migration {version} changed after application; add a new migration instead."
+                )));
+            }
+        } else {
+            sqlx::raw_sql(script).execute(&mut *tx).await?;
+            sqlx::query("INSERT INTO app.schema_migrations(version,checksum) VALUES($1,$2)")
+                .bind(version)
+                .bind(checksum)
+                .execute(&mut *tx)
+                .await?;
         }
-    } else {
-        sqlx::raw_sql(script).execute(&mut *tx).await?;
-        sqlx::query("INSERT INTO app.schema_migrations(version,checksum) VALUES(3,$1)")
-            .bind(checksum)
-            .execute(&mut *tx)
-            .await?;
     }
     tx.commit().await?;
     Ok(())

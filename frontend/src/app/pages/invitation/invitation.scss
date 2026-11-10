@@ -1,0 +1,110 @@
+:host {
+  display: block;
+}
+.invitation-page {
+  max-width: 620px;
+  margin: 1.5rem auto 2rem;
+}
+.invitation-panel {
+  padding: 1.7rem;
+}
+.invitation-icon {
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  background: var(--sage);
+  color: var(--green);
+  border-radius: 50%;
+  font-size: 1.4rem;
+  margin-bottom: 1rem;
+}
+.eyebrow {
+  font-size: 0.7rem;
+  margin-bottom: 0.4rem;
+}
+h1 {
+  font-size: 1.8rem;
+  margin-bottom: 0.5rem;
+}
+.invitation-panel > p {
+  font-size: 0.9rem;
+}
+.connected-account {
+  padding: 0.8rem;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin: 1.2rem 0;
+}
+.connected-account > div {
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.connected-account small,
+.connected-account strong {
+  display: block;
+  font-size: 0.8rem;
+}
+.connected-account small {
+  margin-bottom: 0.3rem;
+}
+.connected-account .text-button {
+  font-size: 0.75rem;
+}
+.account-avatar {
+  flex: none;
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  background: var(--sage);
+  border-radius: 50%;
+  font-weight: 700;
+  color: var(--green);
+}
+.permission-note {
+  font-size: 0.84rem;
+  line-height: 1.6;
+  margin: 1rem 0;
+}
+.permission-note p {
+  margin: 0.4rem 0;
+}
+.invitation-submit {
+  width: 100%;
+}
+.invitation-secondary {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  margin-top: 0.7rem;
+}
+.notice {
+  font-size: 0.85rem;
+}
+@media (max-width: 480px) {
+  .invitation-page {
+    margin: 0.5rem auto;
+  }
+  .invitation-panel {
+    padding: 1rem;
+  }
+  .connected-account {
+    display: grid;
+    grid-template-columns: 34px minmax(0, 1fr);
+    align-items: start;
+  }
+  .connected-account > .text-button {
+    grid-column: 2;
+    justify-self: start;
+    margin-left: 0;
+  }
+  .invitation-panel h1 {
+    font-size: 1.6rem;
+  }
+}

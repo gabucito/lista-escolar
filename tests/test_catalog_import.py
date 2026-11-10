@@ -55,6 +55,39 @@ class NotebookSuggestionsTest(unittest.TestCase):
 
 
 class OtherSupplySuggestionsTest(unittest.TestCase):
+    def test_product_candidates_use_type_attributes_without_changing_identity(self):
+        cases = (
+            ("Cuad. Univ. 100H 7mm", "cuaderno:universitario:cuadriculados:-:7:100", "tipo_cuaderno", "Cuadriculado"),
+            ("Cuaderno College 80H caligrafía vertical", "cuaderno:college:caligrafia:vertical:-:80", "tipo_cuaderno", "Caligrafía"),
+            ("Lapiz Color 12 col Artel", "manual:lapices-colores-12", "tipo_arte", "Lápices de colores"),
+            ("Lapiz Grafito HB s/Goma", "lapiz-grafito:hb:sin-goma", "tipo_escritura", "Grafito"),
+            ("Croquera Carta 80H", "croquera:carta:80:sin-medidas", "tipo_arte", "Croquera"),
+            ("Block Dibujo Medio 99 1/8 20H", "block:medio:99:1/8:20", "tipo_arte", "Block"),
+            ("Regla 30 cm", "manual:regla-30-cm", "tipo_geometria", "Regla"),
+            ("Pegamento en barra 21g", "pegamento-barra:21-g", "tipo_pegado_corte", "Pegamento"),
+        )
+        for name, key, type_key, type_value in cases:
+            with self.subTest(name=name):
+                item = catalog_import.product_suggestion(name)
+                self.assertIsNotNone(item)
+                self.assertEqual(item["key"], key)
+                self.assertEqual(item["attributes"][type_key], type_value)
+                self.assertNotIn("subcategory", item)
+        self.assertIs(catalog_import.product_suggestion("Lapiz Grafito HB s/Goma")["attributes"]["incluye_goma"], False)
+
+    def test_notebook_types_preserve_distinct_classifications(self):
+        names = {
+            "Cuadriculado": "7mm", "Rayado": "rayado", "Composición": "composición",
+            "Caligrafía": "caligrafía", "Croquis": "croquis", "Liso": "liso",
+        }
+        keys = set()
+        for expected, description in names.items():
+            item = catalog_import.product_suggestion(f"Cuaderno College 80 hojas {description}")
+            self.assertIsNotNone(item)
+            self.assertEqual(item["attributes"]["tipo_cuaderno"], expected)
+            keys.add(item["key"])
+        self.assertEqual(len(keys), 6)
+
     def test_color_count_is_preserved_and_mixed_sets_are_skipped(self):
         item = catalog_import.color_pencil_suggestion("Lápiz Color 12 col Artel")
         self.assertEqual(item["key"], "manual:lapices-colores-12")

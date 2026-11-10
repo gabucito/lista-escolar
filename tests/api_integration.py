@@ -512,6 +512,10 @@ def main():
         if not args.core_only:
             from api_community import run_community
             run_community(ctx)
+            from api_category_attributes import run_category_attributes
+            run_category_attributes(ctx)
+            from api_catalog_browse import run_catalog_browse
+            run_catalog_browse(ctx)
         run_cli_checks(ctx)
         report = {'created_at': datetime.now(timezone.utc).isoformat(), 'isolated_database': True, 'requests': ctx.requests,
                   'passed': sum(row['passed'] for row in ctx.results), 'failed': sum(not row['passed'] for row in ctx.results),

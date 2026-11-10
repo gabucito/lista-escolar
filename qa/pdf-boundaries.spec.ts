@@ -46,9 +46,16 @@ async function publishList(context: BrowserContext, id: string) {
   const draft = await api(context, 'GET', `/lists/${id}/draft`);
   return api(context, 'POST', `/lists/${id}/publish`, { revision: draft.revision, current_version: draft.current_version, request_id: randomUUID() });
 }
+async function openPdf(page: Page) {
+  if (!await page.getByRole('dialog', { name: 'Vista previa del PDF' }).isVisible()) {
+    await page.getByRole('button', { name: /^(Vista previa|Descargar PDF)$/ }).first().click();
+    await expect(page.getByRole('dialog', { name: 'Vista previa del PDF' }).locator('app-pdf-preview img')).toBeVisible();
+  }
+}
 async function download(page: Page, filename: string) {
+  await openPdf(page);
   const pending = page.waitForEvent('download');
-  await page.getByRole('button', { name: /Descargar PDF/ }).click();
+  await page.getByRole('dialog', { name: 'Vista previa del PDF' }).getByRole('button', { name: 'Descargar PDF', exact: true }).click();
   const file = `${artifacts}/${filename}`; await (await pending).saveAs(file); return file;
 }
 async function examine(file: string, grayscale = false) {
@@ -89,6 +96,7 @@ for (const layout of ['Dos columnas', 'Barra lateral', 'Fichas']) {
     const browserErrors: string[] = []; page.on('pageerror', error => browserErrors.push(error.message));
     await account(context); const data = content(await logo(context)); const id = await seed(context, data);
     await page.goto(`/listas/${id}`); await expect(page.getByRole('heading', { name: data.school, exact: true })).toBeVisible();
+    await openPdf(page);
     await page.getByRole('button', { name: layout, exact: true }).click();
     await page.getByRole('combobox', { name: 'Papel', exact: true }).selectOption(layout === 'Dos columnas' ? 'A4' : 'LETTER');
     const results = [];
@@ -113,7 +121,7 @@ test('PDF drafts, historical versions, archives and preference overrides', async
   test.setTimeout(180_000);
   const user = await account(context), data = content('', false), id = await seed(context, data, false);
   await page.goto(`/editar/${id}`);
-  await expect(page.getByLabel('Colegio', { exact: true })).toHaveValue(data.school);
+  await expect(page.locator('main h1')).toContainText(data.school);
   const draft = await examine(await download(page, 'Boundary-draft.pdf'));
   expect(draft.text).toContain('BORRADOR'); expect(draft.text).not.toContain('Versión 0');
   await publishList(context, id);
@@ -123,6 +131,7 @@ test('PDF drafts, historical versions, archives and preference overrides', async
   const preferences = { layout: 'cards', paper: 'A4', color: false };
   await api(context, 'PATCH', '/auth/me', { display_name: user.display_name, preferences });
   await page.goto(`/listas/${id}?version=1`);
+  await openPdf(page);
   await expect(page.getByRole('button', { name: 'Fichas', exact: true })).toHaveAttribute('aria-pressed', 'true');
   await expect(page.getByRole('combobox', { name: 'Papel', exact: true })).toHaveValue('A4');
   await expect(page.getByLabel('En color', { exact: true })).not.toBeChecked();

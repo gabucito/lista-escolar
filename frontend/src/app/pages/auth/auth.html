@@ -1,0 +1,113 @@
+<div class="auth-page">
+  <div class="auth-intro">
+    <p class="eyebrow">Tu comunidad escolar</p>
+    <h1>{{ register ? 'Crea tu cuenta' : 'Ingresa a tu cuenta' }}</h1>
+    <p class="muted">
+      {{
+        register
+          ? 'Crea listas, comparte con tu curso y guarda tu avance.'
+          : 'Continúa con tus listas y tus útiles pendientes.'
+      }}
+    </p>
+  </div>
+  <section class="panel auth-panel">
+    <div class="auth-switch">
+      <a
+        routerLink="/ingresar"
+        [queryParams]="{ next: next }"
+        [class.selected]="!register"
+        [attr.aria-current]="!register ? 'page' : null"
+        >Ingresar</a
+      ><a
+        routerLink="/registro"
+        [queryParams]="{ next: next }"
+        [class.selected]="register"
+        [attr.aria-current]="register ? 'page' : null"
+        >Crear cuenta</a
+      >
+    </div>
+    <form novalidate (submit)="send(); $event.preventDefault()">
+      @if (register) {
+        <label for="account-name">Nombre para mostrar</label
+        ><input
+          id="account-name"
+          [formField]="fields.display_name"
+          autocomplete="nickname"
+          placeholder="Así te verá la comunidad"
+          aria-describedby="name-help"
+        />
+        <small
+          id="name-help"
+          [class.validation-error]="
+            fields.display_name().invalid() && (fields.display_name().touched() || attempted())
+          "
+          >{{
+            fields.display_name().invalid() && (fields.display_name().touched() || attempted())
+              ? 'Escribe un nombre de hasta 80 caracteres.'
+              : 'Usa el nombre con el que quieres aparecer en tus listas.'
+          }}</small
+        >
+      }
+      <label for="account-email">Correo electrónico</label
+      ><input
+        id="account-email"
+        type="email"
+        [formField]="fields.email"
+        autocomplete="email"
+        placeholder="tu@correo.cl"
+        aria-describedby="email-help"
+      />
+      @if (fields.email().invalid() && (fields.email().touched() || attempted())) {
+        <small id="email-help" class="validation-error"
+          >Ingresa un correo válido, por ejemplo nombre&#64;correo.cl.</small
+        >
+      }
+      <label for="account-password">Contraseña</label>
+      <div class="password-field">
+        <input
+          id="account-password"
+          [type]="showPassword() ? 'text' : 'password'"
+          [formField]="fields.password"
+          [attr.autocomplete]="register ? 'new-password' : 'current-password'"
+          aria-describedby="password-help"
+        /><button
+          type="button"
+          class="password-toggle"
+          [attr.aria-label]="showPassword() ? 'Ocultar contraseña' : 'Mostrar contraseña'"
+          [attr.aria-pressed]="showPassword()"
+          (click)="showPassword.set(!showPassword())"
+        >
+          {{ showPassword() ? 'Ocultar' : 'Mostrar' }}
+        </button>
+      </div>
+      <small
+        id="password-help"
+        [class.validation-error]="
+          fields.password().invalid() && (fields.password().touched() || attempted())
+        "
+        >Al menos 8 caracteres.</small
+      >
+      @if (error()) {
+        <p class="error-inline" role="alert">{{ error() }}</p>
+      }
+      <button type="submit" class="btn submit-button" [disabled]="busy()">
+        {{ busy() ? 'Un momento…' : register ? 'Crear cuenta' : 'Ingresar' }}
+      </button>
+    </form>
+    <p class="auth-alternative">
+      @if (register) {
+        ¿Ya tienes cuenta?
+        <a routerLink="/ingresar" [queryParams]="{ next: next }">Ingresa aquí</a>.
+      } @else {
+        ¿Primera vez? <a routerLink="/registro" [queryParams]="{ next: next }">Crea una cuenta</a>.
+      }
+    </p>
+  </section>
+  <aside class="local-notice">
+    <strong>Desarrollo local</strong>
+    <p>
+      Las cuentas están disponibles de inmediato. El envío de correos y el acceso con Google se
+      incorporarán más adelante.
+    </p>
+  </aside>
+</div>

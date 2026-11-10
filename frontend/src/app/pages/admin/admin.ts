@@ -2,7 +2,6 @@ import { Component, computed, inject, signal } from '@angular/core';
 import {
   FormField,
   applyEach,
-  disabled,
   form,
   maxLength,
   minLength,
@@ -13,6 +12,7 @@ import { Api, ApiError } from '../../core/api';
 import {
   CatalogItem,
   Category,
+  CategoryAttribute,
   Content,
   Item,
   Template,
@@ -21,6 +21,7 @@ import {
   newItem,
   dateLabel,
 } from '../../core/models';
+import { applicableCategoryAttributes, categoryInputAttributes } from '../../core/catalog-attributes';
 
 interface Administrator {
   id: string;
@@ -45,6 +46,12 @@ interface AdminItem extends CatalogItem {
 interface AttributeInput {
   key: string;
   value: string;
+}
+interface AttributeBindingInput {
+  key: string;
+  options: string;
+  all_types: boolean;
+  types: { value: string; selected: boolean }[];
 }
 interface Match {
   item_id: string;
@@ -95,6 +102,7 @@ export class Admin {
   readonly loading = signal(true);
   readonly busy = signal(false);
   readonly error = signal('');
+  readonly attempted = signal('');
   readonly tab = signal<Tab>('summary');
   readonly tabs: { id: Tab; label: string }[] = [
     { id: 'summary', label: 'Resumen' },
@@ -106,6 +114,28 @@ export class Admin {
     { id: 'schools', label: 'Colegios' },
     { id: 'accounts', label: 'Administradores' },
   ];
+  readonly titles: Record<Tab, string> = {
+    summary: 'Administración',
+    catalog: 'Catálogo compartido',
+    taxonomy: 'Organización del catálogo',
+    products: 'Revisar vínculos de productos',
+    reports: 'Reportes de la comunidad',
+    templates: 'Plantillas por nivel',
+    schools: 'Nombres de colegios',
+    accounts: 'Crear cuenta administrativa',
+  };
+  readonly navPaths: Record<Tab, string> = {
+    summary: 'M3 10 12 3l9 7M5 9v12h5v-7h4v7h5V9',
+    catalog: 'M3 4h7l2 2 2-2h7v16h-7l-2 2-2-2H3zM12 6v16',
+    taxonomy: 'm12 3 10 5-10 5L2 8zM2 12l10 5 10-5M2 16l10 5 10-5',
+    products:
+      'm9 15 6-6M8 16l-2 2a4 4 0 0 1-6-6l5-5a4 4 0 0 1 6 0M16 8l2-2a4 4 0 0 1 6 6l-5 5a4 4 0 0 1-6 0',
+    reports: 'M5 3h14v18H5zM9 7h6M9 11h6M9 15h3',
+    templates: 'M6 3h10l4 4v14H6zM16 3v5h4M10 12h6M10 16h6',
+    schools: 'm3 10 9-7 9 7M5 9v12h14V9M10 21v-6h4v6M9 10h1M14 10h1',
+    accounts:
+      'M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8M2 21v-3a7 7 0 0 1 14 0v3zM17 4a4 4 0 0 1 0 7M19 14a6 6 0 0 1 3 5v2',
+  };
   readonly counts = signal<Record<string, number>>({});
   readonly catalog = signal<AdminItem[]>([]);
   readonly categories = signal<Category[]>([]);
@@ -155,7 +185,6 @@ export class Admin {
     name: '',
     target_id: '',
     category_id: '',
-    subcategory_id: '',
     aliases: '',
     attributes: [] as AttributeInput[],
   });
@@ -169,24 +198,54 @@ export class Admin {
       maxLength(a.value, 300);
     });
   });
-  readonly reviewSubcategories = computed(
-    () =>
-      this.categories().find((c) => String(c.id) === this.reviewModel().category_id)
-        ?.subcategories || [],
+  readonly reviewCategory = computed(() =>
+    this.categories().find((c) => String(c.id) === this.reviewModel().category_id),
   );
-  readonly taxonomyModel = signal({ kind: 'category', id: 0, name: '', slug: '', category_id: '' });
+  readonly reviewDefinitions = computed(() =>
+    categoryInputAttributes(
+      this.reviewCategory(),
+      Object.fromEntries(this.reviewModel().attributes.map((a) => [a.key, a.value])),
+    ),
+  );
+  readonly taxonomyModel = signal({ id: 0, name: '', slug: '' });
   readonly taxonomyFields = form(this.taxonomyModel, (p) => {
     required(p.name);
     required(p.slug);
-    disabled(p.kind, ({ valueOf }) => valueOf(p.id) !== 0);
+  });
+  readonly configuredCategory = computed(() =>
+    this.categories().find((c) => c.id === this.taxonomyModel().id),
+  );
+  readonly typeOptions = computed(() => this.categoryTypes(this.configuredCategory()));
+  readonly typeModel = signal({ previous: '', value: '' });
+  readonly typeFields = form(this.typeModel, (p) => {
+    required(p.value);
+    maxLength(p.value, 300);
+  });
+  readonly bindingModel = signal({ attributes: [] as AttributeBindingInput[] });
+  readonly bindingFields = form(this.bindingModel, (p) =>
+    applyEach(p.attributes, (a) => required(a.key)),
+  );
+  readonly bindingDefinitions = computed(() => {
+    const typeKeys = new Set(
+      this.categories()
+        .map((c) => c.type_attribute)
+        .filter(Boolean),
+    );
+    return this.attributeDefinitions().filter((a) => !typeKeys.has(a.key));
   });
   readonly productSearchModel = signal({ q: '' });
   readonly productSearchFields = form(this.productSearchModel);
   readonly linkModel = signal({ item_id: '' });
   readonly linkFields = form(this.linkModel, (p) => required(p.item_id));
+  readonly selectedGeneric = computed(() =>
+    this.usableItems().find((item) => item.id === this.linkModel().item_id),
+  );
   readonly decisionModel = signal({ note: '', action: 'dismiss' });
   readonly decisionFields = form(this.decisionModel, (p) => required(p.note));
   readonly templateEditing = signal(false);
+  readonly templateNoteIds = signal<string[]>([]);
+  readonly showAccountPassword = signal(false);
+  readonly showLoginPassword = signal(false);
   readonly templateModel = signal({
     id: '',
     name: '',
@@ -240,6 +299,8 @@ export class Admin {
     this.selectedProduct.set(undefined);
     this.decisionModel.set({ note: '', action: 'dismiss' });
     this.accountModel.set({ username: '', password: '' });
+    this.showAccountPassword.set(false);
+    this.showLoginPassword.set(false);
   }
   private fail(error: unknown) {
     if (error instanceof ApiError && error.status === 401) {
@@ -250,6 +311,7 @@ export class Admin {
   }
   async selectTab(tab: Tab) {
     if (this.busy()) return;
+    this.attempted.set('');
     this.tab.set(tab);
     this.error.set('');
     this.selectedItem.set(undefined);
@@ -281,9 +343,25 @@ export class Admin {
         this.attributeDefinitions.set(definitions);
         break;
       }
-      case 'taxonomy':
-        this.categories.set(await this.api.get<Category[]>('/catalog/categories'));
+      case 'taxonomy': {
+        const [categories, definitions] = await Promise.all([
+          this.api.get<Category[]>('/catalog/categories'),
+          this.api.get<AttributeDefinition[]>('/admin/attributes'),
+        ]);
+        this.categories.set(categories);
+        this.attributeDefinitions.set(definitions);
+        const options = this.typeOptions();
+        this.bindingModel.update((model) => ({
+          attributes: model.attributes.map((row) => ({
+            ...row,
+            types: options.map((value) => ({
+              value,
+              selected: row.types.find((t) => t.value === value)?.selected || false,
+            })),
+          })),
+        }));
         break;
+      }
       case 'products': {
         const [products, matches] = await Promise.all([
           this.api.get<Product[]>(
@@ -340,6 +418,7 @@ export class Admin {
     }
   }
   login() {
+    this.attempted.set('login');
     void submit(this.loginFields, async () => {
       this.busy.set(true);
       this.error.set('');
@@ -396,7 +475,7 @@ export class Admin {
       .map(([key, value]) => {
         if (typeof value === 'object' && value !== null && 'value' in value) {
           const v = value as { name?: string; value: unknown; unit?: string };
-          return `${v.name || key}: ${String(v.value)}${v.unit ? ' ' + v.unit : ''}`;
+          return `${v.name || key}: ${this.attributeValue(v.value)}${v.unit ? ' ' + v.unit : ''}`;
         }
         return `${key}: ${String(value)}`;
       })
@@ -409,7 +488,6 @@ export class Admin {
       name: item.name,
       target_id: '',
       category_id: String(item.category_id || ''),
-      subcategory_id: String(item.subcategory_id || ''),
       aliases: (item.aliases || []).join('\n'),
       attributes: Object.entries(item.attributes || {}).map(([key, attribute]) => {
         const value =
@@ -424,23 +502,71 @@ export class Admin {
     void this.findMergeTargets();
   }
   newSupply() {
+    this.attempted.set('');
     this.itemEditing.set(true);
     this.selectedItem.set(undefined);
     this.reviewModel.set({
       name: '',
       target_id: '',
       category_id: '',
-      subcategory_id: '',
       aliases: '',
       attributes: [],
     });
   }
   closeSupply() {
+    this.attempted.set('');
     this.itemEditing.set(false);
     this.selectedItem.set(undefined);
   }
   changeReviewCategory(category_id: string) {
-    this.reviewModel.update((v) => ({ ...v, category_id, subcategory_id: '' }));
+    const category = this.categories().find((c) => String(c.id) === category_id);
+    const keys = new Set(category?.attributes.map((a) => a.key) || []);
+    this.reviewModel.update((v) => ({
+      ...v,
+      category_id,
+      attributes: v.attributes.filter((a) => keys.has(a.key)),
+    }));
+    this.reviewAttributeChanged();
+  }
+  reviewAttributeChanged(index?: number) {
+    const category = this.reviewCategory();
+    const original = this.selectedItem();
+    const originalValue = (key: string) => {
+      const value = original?.attributes[key];
+      return value && typeof value === 'object' && 'value' in value ? value.value : value;
+    };
+    this.reviewModel.update((model) => {
+      const rows = model.attributes.map((row, i) => (i === index ? { ...row, value: '' } : row));
+      const values = Object.fromEntries(rows.map((a) => [a.key, a.value]));
+      const typeChanged =
+        !!category?.type_attribute &&
+        values[category.type_attribute] !== originalValue(category.type_attribute);
+      const allowed = new Set(applicableCategoryAttributes(category, values).map((a) => a.key));
+      return {
+        ...model,
+        attributes: rows.filter((a) => {
+          if (!a.key || allowed.has(a.key)) return true;
+          const unchanged =
+            original?.category_id === category?.id &&
+            originalValue(a.key) !== undefined &&
+            String(originalValue(a.key)) === a.value;
+          const assigned = category?.attributes.some((definition) => definition.key === a.key);
+          return unchanged && (!assigned || !typeChanged);
+        }),
+      };
+    });
+  }
+  reviewAttributeChoices(index: number) {
+    const current = this.reviewModel().attributes[index]?.key;
+    const definitions: AttributeDefinition[] = [...this.reviewDefinitions()];
+    if (current && !definitions.some((a) => a.key === current)) {
+      const legacy = this.attributeDefinition(current);
+      if (legacy) definitions.push(legacy);
+    }
+    return definitions;
+  }
+  reviewAttributeOptions(key: string) {
+    return this.reviewCategory()?.attributes.find((a) => a.key === key)?.options || [];
   }
   addAttribute() {
     this.reviewModel.update((v) => ({
@@ -455,7 +581,10 @@ export class Admin {
     }));
   }
   attributeDefinition(key: string) {
-    return this.attributeDefinitions().find((a) => a.key === key);
+    return (
+      this.reviewCategory()?.attributes.find((a) => a.key === key) ||
+      this.attributeDefinitions().find((a) => a.key === key)
+    );
   }
   private supplyInput() {
     const value = this.reviewModel();
@@ -478,7 +607,7 @@ export class Admin {
     return {
       name: value.name,
       category_id: Number(value.category_id),
-      subcategory_id: value.subcategory_id ? Number(value.subcategory_id) : null,
+      subcategory_id: null,
       attributes,
       aliases: value.aliases
         .split('\n')
@@ -534,6 +663,7 @@ export class Admin {
       }, 'Útil retirado del catálogo.');
       return;
     }
+    this.attempted.set('review');
     void submit(this.reviewFields, async () => {
       await this.action(
         async () => {
@@ -547,51 +677,47 @@ export class Admin {
     });
   }
   editCategory(category: Category) {
+    if (this.busy()) return;
     this.taxonomyModel.set({
-      kind: 'category',
       id: category.id,
       name: category.name,
       slug: category.slug,
-      category_id: '',
     });
-  }
-  editSubcategory(parent: Category, sub: Category['subcategories'][number]) {
-    this.taxonomyModel.set({
-      kind: 'subcategory',
-      id: sub.id,
-      name: sub.name,
-      slug: sub.slug,
-      category_id: String(parent.id),
-    });
+    this.typeModel.set({ previous: '', value: '' });
+    this.loadCategoryBindings(category);
+    requestAnimationFrame(() => document.getElementById('taxonomy-editor-heading')?.focus());
   }
   clearTaxonomy() {
-    this.taxonomyModel.set({ kind: 'category', id: 0, name: '', slug: '', category_id: '' });
+    this.attempted.set('');
+    this.taxonomyModel.set({ id: 0, name: '', slug: '' });
+    this.typeModel.set({ previous: '', value: '' });
+    this.bindingModel.set({ attributes: [] });
   }
   saveTaxonomy() {
+    this.attempted.set('taxonomy');
     void submit(this.taxonomyFields, async () => {
       const value = this.taxonomyModel();
-      if (value.kind === 'subcategory' && !value.category_id) {
-        this.error.set('Selecciona la categoría principal.');
-        return;
-      }
-      const route = '/admin/' + (value.kind === 'category' ? 'categories' : 'subcategories');
       await this.action(async () => {
         const body = {
           name: value.name,
           slug: value.slug,
-          category_id: value.category_id ? Number(value.category_id) : undefined,
         };
-        if (value.id) await this.api.patch(route + '/' + value.id, body);
-        else await this.api.post(route, body);
-        this.clearTaxonomy();
+        if (value.id) await this.api.patch('/admin/categories/' + value.id, body);
+        else {
+          const result = await this.api.post<{ id: number }>('/admin/categories', body);
+          this.taxonomyModel.update((model) => ({ ...model, id: result.id }));
+        }
       }, 'Categoría guardada.');
     });
   }
-  removeTaxonomy(kind: 'categories' | 'subcategories', id: number) {
+  removeTaxonomy(id: number) {
     if (
       window.confirm('¿Eliminar esta categoría? Solo se permite si no tiene artículos asociados.')
     )
-      void this.action(() => this.api.delete('/admin/' + kind + '/' + id), 'Categoría eliminada.');
+      void this.action(async () => {
+        await this.api.delete('/admin/categories/' + id);
+        if (this.taxonomyModel().id === id) this.clearTaxonomy();
+      }, 'Categoría eliminada.');
   }
   chooseProduct(product: Product) {
     this.selectedProduct.set(product);
@@ -622,6 +748,7 @@ export class Admin {
       .join(' · ');
   }
   addLink() {
+    this.attempted.set('link');
     void submit(this.linkFields, async () => {
       const product = this.selectedProduct();
       if (!product) return;
@@ -662,6 +789,7 @@ export class Admin {
     this.evidenceLimit.set(50);
   }
   decide() {
+    this.attempted.set('decision');
     void submit(this.decisionFields, async () => {
       const report = this.selectedReport();
       if (!report) return;
@@ -682,8 +810,10 @@ export class Admin {
     });
   }
   newTemplate() {
+    this.attempted.set('');
     this.templateEditing.set(true);
     this.templateModel.set({ id: '', name: '', grade: '', instructions: '', items: [newItem()] });
+    this.templateNoteIds.set([this.templateModel().items[0].id]);
   }
   editTemplate(template: Template) {
     this.templateEditing.set(true);
@@ -694,6 +824,7 @@ export class Admin {
       instructions: template.content.instructions,
       items: structuredClone(template.content.items),
     });
+    this.templateNoteIds.set(template.content.items.slice(0, 1).map((item) => item.id));
   }
   addTemplateItem() {
     this.templateModel.update((v) => ({ ...v, items: [...v.items, newItem()] }));
@@ -701,7 +832,213 @@ export class Admin {
   removeTemplateItem(index: number) {
     this.templateModel.update((v) => ({ ...v, items: v.items.filter((_, i) => i !== index) }));
   }
+  templateNoteOpen(index: number) {
+    return this.templateNoteIds().includes(this.templateModel().items[index].id);
+  }
+  toggleTemplateNote(index: number) {
+    const id = this.templateModel().items[index].id;
+    this.templateNoteIds.update((ids) =>
+      ids.includes(id) ? ids.filter((value) => value !== id) : [...ids, id],
+    );
+  }
+  categoryTypes(category: Category | undefined) {
+    return category?.attributes.find((a) => a.key === category.type_attribute)?.options || [];
+  }
+  editType(value: string) {
+    this.typeModel.set({ previous: value, value });
+    requestAnimationFrame(() => document.getElementById('taxonomy-type-name')?.focus());
+  }
+  saveType() {
+    const category = this.configuredCategory();
+    if (!category) return;
+    this.attempted.set('type');
+    void submit(this.typeFields, async () => {
+      const { previous, value } = this.typeModel();
+      await this.action(
+        async () => {
+          await this.api.post(`/admin/categories/${category.id}/types`, {
+            action: previous ? 'rename' : 'add',
+            value: previous || value,
+            new_value: previous ? value : undefined,
+          });
+          if (this.taxonomyModel().id !== category.id) return;
+          if (previous)
+            this.bindingModel.update((model) => ({
+              attributes: model.attributes.map((row) => ({
+                ...row,
+                types: row.types.map((type) =>
+                  type.value === previous ? { ...type, value: value.trim() } : type,
+                ),
+              })),
+            }));
+          if (this.typeModel().previous === previous && this.typeModel().value === value)
+            this.typeModel.set({ previous: '', value: '' });
+        },
+        previous
+          ? 'Tipo actualizado. Las listas publicadas conservan su contenido.'
+          : 'Tipo agregado.',
+      );
+    });
+  }
+  removeType(value: string) {
+    const category = this.configuredCategory();
+    if (
+      !category ||
+      !window.confirm(`¿Quitar el tipo «${value}»? Los tipos usados por útiles deben conservarse.`)
+    )
+      return;
+    void this.action(
+      () => this.api.post(`/admin/categories/${category.id}/types`, { action: 'remove', value }),
+      'Tipo eliminado.',
+    );
+  }
+  private loadCategoryBindings(category: Category) {
+    const options = this.categoryTypes(category);
+    this.bindingModel.set({
+      attributes: category.attributes
+        .filter((a) => a.key !== category.type_attribute)
+        .map((a) => ({
+          key: a.key,
+          options: a.options.join('\n'),
+          all_types: !a.applies_to_types.length,
+          types: options.map((value) => ({ value, selected: a.applies_to_types.includes(value) })),
+        })),
+    });
+  }
+  addBinding() {
+    const index = this.bindingModel().attributes.length;
+    this.bindingModel.update((model) => ({
+      attributes: [
+        ...model.attributes,
+        {
+          key: '',
+          options: '',
+          all_types: true,
+          types: this.typeOptions().map((value) => ({ value, selected: false })),
+        },
+      ],
+    }));
+    requestAnimationFrame(() => document.getElementById('binding-key-' + index)?.focus());
+  }
+  removeBinding(index: number) {
+    this.bindingModel.update((model) => ({
+      attributes: model.attributes.filter((_, i) => i !== index),
+    }));
+    requestAnimationFrame(() => {
+      const target = this.bindingModel().attributes.length
+        ? document.getElementById(
+            'binding-key-' + Math.min(index, this.bindingModel().attributes.length - 1),
+          )
+        : document.getElementById('add-category-binding');
+      target?.focus();
+    });
+  }
+  bindingKeyChanged(index: number) {
+    this.bindingModel.update((model) => ({
+      attributes: model.attributes.map((row, i) => (i === index ? { ...row, options: '' } : row)),
+    }));
+  }
+  bindingDefinition(key: string) {
+    return this.attributeDefinitions().find((a) => a.key === key);
+  }
+  resetBindings() {
+    const category = this.configuredCategory();
+    if (category) this.loadCategoryBindings(category);
+  }
+  saveBindings() {
+    const category = this.configuredCategory();
+    if (!category) return;
+    this.attempted.set('bindings');
+    void submit(this.bindingFields, async () => {
+      await this.action(async () => {
+        const type = category.attributes.find((a) => a.key === category.type_attribute);
+        const attributes: Pick<
+          CategoryAttribute,
+          'key' | 'options' | 'applies_to_types' | 'sort_order'
+        >[] = type
+          ? [
+              {
+                key: type.key,
+                options: type.options,
+                applies_to_types: [],
+                sort_order: 0,
+              },
+            ]
+          : [];
+        const seen = new Set(attributes.map((a) => a.key));
+        for (const [index, row] of this.bindingModel().attributes.entries()) {
+          if (seen.has(row.key)) throw new Error('Cada característica debe aparecer una sola vez.');
+          seen.add(row.key);
+          const types = row.all_types
+            ? []
+            : row.types.filter((t) => t.selected).map((t) => t.value);
+          if (!row.all_types && !types.length)
+            throw new Error('Selecciona los tipos a los que se aplica cada característica.');
+          attributes.push({
+            key: row.key,
+            options:
+              this.bindingDefinition(row.key)?.data_type === 'text'
+                ? row.options
+                    .split('\n')
+                    .map((v) => v.trim())
+                    .filter(Boolean)
+                : [],
+            applies_to_types: types,
+            sort_order: (index + 1) * 10,
+          });
+        }
+        await this.api.patch(`/admin/categories/${category.id}/attributes`, { attributes });
+      }, 'Características de la categoría guardadas.');
+    });
+  }
+  attributeRows(item: CatalogItem) {
+    return Object.entries(item.attributes || {}).map(([key, attribute]) => {
+      if (typeof attribute === 'object' && attribute !== null && 'value' in attribute) {
+        const value = attribute as { name?: string; value: unknown; unit?: string };
+        return {
+          name: value.name || key,
+          value: this.attributeValue(value.value) + (value.unit ? ' ' + value.unit : ''),
+        };
+      }
+      return { name: key, value: this.attributeValue(attribute) };
+    });
+  }
+  variantRows(attributes: Record<string, unknown>) {
+    return Object.entries(attributes || {}).map(([name, value]) => ({
+      name,
+      value: this.attributeValue(value),
+    }));
+  }
+  private attributeValue(value: unknown): string {
+    return typeof value === 'boolean'
+      ? value
+        ? 'Sí'
+        : 'No'
+      : typeof value === 'object'
+        ? JSON.stringify(value)
+        : String(value);
+  }
+  importedPrice(value: number) {
+    return new Intl.NumberFormat('es-CL', {
+      style: 'currency',
+      currency: 'CLP',
+      maximumFractionDigits: 0,
+    }).format(value);
+  }
+  decisionHint() {
+    return (
+      {
+        hide: 'Ocultar mantiene el caso abierto.',
+        dismiss: 'Descartar cierra el caso y elimina su copia de evidencia.',
+        restore:
+          'Restaurar cierra el caso. Otro reporte abierto puede mantener el contenido oculto.',
+        remove:
+          'Eliminar retira el contenido y sus copias de evidencia. Esta acción es permanente.',
+      } as Record<string, string>
+    )[this.decisionModel().action];
+  }
   saveTemplate() {
+    this.attempted.set('template');
     void submit(this.templateFields, async () => {
       const value = this.templateModel();
       if (!value.items.length) {
@@ -729,6 +1066,7 @@ export class Admin {
       );
   }
   saveSchool() {
+    this.attempted.set('school');
     void submit(this.schoolFields, async () => {
       await this.action(async () => {
         await this.api.post('/admin/schools', this.schoolModel());
@@ -744,6 +1082,7 @@ export class Admin {
       );
   }
   createAccount() {
+    this.attempted.set('account');
     void submit(this.accountFields, async () => {
       await this.action(async () => {
         await this.api.post('/admin/accounts', this.accountModel());

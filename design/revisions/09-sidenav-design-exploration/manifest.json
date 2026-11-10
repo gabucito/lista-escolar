@@ -1,0 +1,40 @@
+{
+  "created_at": "2026-11-10",
+  "status": "design-proposals-not-implemented",
+  "generator": "Built-in image_gen.imagegen",
+  "references": [
+    "../08-shared-catalog-sidenav/1366-initial-categories.png",
+    "../08-shared-catalog-sidenav/1366-notebook-five-results.png"
+  ],
+  "interaction": "One sidenav: categories first, then category attributes; permanent back control.",
+  "recommendation": "B for comparing similar supplies; C for entering quantities before adding. Preserve existing result counts and per-filter reset controls in implementation.",
+  "images": [
+    {
+      "title": "A · Catálogo claro",
+      "file": "01-catalogo-claro.png",
+      "prompt": "01-catalogo-claro.prompt.txt",
+      "width": 1536,
+      "height": 1024,
+      "sha256": "29772d70c94d07017cfd04ffe138d02975ab8855074431298d7a000f132de713",
+      "original": "/home/gabucito/.codex/generated_images/01a1c343-f58b-76c1-9606-e1d7048899fb/exec-dacf7ef1-a4b7-43f9-8f68-21228ab0b057.png"
+    },
+    {
+      "title": "B · Comparar y agregar",
+      "file": "02-comparar-y-agregar.png",
+      "prompt": "02-comparar-y-agregar.prompt.txt",
+      "width": 1536,
+      "height": 1024,
+      "sha256": "3cc74032ab77386b3311c871e6aad3efea788a285fad0fac8145eb7a572957e5",
+      "original": "/home/gabucito/.codex/generated_images/01a1c343-f58b-76c1-9606-e1d7048899fb/exec-4b760599-0219-4768-a6b7-aa5ddcbb0fdf.png"
+    },
+    {
+      "title": "C · Preparar mi lista",
+      "file": "03-preparar-mi-lista.png",
+      "prompt": "03-preparar-mi-lista.prompt.txt",
+      "width": 1536,
+      "height": 1024,
+      "sha256": "449a9bd62545b4e59992a8c535c50ee50e12a830ded733fa2c6c81e79d4bd0d0",
+      "original": "/home/gabucito/.codex/generated_images/01a1c343-f58b-76c1-9606-e1d7048899fb/exec-59543a06-4690-4a1c-a6c8-0245fcea1359.png"
+    }
+  ]
+}

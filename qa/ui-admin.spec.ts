@@ -7,6 +7,7 @@ const environment = JSON.parse(readFileSync('../.local/qa/environment.json', 'ut
 const artifacts = '../.local/qa/ui-admin';
 mkdirSync(artifacts, { recursive: true });
 let storage: Awaited<ReturnType<BrowserContext['storageState']>>;
+let comparisonGenericId: string;
 const tag = randomUUID().slice(0, 8);
 const supplyName = `Cuaderno universitario para la comunidad escolar ${tag}`;
 const reportReason = `Revisar la identificación del establecimiento ${tag}`;
@@ -30,6 +31,7 @@ test.beforeAll(async ({ browser }) => {
   await api(context, 'POST', `/lists/${id}/publish`, { revision: 1, current_version: 0, request_id: randomUUID() });
   await api(context, 'POST', `/lists/${id}/reports`, { version: 1, kind: 'content', reason: reportReason });
   await api(context, 'POST', '/admin/login', environment.admin);
+  comparisonGenericId = (await api(context, 'POST', '/admin/catalog', { name: `Lápiz grafito HB de comparación ${tag}`, category_id: (categories.find((category: {slug: string}) => category.slug === 'escritura') || categories[0]).id, attributes: {dureza_grafito: 'HB', incluye_goma: true}, approve: true })).id;
   await api(context, 'POST', '/admin/schools', { canonical_name: school, alias: `Los Aromos ${tag}`, comuna: 'Santiago', region: 'Metropolitana de Santiago' });
   // Keep screenshots focused on the administrative account's navigation.
   await api(context, 'POST', '/auth/logout', {});
@@ -92,7 +94,10 @@ for (const viewport of [{ name: 'desktop', width: 1440, height: 1000 }, { name: 
             await page.getByRole('button', { name: 'Cerrar', exact: true }).click();
             await page.getByRole('button', { name: 'Nuevo útil', exact: true }).click();
             await expect(page.getByLabel('Nombre genérico', { exact: true })).toBeVisible();
-            for (const name of ['Categoría del útil', 'Subcategoría del útil']) await expect(page.getByRole('combobox', { name, exact: true })).toBeVisible();
+            const category = page.getByRole('combobox', { name: 'Categoría del útil', exact: true });
+            await expect(category).toBeVisible();
+            await category.selectOption({ label: 'Cuadernos' });
+            await expect(page.getByRole('combobox', { name: /Subcategoría/ })).toHaveCount(0);
             await expect(page.getByLabel('Nombres alternativos', { exact: false })).toBeVisible();
             await page.getByRole('button', { name: 'Agregar atributo', exact: true }).click();
             await expect(page.getByRole('combobox', { name: 'Atributo 1', exact: true })).toBeVisible();
@@ -102,12 +107,14 @@ for (const viewport of [{ name: 'desktop', width: 1440, height: 1000 }, { name: 
             break;
           }
           case 'taxonomy':
-            await page.getByRole('combobox', { name: 'Tipo', exact: true }).selectOption('subcategory');
-            await expect(page.getByRole('combobox', { name: 'Categoría principal', exact: true })).toBeVisible();
             await expect(page.getByLabel('Nombre', { exact: true })).toBeVisible();
             await expect(page.getByLabel('Identificador', { exact: false })).toBeVisible();
-            await page.locator('.taxonomy-group summary').first().click();
-            await expect(page.getByRole('button', { name: 'Editar categoría', exact: true }).first()).toBeVisible();
+            await page.locator('.taxonomy-group summary').filter({ hasText: 'Cuadernos' }).click();
+            await page.getByRole('button', { name: 'Editar categoría', exact: true }).first().click();
+            await expect(page.getByRole('heading', { name: 'Tipos de útiles', exact: true })).toBeVisible();
+            await expect(page.getByRole('button', { name: 'Renombrar tipo Cuadriculado', exact: true })).toBeVisible();
+            await expect(page.getByRole('heading', { name: 'Características disponibles', exact: true })).toBeVisible();
+            await expect(page.getByRole('combobox', { name: 'Característica 1', exact: true })).toBeVisible();
             break;
           case 'products': {
             const product = page.getByRole('row')
@@ -122,6 +129,10 @@ for (const viewport of [{ name: 'desktop', width: 1440, height: 1000 }, { name: 
             await expect(page.getByLabel('Buscar útil para vincular', { exact: true })).toBeVisible();
             await expect(page.getByRole('button', { name: 'Buscar equivalente', exact: true })).toBeVisible();
             await expect(page.getByRole('combobox', { name: 'Útil genérico', exact: true })).toBeVisible();
+            await page.getByRole('combobox', { name: 'Útil genérico', exact: true }).selectOption(comparisonGenericId);
+            await expect(page.locator('.generic-selection')).toContainText('HB');
+            await expect(page.locator('.generic-selection')).toContainText('Sí');
+            await expect(page.getByRole('button', { name: 'Confirmar vínculo', exact: true })).toBeEnabled();
             break;
           }
           case 'reports':
@@ -130,19 +141,43 @@ for (const viewport of [{ name: 'desktop', width: 1440, height: 1000 }, { name: 
             await expect(page.getByRole('combobox', { name: 'Decisión', exact: true })).toBeVisible();
             await expect(page.getByLabel('Motivo de la decisión', { exact: true })).toBeVisible();
             break;
-          case 'templates':
+          case 'templates': {
             await page.getByRole('button', { name: 'Nueva plantilla', exact: true }).click();
             for (const label of ['Nombre', 'Nivel o curso', 'Útil', 'Cantidad', 'Categoría', 'Nota']) await expect(page.getByLabel(label, { exact: true })).toBeVisible();
-            await expect(page.getByRole('combobox', { name: 'Unidad', exact: true })).toBeVisible();
+            await page.getByLabel('Nombre', { exact: true }).fill('Materiales para 5° básico');
+            await page.getByLabel('Nivel o curso', { exact: true }).fill('5° básico');
+            await page.getByLabel('Instrucciones generales', { exact: true }).fill('Reutiliza los materiales en buen estado. No se exige una marca.');
+            const items = [
+              ['Cuaderno universitario 100 hojas', '4', 'unidad', 'Cuadernos'], ['Lápiz grafito', '3', 'unidad', 'Escritura'],
+              ['Lápices de colores', '1', 'caja', 'Arte y dibujo'], ['Goma de borrar', '2', 'unidad', 'Escritura'],
+              ['Sacapuntas', '1', 'unidad', 'Escritura'], ['Regla de 30 cm', '1', 'unidad', 'Geometría'],
+              ['Pegamento en barra', '2', 'unidad', 'Pegado y corte'],
+            ];
+            for (const [index, [name, quantity, unit, category]] of items.entries()) {
+              if(index) await page.getByRole('button', {name: 'Agregar artículo', exact: true}).click();
+              const row = page.locator('.template-item').nth(index);
+              await row.getByLabel('Útil', {exact: true}).fill(name);
+              await row.getByLabel('Cantidad', {exact: true}).fill(quantity);
+              await row.getByRole('combobox', {name: 'Unidad', exact: true}).selectOption(unit);
+              await row.getByLabel('Categoría', {exact: true}).fill(category);
+            }
+            await page.getByLabel('Nota', {exact: true}).fill('Cuadriculado de 7 mm');
+            await expect(page.locator('.template-item')).toHaveCount(7);
+            await expect(page.locator('.template-note')).toHaveCount(1);
             await expect(page.getByRole('button', { name: 'Guardar plantilla', exact: true })).toBeVisible();
+            if(viewport.name === 'desktop') {
+              const last = await page.locator('.template-item').last().boundingBox();
+              expect(last!.y + last!.height).toBeLessThanOrEqual(viewport.height);
+            }
             break;
+          }
           case 'schools':
             for (const label of ['Nombre del colegio', 'Nombre alternativo', 'Comuna', 'Región']) await expect(page.getByLabel(label, { exact: true })).toBeVisible();
             await expect(page.getByRole('cell', { name: school, exact: false })).toBeVisible();
             break;
           case 'accounts':
             await expect(page.getByLabel('Usuario', { exact: true })).toBeVisible();
-            await expect(page.getByLabel('Contraseña inicial', { exact: false })).toHaveAttribute('type', 'password');
+            await expect(page.getByLabel('Contraseña inicial', { exact: true })).toHaveAttribute('type', 'password');
             await expect(page.getByRole('button', { name: 'Crear administrador', exact: true })).toBeVisible();
             break;
         }

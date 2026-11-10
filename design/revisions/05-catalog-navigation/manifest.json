@@ -1,0 +1,33 @@
+{
+  "created_at": "2026-11-10",
+  "status": "design-options",
+  "generator": "Built-in image_gen.imagegen",
+  "recommended": "02-categorias-contextuales",
+  "reference": "../04-catalog-browsing/index.html",
+  "images": [
+    {
+      "id": "01-arbol-y-filtros",
+      "title": "A · Árbol y filtros",
+      "file": "01-arbol-y-filtros.png",
+      "prompt": "01-arbol-y-filtros.prompt.txt"
+    },
+    {
+      "id": "02-categorias-contextuales",
+      "title": "B · Categorías contextuales",
+      "file": "02-categorias-contextuales.png",
+      "prompt": "02-categorias-contextuales.prompt.txt"
+    },
+    {
+      "id": "03-exploracion-por-niveles",
+      "title": "C · Explorar por niveles",
+      "file": "03-exploracion-por-niveles.png",
+      "prompt": "03-exploracion-por-niveles.prompt.txt"
+    },
+    {
+      "id": "04-estados-contextuales",
+      "title": "Estados: sin subcategorías y drawer cerrado",
+      "file": "04-estados-contextuales.png",
+      "prompt": "04-estados-contextuales.prompt.txt"
+    }
+  ]
+}

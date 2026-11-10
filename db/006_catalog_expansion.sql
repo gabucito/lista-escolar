@@ -1,0 +1,2393 @@
+-- Evidence-based additions to the generic school-supply catalog.
+-- Dataset SHA-256: 811e33ed1f03debd4028b70eb786ee8be06ba981dee3bfe18cda4f29c5bdad19
+-- Sources and reasoning: docs/catalog-expansion-2026-11-10.json.
+-- No store stock, brands, prices, legacy subcategories or list snapshots are added.
+-- Applied inside config::migrate's advisory-lock transaction; no BEGIN/COMMIT here.
+-- Only newly inserted items receive attributes/aliases. Existing identities,
+-- normalized same-category names, review decisions and curated values win.
+CREATE TEMP TABLE catalog_expansion_006_data (document jsonb NOT NULL) ON COMMIT DROP;
+INSERT INTO catalog_expansion_006_data VALUES ($catalog_expansion_006$
+{
+  "categories": [
+    {
+      "slug": "cuadernos",
+      "name": "Cuadernos",
+      "sort_order": 10,
+      "type_key": "tipo_cuaderno",
+      "type_name": "Tipo de cuaderno",
+      "new": false
+    },
+    {
+      "slug": "escritura",
+      "name": "Escritura",
+      "sort_order": 20,
+      "type_key": "tipo_escritura",
+      "type_name": "Tipo de escritura",
+      "new": false
+    },
+    {
+      "slug": "arte-y-dibujo",
+      "name": "Arte y dibujo",
+      "sort_order": 30,
+      "type_key": "tipo_arte",
+      "type_name": "Tipo de arte y dibujo",
+      "new": false
+    },
+    {
+      "slug": "geometria",
+      "name": "Geometría",
+      "sort_order": 40,
+      "type_key": "tipo_geometria",
+      "type_name": "Tipo de geometría",
+      "new": false
+    },
+    {
+      "slug": "papeles",
+      "name": "Papeles y cartulinas",
+      "sort_order": 50,
+      "type_key": "tipo_papel",
+      "type_name": "Tipo de papeles y cartulinas",
+      "new": false
+    },
+    {
+      "slug": "pegado-y-corte",
+      "name": "Pegado y corte",
+      "sort_order": 60,
+      "type_key": "tipo_pegado_corte",
+      "type_name": "Tipo de pegado y corte",
+      "new": false
+    },
+    {
+      "slug": "organizacion",
+      "name": "Organización",
+      "sort_order": 70,
+      "type_key": "tipo_organizacion",
+      "type_name": "Tipo de organización",
+      "new": false
+    },
+    {
+      "slug": "aseo",
+      "name": "Aseo",
+      "sort_order": 80,
+      "type_key": "tipo_aseo",
+      "type_name": "Tipo de aseo",
+      "new": false
+    },
+    {
+      "slug": "otros",
+      "name": "Otros",
+      "sort_order": 90,
+      "type_key": "tipo_categoria_9",
+      "type_name": "Tipo de otros",
+      "new": false
+    },
+    {
+      "slug": "manualidades",
+      "name": "Manualidades",
+      "sort_order": 35,
+      "type_key": "tipo_manualidades",
+      "type_name": "Tipo de manualidades",
+      "new": true
+    },
+    {
+      "slug": "material-didactico",
+      "name": "Material didáctico",
+      "sort_order": 45,
+      "type_key": "tipo_material_didactico",
+      "type_name": "Tipo de material didáctico",
+      "new": true
+    },
+    {
+      "slug": "musica",
+      "name": "Música",
+      "sort_order": 65,
+      "type_key": "tipo_musica",
+      "type_name": "Tipo de música",
+      "new": true
+    },
+    {
+      "slug": "tecnologia",
+      "name": "Tecnología",
+      "sort_order": 75,
+      "type_key": "tipo_tecnologia",
+      "type_name": "Tipo de tecnología",
+      "new": true
+    },
+    {
+      "slug": "lectura-y-consulta",
+      "name": "Lectura y consulta",
+      "sort_order": 76,
+      "type_key": "tipo_lectura_y_consulta",
+      "type_name": "Tipo de lectura y consulta",
+      "new": true
+    }
+  ],
+  "definitions": [
+    {
+      "key": "acabado",
+      "name": "Acabado",
+      "data_type": "text",
+      "unit": null
+    },
+    {
+      "key": "autoadhesivo",
+      "name": "Autoadhesivo",
+      "data_type": "boolean",
+      "unit": null
+    },
+    {
+      "key": "capacidad_gb",
+      "name": "Capacidad de almacenamiento",
+      "data_type": "number",
+      "unit": "GB"
+    },
+    {
+      "key": "capacidad_l",
+      "name": "Capacidad",
+      "data_type": "number",
+      "unit": "L"
+    },
+    {
+      "key": "color",
+      "name": "Color",
+      "data_type": "text",
+      "unit": null
+    },
+    {
+      "key": "con_deposito",
+      "name": "Con depósito",
+      "data_type": "boolean",
+      "unit": null
+    },
+    {
+      "key": "cuadricula_mm",
+      "name": "Separación de la cuadrícula",
+      "data_type": "number",
+      "unit": "mm"
+    },
+    {
+      "key": "dimension_mayor_cm",
+      "name": "Dimensión mayor",
+      "data_type": "number",
+      "unit": "cm"
+    },
+    {
+      "key": "dimension_menor_cm",
+      "name": "Dimensión menor",
+      "data_type": "number",
+      "unit": "cm"
+    },
+    {
+      "key": "dureza_grafito",
+      "name": "Dureza del grafito",
+      "data_type": "text",
+      "unit": null
+    },
+    {
+      "key": "forma_pincel",
+      "name": "Forma del pincel",
+      "data_type": "text",
+      "unit": null
+    },
+    {
+      "key": "formato",
+      "name": "Formato",
+      "data_type": "text",
+      "unit": null
+    },
+    {
+      "key": "fraccion_block",
+      "name": "Fracción de block",
+      "data_type": "text",
+      "unit": null
+    },
+    {
+      "key": "idioma",
+      "name": "Idioma",
+      "data_type": "text",
+      "unit": null
+    },
+    {
+      "key": "largo_cm",
+      "name": "Largo",
+      "data_type": "number",
+      "unit": "cm"
+    },
+    {
+      "key": "lateralidad",
+      "name": "Lateralidad",
+      "data_type": "text",
+      "unit": null
+    },
+    {
+      "key": "material",
+      "name": "Material",
+      "data_type": "text",
+      "unit": null
+    },
+    {
+      "key": "numero_block",
+      "name": "Número de block",
+      "data_type": "number",
+      "unit": null
+    },
+    {
+      "key": "numero_colores",
+      "name": "Número de colores",
+      "data_type": "number",
+      "unit": "colores"
+    },
+    {
+      "key": "numero_hojas",
+      "name": "Número de hojas",
+      "data_type": "number",
+      "unit": "hojas"
+    },
+    {
+      "key": "numero_notas",
+      "name": "Número de notas",
+      "data_type": "number",
+      "unit": "notas"
+    },
+    {
+      "key": "numero_piezas",
+      "name": "Número de piezas",
+      "data_type": "number",
+      "unit": "piezas"
+    },
+    {
+      "key": "numero_pincel",
+      "name": "Número de pincel",
+      "data_type": "number",
+      "unit": null
+    },
+    {
+      "key": "orientacion",
+      "name": "Orientación",
+      "data_type": "text",
+      "unit": null
+    },
+    {
+      "key": "peso_g",
+      "name": "Peso",
+      "data_type": "number",
+      "unit": "g"
+    },
+    {
+      "key": "presentacion",
+      "name": "Presentación",
+      "data_type": "text",
+      "unit": null
+    },
+    {
+      "key": "sistema_cierre",
+      "name": "Sistema de cierre",
+      "data_type": "text",
+      "unit": null
+    },
+    {
+      "key": "tamano",
+      "name": "Tamaño",
+      "data_type": "text",
+      "unit": null
+    },
+    {
+      "key": "tipo_block",
+      "name": "Tipo de block",
+      "data_type": "text",
+      "unit": null
+    },
+    {
+      "key": "tipo_calculadora",
+      "name": "Tipo de calculadora",
+      "data_type": "text",
+      "unit": null
+    },
+    {
+      "key": "tipo_punta",
+      "name": "Tipo de punta",
+      "data_type": "text",
+      "unit": null
+    },
+    {
+      "key": "uso_marcador",
+      "name": "Uso del marcador",
+      "data_type": "text",
+      "unit": null
+    },
+    {
+      "key": "volumen_ml",
+      "name": "Contenido",
+      "data_type": "number",
+      "unit": "ml"
+    },
+    {
+      "key": "tipo_pauta",
+      "name": "Pauta musical",
+      "data_type": "text",
+      "unit": null
+    }
+  ],
+  "items": [
+    {
+      "category": "cuadernos",
+      "key": "cuaderno:college:cuadriculados:-:5:60",
+      "name": "Cuaderno college cuadriculado 5 mm, 60 hojas",
+      "type": "Cuadriculado",
+      "attributes": {
+        "formato": "college",
+        "numero_hojas": 60,
+        "cuadricula_mm": 5
+      },
+      "aliases": [],
+      "sources": [
+        "maipo"
+      ]
+    },
+    {
+      "category": "cuadernos",
+      "key": "cuaderno:college:cuadriculados:-:5:80",
+      "name": "Cuaderno college cuadriculado 5 mm, 80 hojas",
+      "type": "Cuadriculado",
+      "attributes": {
+        "formato": "college",
+        "numero_hojas": 80,
+        "cuadricula_mm": 5
+      },
+      "aliases": [],
+      "sources": [
+        "ceda"
+      ]
+    },
+    {
+      "category": "cuadernos",
+      "key": "cuaderno:college:croquis:-:-:100",
+      "name": "Cuaderno college de croquis, 100 hojas",
+      "type": "Croquis",
+      "attributes": {
+        "formato": "college",
+        "numero_hojas": 100
+      },
+      "aliases": [],
+      "sources": [
+        "maipo"
+      ]
+    },
+    {
+      "category": "cuadernos",
+      "key": "cuaderno:universitario:croquis:-:-:100",
+      "name": "Cuaderno universitario de croquis, 100 hojas",
+      "type": "Croquis",
+      "attributes": {
+        "formato": "universitario",
+        "numero_hojas": 100
+      },
+      "aliases": [],
+      "sources": [
+        "pascal"
+      ]
+    },
+    {
+      "category": "cuadernos",
+      "key": "cuaderno:college:caligrafia:horizontal:-:100",
+      "name": "Cuaderno college de caligrafía horizontal, 100 hojas",
+      "type": "Caligrafía",
+      "attributes": {
+        "formato": "college",
+        "numero_hojas": 100,
+        "orientacion": "horizontal"
+      },
+      "aliases": [],
+      "sources": [
+        "santo"
+      ]
+    },
+    {
+      "category": "cuadernos",
+      "key": "manual:cuaderno-college-de-media-composicion",
+      "name": "Cuaderno college de media composición",
+      "type": "Media composición",
+      "attributes": {
+        "formato": "college"
+      },
+      "aliases": [
+        "cuaderno mitad croquis mitad composición"
+      ],
+      "sources": [
+        "santo"
+      ]
+    },
+    {
+      "category": "escritura",
+      "key": "manual:boligrafo-azul",
+      "name": "Bolígrafo azul",
+      "type": "Bolígrafo",
+      "attributes": {
+        "color": "Azul"
+      },
+      "aliases": [
+        "lápiz pasta azul"
+      ],
+      "sources": [
+        "maipo",
+        "amancay"
+      ]
+    },
+    {
+      "category": "escritura",
+      "key": "manual:boligrafo-negro",
+      "name": "Bolígrafo negro",
+      "type": "Bolígrafo",
+      "attributes": {
+        "color": "Negro"
+      },
+      "aliases": [
+        "lápiz pasta negro"
+      ],
+      "sources": [
+        "maipo",
+        "amancay"
+      ]
+    },
+    {
+      "category": "escritura",
+      "key": "manual:boligrafo-rojo",
+      "name": "Bolígrafo rojo",
+      "type": "Bolígrafo",
+      "attributes": {
+        "color": "Rojo"
+      },
+      "aliases": [
+        "lápiz pasta rojo"
+      ],
+      "sources": [
+        "maipo",
+        "amancay"
+      ]
+    },
+    {
+      "category": "escritura",
+      "key": "manual:destacador",
+      "name": "Destacador",
+      "type": "Destacador",
+      "attributes": {},
+      "aliases": [
+        "resaltador",
+        "marcador fluorescente"
+      ],
+      "sources": [
+        "maipo",
+        "bajo"
+      ]
+    },
+    {
+      "category": "escritura",
+      "key": "manual:corrector",
+      "name": "Corrector",
+      "type": "Corrector",
+      "attributes": {},
+      "aliases": [
+        "corrector de escritura"
+      ],
+      "sources": [
+        "maipo",
+        "amancay"
+      ]
+    },
+    {
+      "category": "escritura",
+      "key": "manual:lapiz-bicolor-rojo-y-azul",
+      "name": "Lápiz bicolor rojo y azul",
+      "type": "Bicolor",
+      "attributes": {
+        "color": "Rojo y azul"
+      },
+      "aliases": [
+        "lápiz rojo azul"
+      ],
+      "sources": [
+        "bajo",
+        "filipense"
+      ]
+    },
+    {
+      "category": "escritura",
+      "key": "manual:lapiz-grafito-jumbo-triangular",
+      "name": "Lápiz grafito jumbo triangular",
+      "type": "Grafito",
+      "attributes": {
+        "tamano": "Jumbo"
+      },
+      "aliases": [
+        "lápiz mina grueso triangular"
+      ],
+      "sources": [
+        "santo"
+      ]
+    },
+    {
+      "category": "escritura",
+      "key": "lapiz-grafito:4b:no-especificada",
+      "name": "Lápiz grafito 4B",
+      "type": "Grafito",
+      "attributes": {
+        "dureza_grafito": "4B"
+      },
+      "aliases": [],
+      "sources": [
+        "amancay"
+      ]
+    },
+    {
+      "category": "escritura",
+      "key": "manual:sacapuntas-con-deposito",
+      "name": "Sacapuntas con depósito",
+      "type": "Sacapuntas",
+      "attributes": {
+        "con_deposito": true
+      },
+      "aliases": [
+        "sacapuntas con recipiente"
+      ],
+      "sources": [
+        "maipo",
+        "bajo"
+      ]
+    },
+    {
+      "category": "escritura",
+      "key": "manual:sacapuntas-doble-con-deposito",
+      "name": "Sacapuntas doble con depósito",
+      "type": "Sacapuntas",
+      "attributes": {
+        "con_deposito": true,
+        "tamano": "Doble"
+      },
+      "aliases": [
+        "sacapuntas para lápiz fino y jumbo"
+      ],
+      "sources": [
+        "santo",
+        "americano"
+      ]
+    },
+    {
+      "category": "escritura",
+      "key": "manual:plumon-de-pizarra-negro",
+      "name": "Plumón de pizarra negro",
+      "type": "Marcador",
+      "attributes": {
+        "color": "Negro",
+        "uso_marcador": "Pizarra"
+      },
+      "aliases": [
+        "marcador de pizarra negro"
+      ],
+      "sources": [
+        "americano",
+        "maipo"
+      ]
+    },
+    {
+      "category": "escritura",
+      "key": "manual:plumon-de-pizarra-azul",
+      "name": "Plumón de pizarra azul",
+      "type": "Marcador",
+      "attributes": {
+        "color": "Azul",
+        "uso_marcador": "Pizarra"
+      },
+      "aliases": [
+        "marcador de pizarra azul"
+      ],
+      "sources": [
+        "americano",
+        "maipo"
+      ]
+    },
+    {
+      "category": "escritura",
+      "key": "manual:plumon-de-pizarra-rojo",
+      "name": "Plumón de pizarra rojo",
+      "type": "Marcador",
+      "attributes": {
+        "color": "Rojo",
+        "uso_marcador": "Pizarra"
+      },
+      "aliases": [
+        "marcador de pizarra rojo"
+      ],
+      "sources": [
+        "americano",
+        "maipo"
+      ]
+    },
+    {
+      "category": "escritura",
+      "key": "manual:plumon-de-pizarra-verde",
+      "name": "Plumón de pizarra verde",
+      "type": "Marcador",
+      "attributes": {
+        "color": "Verde",
+        "uso_marcador": "Pizarra"
+      },
+      "aliases": [
+        "marcador de pizarra verde"
+      ],
+      "sources": [
+        "americano",
+        "maipo"
+      ]
+    },
+    {
+      "category": "escritura",
+      "key": "manual:marcador-permanente-negro",
+      "name": "Marcador permanente negro",
+      "type": "Marcador",
+      "attributes": {
+        "color": "Negro",
+        "uso_marcador": "Permanente"
+      },
+      "aliases": [
+        "plumón permanente negro"
+      ],
+      "sources": [
+        "pascal"
+      ]
+    },
+    {
+      "category": "escritura",
+      "key": "manual:marcador-permanente-rojo",
+      "name": "Marcador permanente rojo",
+      "type": "Marcador",
+      "attributes": {
+        "color": "Rojo",
+        "uso_marcador": "Permanente"
+      },
+      "aliases": [
+        "plumón permanente rojo"
+      ],
+      "sources": [
+        "pascal"
+      ]
+    },
+    {
+      "category": "escritura",
+      "key": "manual:borrador-de-pizarra",
+      "name": "Borrador de pizarra",
+      "type": "Borrador de pizarra",
+      "attributes": {},
+      "aliases": [],
+      "sources": [
+        "bajo",
+        "ceda"
+      ]
+    },
+    {
+      "category": "arte-y-dibujo",
+      "key": "manual:lapices-de-cera-12-colores",
+      "name": "Lápices de cera, 12 colores",
+      "type": "Lápices de cera",
+      "attributes": {
+        "numero_colores": 12
+      },
+      "aliases": [
+        "crayones 12 colores"
+      ],
+      "sources": [
+        "maipo"
+      ]
+    },
+    {
+      "category": "arte-y-dibujo",
+      "key": "manual:lapices-pastel-12-colores",
+      "name": "Lápices pastel, 12 colores",
+      "type": "Lápices pastel",
+      "attributes": {
+        "numero_colores": 12
+      },
+      "aliases": [],
+      "sources": [
+        "maipo"
+      ]
+    },
+    {
+      "category": "arte-y-dibujo",
+      "key": "manual:lapices-colores-jumbo-12",
+      "name": "Lápices de colores jumbo, 12 colores",
+      "type": "Lápices de colores",
+      "attributes": {
+        "tamano": "Jumbo",
+        "numero_colores": 12
+      },
+      "aliases": [],
+      "sources": [
+        "santo"
+      ]
+    },
+    {
+      "category": "arte-y-dibujo",
+      "key": "manual:plumones-jumbo-12-colores",
+      "name": "Plumones jumbo, 12 colores",
+      "type": "Plumones",
+      "attributes": {
+        "tamano": "Jumbo",
+        "numero_colores": 12
+      },
+      "aliases": [
+        "marcadores jumbo 12 colores"
+      ],
+      "sources": [
+        "santo"
+      ]
+    },
+    {
+      "category": "arte-y-dibujo",
+      "key": "manual:plumones-12-colores",
+      "name": "Plumones, 12 colores",
+      "type": "Plumones",
+      "attributes": {
+        "numero_colores": 12
+      },
+      "aliases": [
+        "marcadores 12 colores"
+      ],
+      "sources": [
+        "santo"
+      ]
+    },
+    {
+      "category": "arte-y-dibujo",
+      "key": "manual:temperas-12-colores",
+      "name": "Témperas, 12 colores",
+      "type": "Témperas",
+      "attributes": {
+        "numero_colores": 12,
+        "presentacion": "Líquida"
+      },
+      "aliases": [],
+      "sources": [
+        "maipo"
+      ]
+    },
+    {
+      "category": "arte-y-dibujo",
+      "key": "manual:temperas-solidas-12-colores",
+      "name": "Témperas sólidas, 12 colores",
+      "type": "Témperas",
+      "attributes": {
+        "numero_colores": 12,
+        "presentacion": "Sólida"
+      },
+      "aliases": [],
+      "sources": [
+        "santo"
+      ]
+    },
+    {
+      "category": "arte-y-dibujo",
+      "key": "manual:acuarelas-12-colores",
+      "name": "Acuarelas, 12 colores",
+      "type": "Acuarelas",
+      "attributes": {
+        "numero_colores": 12
+      },
+      "aliases": [],
+      "sources": [
+        "bajo"
+      ]
+    },
+    {
+      "category": "arte-y-dibujo",
+      "key": "manual:plasticina-12-colores",
+      "name": "Plasticina, 12 colores",
+      "type": "Plasticina",
+      "attributes": {
+        "numero_colores": 12
+      },
+      "aliases": [
+        "plastilina 12 colores"
+      ],
+      "sources": [
+        "maipo",
+        "santo"
+      ]
+    },
+    {
+      "category": "arte-y-dibujo",
+      "key": "manual:masa-para-modelar",
+      "name": "Masa para modelar",
+      "type": "Masa para modelar",
+      "attributes": {},
+      "aliases": [
+        "masa de modelado"
+      ],
+      "sources": [
+        "santo"
+      ]
+    },
+    {
+      "category": "arte-y-dibujo",
+      "key": "manual:arcilla-para-modelar",
+      "name": "Arcilla para modelar",
+      "type": "Arcilla",
+      "attributes": {},
+      "aliases": [],
+      "sources": [
+        "maipo",
+        "americano"
+      ]
+    },
+    {
+      "category": "arte-y-dibujo",
+      "key": "manual:pincel-redondo-n-2",
+      "name": "Pincel redondo N° 2",
+      "type": "Pincel",
+      "attributes": {
+        "numero_pincel": 2,
+        "forma_pincel": "Redondo"
+      },
+      "aliases": [],
+      "sources": [
+        "maipo"
+      ]
+    },
+    {
+      "category": "arte-y-dibujo",
+      "key": "manual:pincel-redondo-n-4",
+      "name": "Pincel redondo N° 4",
+      "type": "Pincel",
+      "attributes": {
+        "numero_pincel": 4,
+        "forma_pincel": "Redondo"
+      },
+      "aliases": [],
+      "sources": [
+        "maipo"
+      ]
+    },
+    {
+      "category": "arte-y-dibujo",
+      "key": "manual:pincel-redondo-n-6",
+      "name": "Pincel redondo N° 6",
+      "type": "Pincel",
+      "attributes": {
+        "numero_pincel": 6,
+        "forma_pincel": "Redondo"
+      },
+      "aliases": [],
+      "sources": [
+        "maipo"
+      ]
+    },
+    {
+      "category": "arte-y-dibujo",
+      "key": "manual:pincel-plano-n-4",
+      "name": "Pincel plano N° 4",
+      "type": "Pincel",
+      "attributes": {
+        "numero_pincel": 4,
+        "forma_pincel": "Plano"
+      },
+      "aliases": [],
+      "sources": [
+        "santo"
+      ]
+    },
+    {
+      "category": "arte-y-dibujo",
+      "key": "manual:pincel-plano-n-6",
+      "name": "Pincel plano N° 6",
+      "type": "Pincel",
+      "attributes": {
+        "numero_pincel": 6,
+        "forma_pincel": "Plano"
+      },
+      "aliases": [],
+      "sources": [
+        "santo"
+      ]
+    },
+    {
+      "category": "arte-y-dibujo",
+      "key": "manual:pincel-plano-n-14",
+      "name": "Pincel plano N° 14",
+      "type": "Pincel",
+      "attributes": {
+        "numero_pincel": 14,
+        "forma_pincel": "Plano"
+      },
+      "aliases": [],
+      "sources": [
+        "santo"
+      ]
+    },
+    {
+      "category": "arte-y-dibujo",
+      "key": "manual:mezclador-de-pintura",
+      "name": "Mezclador de pintura",
+      "type": "Mezclador",
+      "attributes": {},
+      "aliases": [
+        "paleta para témperas"
+      ],
+      "sources": [
+        "maipo",
+        "bajo"
+      ]
+    },
+    {
+      "category": "arte-y-dibujo",
+      "key": "manual:vaso-limpia-pinceles",
+      "name": "Vaso limpia pinceles",
+      "type": "Accesorio de pintura",
+      "attributes": {},
+      "aliases": [],
+      "sources": [
+        "santo"
+      ]
+    },
+    {
+      "category": "arte-y-dibujo",
+      "key": "manual:delantal-plastico-para-arte",
+      "name": "Delantal plástico para arte",
+      "type": "Delantal de arte",
+      "attributes": {
+        "material": "Plástico"
+      },
+      "aliases": [
+        "pechera para pintar"
+      ],
+      "sources": [
+        "santo"
+      ]
+    },
+    {
+      "category": "arte-y-dibujo",
+      "key": "manual:individual-plastico-protector-de-mesa",
+      "name": "Individual plástico protector de mesa",
+      "type": "Protector de mesa",
+      "attributes": {
+        "material": "Plástico"
+      },
+      "aliases": [
+        "mantel plástico para arte"
+      ],
+      "sources": [
+        "maipo",
+        "bajo"
+      ]
+    },
+    {
+      "category": "arte-y-dibujo",
+      "key": "manual:lienzo-con-bastidor-30-40-cm",
+      "name": "Lienzo con bastidor 30 × 40 cm",
+      "type": "Lienzo",
+      "attributes": {
+        "dimension_menor_cm": 30,
+        "dimension_mayor_cm": 40
+      },
+      "aliases": [],
+      "sources": [
+        "bajo"
+      ]
+    },
+    {
+      "category": "arte-y-dibujo",
+      "key": "manual:block-de-dibujo-medium-n-99-1-8",
+      "name": "Block de dibujo medium N° 99, 1/8",
+      "type": "Block",
+      "attributes": {
+        "tipo_block": "medium",
+        "numero_block": 99,
+        "fraccion_block": "1/8"
+      },
+      "aliases": [],
+      "sources": [
+        "maipo"
+      ]
+    },
+    {
+      "category": "arte-y-dibujo",
+      "key": "manual:block-de-dibujo-liceo-n-60",
+      "name": "Block de dibujo liceo N° 60",
+      "type": "Block",
+      "attributes": {
+        "tipo_block": "liceo",
+        "numero_block": 60
+      },
+      "aliases": [],
+      "sources": [
+        "santo"
+      ]
+    },
+    {
+      "category": "arte-y-dibujo",
+      "key": "manual:croquera-tamano-carta",
+      "name": "Croquera tamaño carta",
+      "type": "Croquera",
+      "attributes": {
+        "formato": "carta"
+      },
+      "aliases": [],
+      "sources": [
+        "ceda"
+      ]
+    },
+    {
+      "category": "geometria",
+      "key": "regla:15-cm",
+      "name": "Regla, 15 cm",
+      "type": "Regla",
+      "attributes": {
+        "largo_cm": 15
+      },
+      "aliases": [],
+      "sources": [
+        "bajo"
+      ]
+    },
+    {
+      "category": "geometria",
+      "key": "regla:20-cm",
+      "name": "Regla, 20 cm",
+      "type": "Regla",
+      "attributes": {
+        "largo_cm": 20
+      },
+      "aliases": [],
+      "sources": [
+        "maipo",
+        "sunny"
+      ]
+    },
+    {
+      "category": "geometria",
+      "key": "manual:cinta-metrica-de-100-cm",
+      "name": "Cinta métrica de 100 cm",
+      "type": "Cinta métrica",
+      "attributes": {
+        "largo_cm": 100
+      },
+      "aliases": [
+        "huincha de medir 1 metro"
+      ],
+      "sources": [
+        "santo"
+      ]
+    },
+    {
+      "category": "papeles",
+      "key": "manual:papel-blanco-tamano-carta",
+      "name": "Papel blanco tamaño carta",
+      "type": "Papel",
+      "attributes": {
+        "formato": "carta",
+        "color": "Blanco"
+      },
+      "aliases": [
+        "hojas blancas carta",
+        "papel fotocopia carta"
+      ],
+      "sources": [
+        "ceda"
+      ]
+    },
+    {
+      "category": "papeles",
+      "key": "manual:papel-blanco-tamano-oficio",
+      "name": "Papel blanco tamaño oficio",
+      "type": "Papel",
+      "attributes": {
+        "formato": "oficio",
+        "color": "Blanco"
+      },
+      "aliases": [
+        "hojas blancas oficio",
+        "papel fotocopia oficio"
+      ],
+      "sources": [
+        "santo"
+      ]
+    },
+    {
+      "category": "papeles",
+      "key": "manual:papel-de-colores-tamano-carta",
+      "name": "Papel de colores tamaño carta",
+      "type": "Papel",
+      "attributes": {
+        "formato": "carta",
+        "color": "Surtido"
+      },
+      "aliases": [
+        "hojas de colores carta"
+      ],
+      "sources": [
+        "santo"
+      ]
+    },
+    {
+      "category": "papeles",
+      "key": "manual:papel-lustre-10-10-cm",
+      "name": "Papel lustre 10 × 10 cm",
+      "type": "Papel lustre",
+      "attributes": {
+        "dimension_menor_cm": 10,
+        "dimension_mayor_cm": 10
+      },
+      "aliases": [
+        "papel origami 10x10"
+      ],
+      "sources": [
+        "ceda"
+      ]
+    },
+    {
+      "category": "papeles",
+      "key": "manual:papel-lustre-16-16-cm",
+      "name": "Papel lustre 16 × 16 cm",
+      "type": "Papel lustre",
+      "attributes": {
+        "dimension_menor_cm": 16,
+        "dimension_mayor_cm": 16
+      },
+      "aliases": [
+        "papel origami 16x16"
+      ],
+      "sources": [
+        "maipo",
+        "santo"
+      ]
+    },
+    {
+      "category": "papeles",
+      "key": "manual:papel-entretenido",
+      "name": "Papel entretenido",
+      "type": "Papel entretenido",
+      "attributes": {},
+      "aliases": [
+        "papel estampado"
+      ],
+      "sources": [
+        "bajo"
+      ]
+    },
+    {
+      "category": "papeles",
+      "key": "manual:papel-kraft",
+      "name": "Papel kraft",
+      "type": "Papel kraft",
+      "attributes": {},
+      "aliases": [
+        "papel café",
+        "papel kraff"
+      ],
+      "sources": [
+        "maipo",
+        "americano"
+      ]
+    },
+    {
+      "category": "papeles",
+      "key": "manual:papel-crepe",
+      "name": "Papel crepé",
+      "type": "Papel crepé",
+      "attributes": {},
+      "aliases": [
+        "papel crepe"
+      ],
+      "sources": [
+        "americano",
+        "camilo"
+      ]
+    },
+    {
+      "category": "papeles",
+      "key": "manual:papel-volantin",
+      "name": "Papel volantín",
+      "type": "Papel volantín",
+      "attributes": {},
+      "aliases": [
+        "papel volantín de colores"
+      ],
+      "sources": [
+        "americano",
+        "camilo"
+      ]
+    },
+    {
+      "category": "papeles",
+      "key": "manual:cartulina-de-colores",
+      "name": "Cartulina de colores",
+      "type": "Cartulina",
+      "attributes": {
+        "color": "Surtido"
+      },
+      "aliases": [
+        "cartulina escolar"
+      ],
+      "sources": [
+        "maipo"
+      ]
+    },
+    {
+      "category": "papeles",
+      "key": "manual:cartulina-espanola",
+      "name": "Cartulina española",
+      "type": "Cartulina española",
+      "attributes": {},
+      "aliases": [],
+      "sources": [
+        "maipo",
+        "santo"
+      ]
+    },
+    {
+      "category": "papeles",
+      "key": "manual:carton-forrado",
+      "name": "Cartón forrado",
+      "type": "Cartón",
+      "attributes": {
+        "acabado": "Forrado"
+      },
+      "aliases": [],
+      "sources": [
+        "santo"
+      ]
+    },
+    {
+      "category": "papeles",
+      "key": "manual:goma-eva-de-colores",
+      "name": "Goma EVA de colores",
+      "type": "Goma EVA",
+      "attributes": {
+        "color": "Surtido",
+        "autoadhesivo": false
+      },
+      "aliases": [
+        "foami de colores"
+      ],
+      "sources": [
+        "maipo",
+        "americano",
+        "altazor"
+      ]
+    },
+    {
+      "category": "papeles",
+      "key": "manual:goma-eva-autoadhesiva",
+      "name": "Goma EVA autoadhesiva",
+      "type": "Goma EVA",
+      "attributes": {
+        "acabado": "Liso",
+        "autoadhesivo": true
+      },
+      "aliases": [
+        "foami adhesivo"
+      ],
+      "sources": [
+        "santo"
+      ]
+    },
+    {
+      "category": "papeles",
+      "key": "manual:goma-eva-escarchada-autoadhesiva",
+      "name": "Goma EVA escarchada autoadhesiva",
+      "type": "Goma EVA",
+      "attributes": {
+        "acabado": "Escarchado",
+        "autoadhesivo": true
+      },
+      "aliases": [
+        "goma eva glitter adhesiva"
+      ],
+      "sources": [
+        "maipo",
+        "santo"
+      ]
+    },
+    {
+      "category": "papeles",
+      "key": "manual:papel-autoadhesivo-transparente",
+      "name": "Papel autoadhesivo transparente",
+      "type": "Papel autoadhesivo",
+      "attributes": {
+        "color": "Transparente",
+        "autoadhesivo": true
+      },
+      "aliases": [
+        "forro autoadhesivo transparente"
+      ],
+      "sources": [
+        "americano"
+      ]
+    },
+    {
+      "category": "papeles",
+      "key": "manual:lamina-para-termolaminar-tamano-oficio",
+      "name": "Lámina para termolaminar tamaño oficio",
+      "type": "Termolaminado",
+      "attributes": {
+        "formato": "oficio"
+      },
+      "aliases": [
+        "pouch oficio",
+        "lámina para plastificar oficio"
+      ],
+      "sources": [
+        "maipo",
+        "santo"
+      ]
+    },
+    {
+      "category": "papeles",
+      "key": "manual:hoja-autoadhesiva-tamano-carta-mate",
+      "name": "Hoja autoadhesiva tamaño carta mate",
+      "type": "Papel autoadhesivo",
+      "attributes": {
+        "formato": "carta",
+        "acabado": "Mate",
+        "autoadhesivo": true
+      },
+      "aliases": [
+        "papel adhesivo carta"
+      ],
+      "sources": [
+        "camilo"
+      ]
+    },
+    {
+      "category": "pegado-y-corte",
+      "key": "pegamento-barra:21-g",
+      "name": "Pegamento en barra, 21 g",
+      "type": "Pegamento",
+      "attributes": {
+        "peso_g": 21,
+        "presentacion": "Barra"
+      },
+      "aliases": [],
+      "sources": [
+        "maipo"
+      ]
+    },
+    {
+      "category": "pegado-y-corte",
+      "key": "pegamento-barra:40-g",
+      "name": "Pegamento en barra, 40 g",
+      "type": "Pegamento",
+      "attributes": {
+        "peso_g": 40,
+        "presentacion": "Barra"
+      },
+      "aliases": [],
+      "sources": [
+        "santo",
+        "ceda"
+      ]
+    },
+    {
+      "category": "pegado-y-corte",
+      "key": "manual:cola-fria-escolar",
+      "name": "Cola fría escolar",
+      "type": "Pegamento",
+      "attributes": {
+        "presentacion": "Líquida"
+      },
+      "aliases": [
+        "pegamento blanco escolar"
+      ],
+      "sources": [
+        "bajo"
+      ]
+    },
+    {
+      "category": "pegado-y-corte",
+      "key": "manual:cola-fria-escolar-250-ml",
+      "name": "Cola fría escolar, 250 ml",
+      "type": "Pegamento",
+      "attributes": {
+        "presentacion": "Líquida",
+        "volumen_ml": 250
+      },
+      "aliases": [],
+      "sources": [
+        "santo"
+      ]
+    },
+    {
+      "category": "pegado-y-corte",
+      "key": "manual:silicona-liquida",
+      "name": "Silicona líquida",
+      "type": "Pegamento",
+      "attributes": {
+        "presentacion": "Líquida"
+      },
+      "aliases": [],
+      "sources": [
+        "maipo"
+      ]
+    },
+    {
+      "category": "pegado-y-corte",
+      "key": "manual:barra-de-silicona",
+      "name": "Barra de silicona",
+      "type": "Pegamento",
+      "attributes": {
+        "presentacion": "Barra"
+      },
+      "aliases": [
+        "silicona en barra"
+      ],
+      "sources": [
+        "santo",
+        "americano"
+      ]
+    },
+    {
+      "category": "pegado-y-corte",
+      "key": "manual:cinta-adhesiva-transparente",
+      "name": "Cinta adhesiva transparente",
+      "type": "Cinta adhesiva",
+      "attributes": {
+        "color": "Transparente"
+      },
+      "aliases": [
+        "scotch"
+      ],
+      "sources": [
+        "ceda"
+      ]
+    },
+    {
+      "category": "pegado-y-corte",
+      "key": "manual:cinta-de-embalaje-transparente",
+      "name": "Cinta de embalaje transparente",
+      "type": "Cinta adhesiva",
+      "attributes": {
+        "color": "Transparente",
+        "presentacion": "Embalaje"
+      },
+      "aliases": [],
+      "sources": [
+        "maipo"
+      ]
+    },
+    {
+      "category": "pegado-y-corte",
+      "key": "manual:cinta-de-enmascarar",
+      "name": "Cinta de enmascarar",
+      "type": "Cinta adhesiva",
+      "attributes": {
+        "material": "Papel"
+      },
+      "aliases": [
+        "masking tape",
+        "cinta masking"
+      ],
+      "sources": [
+        "maipo",
+        "americano"
+      ]
+    },
+    {
+      "category": "pegado-y-corte",
+      "key": "manual:cinta-de-doble-contacto",
+      "name": "Cinta de doble contacto",
+      "type": "Cinta adhesiva",
+      "attributes": {
+        "presentacion": "Doble contacto"
+      },
+      "aliases": [
+        "cinta doble faz",
+        "cinta doble cara"
+      ],
+      "sources": [
+        "maipo",
+        "santo"
+      ]
+    },
+    {
+      "category": "pegado-y-corte",
+      "key": "manual:tijera-escolar-para-zurdos",
+      "name": "Tijera escolar para zurdos",
+      "type": "Tijeras",
+      "attributes": {
+        "tipo_punta": "Redonda",
+        "lateralidad": "Zurda"
+      },
+      "aliases": [
+        "tijera punta roma para zurdos"
+      ],
+      "sources": [
+        "americano"
+      ]
+    },
+    {
+      "category": "organizacion",
+      "key": "manual:carpeta-con-acoclip-tamano-oficio",
+      "name": "Carpeta con acoclip tamaño oficio",
+      "type": "Carpeta",
+      "attributes": {
+        "formato": "oficio",
+        "sistema_cierre": "Acoclip"
+      },
+      "aliases": [
+        "carpeta con archivador"
+      ],
+      "sources": [
+        "maipo",
+        "santo"
+      ]
+    },
+    {
+      "category": "organizacion",
+      "key": "manual:carpeta-con-elastico-tamano-oficio",
+      "name": "Carpeta con elástico tamaño oficio",
+      "type": "Carpeta",
+      "attributes": {
+        "formato": "oficio",
+        "sistema_cierre": "Elástico"
+      },
+      "aliases": [],
+      "sources": [
+        "bajo"
+      ]
+    },
+    {
+      "category": "organizacion",
+      "key": "manual:archivador-tamano-oficio-lomo-angosto",
+      "name": "Archivador tamaño oficio, lomo angosto",
+      "type": "Archivador",
+      "attributes": {
+        "formato": "oficio",
+        "tamano": "Lomo angosto"
+      },
+      "aliases": [],
+      "sources": [
+        "santo"
+      ]
+    },
+    {
+      "category": "organizacion",
+      "key": "manual:separadores-de-colores",
+      "name": "Separadores de colores",
+      "type": "Separador",
+      "attributes": {
+        "color": "Surtido"
+      },
+      "aliases": [
+        "separadores para archivador"
+      ],
+      "sources": [
+        "americano"
+      ]
+    },
+    {
+      "category": "organizacion",
+      "key": "manual:fundas-plasticas-tamano-oficio",
+      "name": "Fundas plásticas tamaño oficio",
+      "type": "Funda",
+      "attributes": {
+        "formato": "oficio",
+        "material": "Plástico"
+      },
+      "aliases": [
+        "fundas transparentes oficio"
+      ],
+      "sources": [
+        "maipo",
+        "santo"
+      ]
+    },
+    {
+      "category": "organizacion",
+      "key": "manual:forro-para-cuaderno-college",
+      "name": "Forro para cuaderno college",
+      "type": "Forro",
+      "attributes": {
+        "formato": "college"
+      },
+      "aliases": [
+        "forro college"
+      ],
+      "sources": [
+        "sunny"
+      ]
+    },
+    {
+      "category": "organizacion",
+      "key": "manual:forro-para-cuaderno-universitario",
+      "name": "Forro para cuaderno universitario",
+      "type": "Forro",
+      "attributes": {
+        "formato": "universitario"
+      },
+      "aliases": [
+        "forro universitario"
+      ],
+      "sources": [
+        "maipo"
+      ]
+    },
+    {
+      "category": "organizacion",
+      "key": "manual:caja-organizadora-de-6-l",
+      "name": "Caja organizadora de 6 L",
+      "type": "Caja organizadora",
+      "attributes": {
+        "capacidad_l": 6,
+        "material": "Plástico"
+      },
+      "aliases": [
+        "caja plástica 6 litros"
+      ],
+      "sources": [
+        "maipo",
+        "santo"
+      ]
+    },
+    {
+      "category": "organizacion",
+      "key": "manual:caja-organizadora-de-14-l",
+      "name": "Caja organizadora de 14 L",
+      "type": "Caja organizadora",
+      "attributes": {
+        "capacidad_l": 14,
+        "material": "Plástico"
+      },
+      "aliases": [
+        "caja plástica 14 litros"
+      ],
+      "sources": [
+        "maipo"
+      ]
+    },
+    {
+      "category": "organizacion",
+      "key": "manual:bolsa-con-cierre-hermetico",
+      "name": "Bolsa con cierre hermético",
+      "type": "Bolsa",
+      "attributes": {
+        "sistema_cierre": "Hermético"
+      },
+      "aliases": [
+        "bolsa hermética"
+      ],
+      "sources": [
+        "santo"
+      ]
+    },
+    {
+      "category": "organizacion",
+      "key": "manual:notas-adhesivas",
+      "name": "Notas adhesivas",
+      "type": "Notas adhesivas",
+      "attributes": {
+        "autoadhesivo": true
+      },
+      "aliases": [
+        "post it",
+        "notas autoadhesivas"
+      ],
+      "sources": [
+        "bajo"
+      ]
+    },
+    {
+      "category": "organizacion",
+      "key": "manual:revistero-de-carton",
+      "name": "Revistero de cartón",
+      "type": "Revistero",
+      "attributes": {
+        "material": "Cartón"
+      },
+      "aliases": [],
+      "sources": [
+        "santo"
+      ]
+    },
+    {
+      "category": "aseo",
+      "key": "manual:papel-higienico",
+      "name": "Papel higiénico",
+      "type": "Papel higiénico",
+      "attributes": {},
+      "aliases": [],
+      "sources": [
+        "pascal2"
+      ]
+    },
+    {
+      "category": "aseo",
+      "key": "manual:jabon-liquido",
+      "name": "Jabón líquido",
+      "type": "Jabón",
+      "attributes": {},
+      "aliases": [],
+      "sources": [
+        "maipo",
+        "pascal"
+      ]
+    },
+    {
+      "category": "aseo",
+      "key": "manual:toallas-humedas",
+      "name": "Toallas húmedas",
+      "type": "Toallas húmedas",
+      "attributes": {},
+      "aliases": [
+        "toallitas húmedas"
+      ],
+      "sources": [
+        "maipo",
+        "santo"
+      ]
+    },
+    {
+      "category": "aseo",
+      "key": "manual:alcohol-gel",
+      "name": "Alcohol gel",
+      "type": "Alcohol gel",
+      "attributes": {},
+      "aliases": [],
+      "sources": [
+        "maipo"
+      ]
+    },
+    {
+      "category": "aseo",
+      "key": "manual:toalla-de-mano",
+      "name": "Toalla de mano",
+      "type": "Toalla",
+      "attributes": {},
+      "aliases": [
+        "toalla pequeña"
+      ],
+      "sources": [
+        "maipo",
+        "pascal"
+      ]
+    },
+    {
+      "category": "aseo",
+      "key": "manual:peineta",
+      "name": "Peineta",
+      "type": "Peineta",
+      "attributes": {},
+      "aliases": [],
+      "sources": [
+        "pascal"
+      ]
+    },
+    {
+      "category": "aseo",
+      "key": "manual:botella-para-agua",
+      "name": "Botella para agua",
+      "type": "Botella",
+      "attributes": {},
+      "aliases": [
+        "botella reutilizable"
+      ],
+      "sources": [
+        "maipo",
+        "bajo"
+      ]
+    },
+    {
+      "category": "manualidades",
+      "key": "manual:palitos-de-helado",
+      "name": "Palitos de helado",
+      "type": "Palitos",
+      "attributes": {},
+      "aliases": [
+        "palos de helado"
+      ],
+      "sources": [
+        "maipo",
+        "bajo"
+      ]
+    },
+    {
+      "category": "manualidades",
+      "key": "manual:pompones-de-colores",
+      "name": "Pompones de colores",
+      "type": "Pompones",
+      "attributes": {},
+      "aliases": [],
+      "sources": [
+        "maipo",
+        "camilo"
+      ]
+    },
+    {
+      "category": "manualidades",
+      "key": "manual:limpiapipas",
+      "name": "Limpiapipas",
+      "type": "Limpiapipas",
+      "attributes": {},
+      "aliases": [
+        "limpia pipas"
+      ],
+      "sources": [
+        "mozart"
+      ]
+    },
+    {
+      "category": "manualidades",
+      "key": "manual:lana-para-manualidades",
+      "name": "Lana para manualidades",
+      "type": "Lana",
+      "attributes": {},
+      "aliases": [],
+      "sources": [
+        "santo"
+      ]
+    },
+    {
+      "category": "manualidades",
+      "key": "manual:aguja-escolar-de-punta-redonda",
+      "name": "Aguja escolar de punta redonda",
+      "type": "Aguja escolar",
+      "attributes": {},
+      "aliases": [
+        "aguja punta roma"
+      ],
+      "sources": [
+        "santo"
+      ]
+    },
+    {
+      "category": "manualidades",
+      "key": "manual:lentejuelas-de-colores",
+      "name": "Lentejuelas de colores",
+      "type": "Lentejuelas",
+      "attributes": {},
+      "aliases": [],
+      "sources": [
+        "santo"
+      ]
+    },
+    {
+      "category": "manualidades",
+      "key": "manual:escarcha-de-colores",
+      "name": "Escarcha de colores",
+      "type": "Escarcha",
+      "attributes": {},
+      "aliases": [
+        "glitter"
+      ],
+      "sources": [
+        "americano",
+        "camilo"
+      ]
+    },
+    {
+      "category": "manualidades",
+      "key": "manual:stickers-de-colores",
+      "name": "Stickers de colores",
+      "type": "Stickers",
+      "attributes": {},
+      "aliases": [
+        "adhesivos decorativos"
+      ],
+      "sources": [
+        "maipo",
+        "camilo"
+      ]
+    },
+    {
+      "category": "manualidades",
+      "key": "manual:hilo-elastico",
+      "name": "Hilo elástico",
+      "type": "Hilo",
+      "attributes": {},
+      "aliases": [],
+      "sources": [
+        "camilo"
+      ]
+    },
+    {
+      "category": "manualidades",
+      "key": "manual:almohadilla-con-punzon-escolar",
+      "name": "Almohadilla con punzón escolar",
+      "type": "Punzón",
+      "attributes": {},
+      "aliases": [
+        "base para punzar"
+      ],
+      "sources": [
+        "santo"
+      ]
+    },
+    {
+      "category": "manualidades",
+      "key": "manual:plato-de-carton-para-manualidades",
+      "name": "Plato de cartón para manualidades",
+      "type": "Soporte",
+      "attributes": {},
+      "aliases": [],
+      "sources": [
+        "maipo"
+      ]
+    },
+    {
+      "category": "material-didactico",
+      "key": "manual:tangram-de-7-piezas",
+      "name": "Tangram de 7 piezas",
+      "type": "Tangram",
+      "attributes": {
+        "numero_piezas": 7
+      },
+      "aliases": [
+        "tangrama 7 piezas"
+      ],
+      "sources": [
+        "santo",
+        "bajo"
+      ]
+    },
+    {
+      "category": "material-didactico",
+      "key": "manual:bloques-de-base-diez",
+      "name": "Bloques de base diez",
+      "type": "Bloques base diez",
+      "attributes": {},
+      "aliases": [
+        "material base 10",
+        "bloques multibase"
+      ],
+      "sources": [
+        "santo"
+      ]
+    },
+    {
+      "category": "material-didactico",
+      "key": "manual:set-de-cuerpos-geometricos",
+      "name": "Set de cuerpos geométricos",
+      "type": "Cuerpos geométricos",
+      "attributes": {},
+      "aliases": [
+        "figuras geométricas 3D"
+      ],
+      "sources": [
+        "sunny"
+      ]
+    },
+    {
+      "category": "material-didactico",
+      "key": "manual:billetes-y-monedas-didacticos-chilenos",
+      "name": "Billetes y monedas didácticos chilenos",
+      "type": "Dinero didáctico",
+      "attributes": {},
+      "aliases": [
+        "dinero chileno de juguete"
+      ],
+      "sources": [
+        "bajo"
+      ]
+    },
+    {
+      "category": "material-didactico",
+      "key": "manual:pizarra-blanca-individual-20-30-cm",
+      "name": "Pizarra blanca individual 20 × 30 cm",
+      "type": "Pizarra",
+      "attributes": {
+        "dimension_menor_cm": 20,
+        "dimension_mayor_cm": 30
+      },
+      "aliases": [
+        "pizarra acrílica individual"
+      ],
+      "sources": [
+        "maipo",
+        "bajo"
+      ]
+    },
+    {
+      "category": "musica",
+      "key": "manual:maracas",
+      "name": "Maracas",
+      "type": "Maracas",
+      "attributes": {},
+      "aliases": [],
+      "sources": [
+        "maipo"
+      ]
+    },
+    {
+      "category": "musica",
+      "key": "manual:pandero",
+      "name": "Pandero",
+      "type": "Pandero",
+      "attributes": {},
+      "aliases": [],
+      "sources": [
+        "maipo"
+      ]
+    },
+    {
+      "category": "musica",
+      "key": "manual:claves-musicales",
+      "name": "Claves musicales",
+      "type": "Claves",
+      "attributes": {},
+      "aliases": [
+        "palos de ritmo"
+      ],
+      "sources": [
+        "maipo"
+      ]
+    },
+    {
+      "category": "musica",
+      "key": "manual:castanuelas",
+      "name": "Castañuelas",
+      "type": "Castañuelas",
+      "attributes": {},
+      "aliases": [],
+      "sources": [
+        "maipo"
+      ]
+    },
+    {
+      "category": "musica",
+      "key": "manual:flauta-dulce-soprano",
+      "name": "Flauta dulce soprano",
+      "type": "Flauta",
+      "attributes": {},
+      "aliases": [
+        "flauta dulce"
+      ],
+      "sources": [
+        "thomas",
+        "peters"
+      ]
+    },
+    {
+      "category": "musica",
+      "key": "manual:melodica",
+      "name": "Melódica",
+      "type": "Melódica",
+      "attributes": {},
+      "aliases": [],
+      "sources": [
+        "amancay"
+      ]
+    },
+    {
+      "category": "musica",
+      "key": "manual:guitarra-acustica",
+      "name": "Guitarra acústica",
+      "type": "Guitarra",
+      "attributes": {},
+      "aliases": [],
+      "sources": [
+        "peters"
+      ]
+    },
+    {
+      "category": "musica",
+      "key": "manual:ukelele",
+      "name": "Ukelele",
+      "type": "Ukelele",
+      "attributes": {},
+      "aliases": [],
+      "sources": [
+        "amancay"
+      ]
+    },
+    {
+      "category": "musica",
+      "key": "manual:metalofono-cromatico-de-25-notas",
+      "name": "Metalófono cromático de 25 notas",
+      "type": "Metalófono",
+      "attributes": {
+        "numero_notas": 25
+      },
+      "aliases": [
+        "metalófono 25 teclas"
+      ],
+      "sources": [
+        "maipo",
+        "santo"
+      ]
+    },
+    {
+      "category": "tecnologia",
+      "key": "manual:calculadora-cientifica",
+      "name": "Calculadora científica",
+      "type": "Calculadora",
+      "attributes": {
+        "tipo_calculadora": "Científica"
+      },
+      "aliases": [],
+      "sources": [
+        "pascal"
+      ]
+    },
+    {
+      "category": "tecnologia",
+      "key": "manual:calculadora",
+      "name": "Calculadora",
+      "type": "Calculadora",
+      "attributes": {},
+      "aliases": [],
+      "sources": [
+        "maipo"
+      ]
+    },
+    {
+      "category": "tecnologia",
+      "key": "manual:memoria-usb-de-8-gb",
+      "name": "Memoria USB de 8 GB",
+      "type": "Memoria USB",
+      "attributes": {
+        "capacidad_gb": 8
+      },
+      "aliases": [
+        "pendrive 8gb",
+        "pendrive 8 GB"
+      ],
+      "sources": [
+        "bajo"
+      ]
+    },
+    {
+      "category": "lectura-y-consulta",
+      "key": "manual:diccionario-de-lengua-espanola",
+      "name": "Diccionario de lengua española",
+      "type": "Diccionario",
+      "attributes": {
+        "idioma": "Español"
+      },
+      "aliases": [
+        "diccionario español",
+        "diccionario castellano"
+      ],
+      "sources": [
+        "amancay",
+        "maipo"
+      ]
+    },
+    {
+      "category": "lectura-y-consulta",
+      "key": "manual:diccionario-ingles-espanol",
+      "name": "Diccionario inglés-español",
+      "type": "Diccionario",
+      "attributes": {
+        "idioma": "Inglés-español"
+      },
+      "aliases": [
+        "diccionario español inglés",
+        "diccionario bilingüe"
+      ],
+      "sources": [
+        "pascal",
+        "amancay"
+      ]
+    },
+    {
+      "category": "lectura-y-consulta",
+      "key": "manual:tabla-periodica-escolar",
+      "name": "Tabla periódica escolar",
+      "type": "Tabla periódica",
+      "attributes": {},
+      "aliases": [
+        "tabla periódica de los elementos"
+      ],
+      "sources": [
+        "pascal"
+      ]
+    },
+    {
+      "category": "cuadernos",
+      "key": "manual:cuaderno-musica-media-pauta",
+      "name": "Cuaderno de música media pauta",
+      "type": "Música",
+      "attributes": {
+        "tipo_pauta": "Media pauta"
+      },
+      "aliases": [
+        "cuaderno de pentagrama media pauta"
+      ],
+      "sources": [
+        "pascal2"
+      ]
+    },
+    {
+      "category": "lectura-y-consulta",
+      "key": "manual:atlas-universal-y-chile",
+      "name": "Atlas universal y de Chile",
+      "type": "Atlas",
+      "attributes": {
+        "idioma": "Español"
+      },
+      "aliases": [
+        "atlas escolar"
+      ],
+      "sources": [
+        "pascal2"
+      ]
+    }
+  ]
+}
+$catalog_expansion_006$::jsonb);
+
+CREATE TEMP TABLE catalog_expansion_006_categories ON COMMIT DROP AS
+SELECT value->>'slug' slug, value->>'name' name, value->>'type_key' type_key,
+    value->>'type_name' type_name, (value->>'sort_order')::integer sort_order,
+    (value->>'new')::boolean is_new, NULL::bigint category_id
+FROM catalog_expansion_006_data, jsonb_array_elements(document->'categories');
+
+-- Preserve an administrator's existing type identity, including a renamed key.
+UPDATE catalog_expansion_006_categories p SET category_id=c.id,
+    type_key=COALESCE(d.key,p.type_key)
+FROM catalog.categories c
+LEFT JOIN catalog.category_type_attributes t ON t.category_id=c.id
+LEFT JOIN catalog.attribute_definitions d ON d.id=t.attribute_id
+WHERE c.slug=p.slug;
+
+CREATE TEMP TABLE catalog_expansion_006_definitions (
+    key text PRIMARY KEY, name text NOT NULL, data_type text NOT NULL, unit text
+) ON COMMIT DROP;
+INSERT INTO catalog_expansion_006_definitions
+SELECT d.* FROM catalog_expansion_006_data,
+    jsonb_to_recordset(document->'definitions') AS d(key text,name text,data_type text,unit text);
+
+DO $$ BEGIN
+    IF EXISTS (SELECT 1 FROM catalog_expansion_006_categories c
+        JOIN catalog_expansion_006_definitions d ON d.key=c.type_key
+        WHERE (c.category_id IS NOT NULL OR c.is_new)
+          AND (d.data_type<>'text' OR d.unit IS NOT NULL)) THEN
+        RAISE EXCEPTION 'Catalog expansion 006: a type definition must be text without a unit';
+    END IF;
+END $$;
+INSERT INTO catalog_expansion_006_definitions(key,name,data_type,unit)
+SELECT type_key,type_name,'text',NULL FROM catalog_expansion_006_categories
+WHERE category_id IS NOT NULL OR is_new
+ON CONFLICT(key) DO NOTHING;
+
+-- Fail transactionally instead of reinterpreting curated numeric/text values.
+DO $$ BEGIN
+    IF EXISTS (SELECT 1 FROM catalog_expansion_006_definitions p
+        JOIN catalog.attribute_definitions d USING(key)
+        WHERE d.data_type<>p.data_type OR d.unit IS DISTINCT FROM p.unit) THEN
+        RAISE EXCEPTION 'Catalog expansion 006: incompatible existing attribute definition type or unit';
+    END IF;
+    IF EXISTS (SELECT 1 FROM catalog_expansion_006_categories p
+        JOIN catalog.attribute_definitions d ON d.key=p.type_key
+        JOIN catalog.category_type_attributes t ON t.attribute_id=d.id
+        WHERE (p.category_id IS NOT NULL OR p.is_new)
+          AND t.category_id IS DISTINCT FROM p.category_id) THEN
+        RAISE EXCEPTION 'Catalog expansion 006: a type definition already belongs to another category';
+    END IF;
+END $$;
+
+INSERT INTO catalog.categories(slug,name,sort_order)
+SELECT slug,name,sort_order FROM catalog_expansion_006_categories
+WHERE is_new AND category_id IS NULL
+ON CONFLICT(slug) DO NOTHING;
+UPDATE catalog_expansion_006_categories p SET category_id=c.id
+FROM catalog.categories c WHERE c.slug=p.slug;
+
+-- Missing old categories stay removed; only explicitly new families are created.
+-- Serialize with category administration and ordinary catalog item insertion.
+SELECT c.id FROM catalog.categories c JOIN catalog_expansion_006_categories p
+ON p.category_id=c.id ORDER BY c.id FOR UPDATE OF c;
+
+INSERT INTO catalog.attribute_definitions(key,name,data_type,unit)
+SELECT key,name,data_type,unit FROM catalog_expansion_006_definitions
+ON CONFLICT(key) DO NOTHING;
+INSERT INTO catalog.category_type_attributes(category_id,attribute_id)
+SELECT p.category_id,d.id FROM catalog_expansion_006_categories p
+JOIN catalog.attribute_definitions d ON d.key=p.type_key
+WHERE p.category_id IS NOT NULL ON CONFLICT(category_id) DO NOTHING;
+INSERT INTO catalog.category_attributes(category_id,attribute_id,sort_order)
+SELECT t.category_id,t.attribute_id,0 FROM catalog.category_type_attributes t
+JOIN catalog_expansion_006_categories p ON p.category_id=t.category_id
+ON CONFLICT(category_id,attribute_id) DO NOTHING;
+
+CREATE TEMP TABLE catalog_expansion_006_items ON COMMIT DROP AS
+SELECT c.category_id,c.type_key,i.key,i.name,i.type,
+    COALESCE(i.attributes,'{}'::jsonb)||jsonb_build_object(c.type_key,i.type) attributes,
+    COALESCE(i.aliases,'[]'::jsonb) aliases,
+    btrim(regexp_replace(translate(lower(i.name),'áéíóúüñ','aeiouun'),'[^[:alnum:]]+',' ','g')) normalized_name
+FROM catalog_expansion_006_data,
+    jsonb_to_recordset(document->'items') AS i(category text,key text,name text,type text,attributes jsonb,aliases jsonb)
+JOIN catalog_expansion_006_categories c ON c.slug=i.category
+WHERE c.category_id IS NOT NULL;
+
+DO $$ BEGIN
+    IF EXISTS (SELECT key FROM catalog_expansion_006_items GROUP BY key HAVING count(*)>1)
+       OR EXISTS (SELECT category_id,normalized_name FROM catalog_expansion_006_items
+                  GROUP BY category_id,normalized_name HAVING count(*)>1) THEN
+        RAISE EXCEPTION 'Catalog expansion 006: duplicate proposed item identity';
+    END IF;
+    IF EXISTS (SELECT 1 FROM catalog_expansion_006_items
+        WHERE btrim(key)='' OR btrim(name)='' OR length(name)>300 OR btrim(type)='') THEN
+        RAISE EXCEPTION 'Catalog expansion 006: invalid proposed item name, identity or type';
+    END IF;
+    IF EXISTS (SELECT 1 FROM catalog_expansion_006_items p
+        CROSS JOIN LATERAL jsonb_each(p.attributes) e
+        LEFT JOIN catalog.attribute_definitions d ON d.key=e.key
+        WHERE d.id IS NULL OR jsonb_typeof(e.value) IS DISTINCT FROM
+            CASE d.data_type WHEN 'text' THEN 'string' ELSE d.data_type END
+          OR (d.data_type='text' AND (btrim(e.value#>>'{}')='' OR length(e.value#>>'{}')>300))
+          OR (d.data_type='number' AND CASE WHEN jsonb_typeof(e.value)='number'
+              THEN (e.value#>>'{}')::numeric<=0 OR (e.value#>>'{}')::numeric>1000000 ELSE true END)) THEN
+        RAISE EXCEPTION 'Catalog expansion 006: invalid proposed typed attribute';
+    END IF;
+END $$;
+
+UPDATE catalog.category_attributes a SET options=a.options||ARRAY(
+    SELECT DISTINCT p.type FROM catalog_expansion_006_items p
+    WHERE p.category_id=a.category_id AND NOT p.type=ANY(a.options) ORDER BY p.type)
+FROM catalog.category_type_attributes t
+WHERE t.category_id=a.category_id AND t.attribute_id=a.attribute_id
+  AND EXISTS(SELECT 1 FROM catalog_expansion_006_items p WHERE p.category_id=a.category_id);
+
+INSERT INTO catalog.category_attributes(category_id,attribute_id,applies_to_types,sort_order)
+SELECT p.category_id,d.id,array_agg(DISTINCT p.type ORDER BY p.type),100+d.id::integer
+FROM catalog_expansion_006_items p CROSS JOIN LATERAL jsonb_each(p.attributes) e
+JOIN catalog.attribute_definitions d ON d.key=e.key
+WHERE e.key<>p.type_key GROUP BY p.category_id,d.id
+ON CONFLICT(category_id,attribute_id) DO UPDATE SET applies_to_types=
+    CASE WHEN cardinality(catalog.category_attributes.applies_to_types)=0
+         THEN catalog.category_attributes.applies_to_types
+         ELSE ARRAY(SELECT DISTINCT value FROM unnest(catalog.category_attributes.applies_to_types||excluded.applies_to_types) value ORDER BY value) END;
+
+-- Keep any existing closed-choice contract rather than silently widening it.
+DO $$ BEGIN
+    IF EXISTS (SELECT 1 FROM catalog_expansion_006_items p
+        CROSS JOIN LATERAL jsonb_each(p.attributes) e
+        JOIN catalog.attribute_definitions d ON d.key=e.key
+        JOIN catalog.category_attributes a ON a.category_id=p.category_id AND a.attribute_id=d.id
+        WHERE cardinality(a.options)>0 AND NOT (e.value#>>'{}')=ANY(a.options)) THEN
+        RAISE EXCEPTION 'Catalog expansion 006: proposed value conflicts with existing allowed choices';
+    END IF;
+END $$;
+
+CREATE TEMP TABLE catalog_expansion_006_inserted (id uuid PRIMARY KEY,canonical_key text NOT NULL) ON COMMIT DROP;
+WITH inserted AS (
+    INSERT INTO catalog.items(category_id,name,canonical_key,review_status)
+    SELECT p.category_id,p.name,p.key,'approved' FROM catalog_expansion_006_items p
+    WHERE NOT EXISTS(SELECT 1 FROM catalog.items i WHERE i.canonical_key=p.key)
+      AND NOT EXISTS(SELECT 1 FROM catalog.items i WHERE i.category_id=p.category_id
+          AND btrim(regexp_replace(translate(lower(i.name),'áéíóúüñ','aeiouun'),'[^[:alnum:]]+',' ','g'))=p.normalized_name)
+    ON CONFLICT(canonical_key) DO NOTHING RETURNING id,canonical_key
+)
+INSERT INTO catalog_expansion_006_inserted SELECT * FROM inserted;
+
+INSERT INTO catalog.item_attributes(item_id,attribute_id,data_type,text_value,number_value,boolean_value)
+SELECT i.id,d.id,d.data_type,
+    CASE WHEN d.data_type='text' THEN e.value#>>'{}' END,
+    CASE WHEN d.data_type='number' THEN (e.value#>>'{}')::numeric END,
+    CASE WHEN d.data_type='boolean' THEN (e.value#>>'{}')::boolean END
+FROM catalog_expansion_006_inserted i JOIN catalog_expansion_006_items p ON p.key=i.canonical_key
+CROSS JOIN LATERAL jsonb_each(p.attributes) e JOIN catalog.attribute_definitions d ON d.key=e.key;
+
+INSERT INTO catalog.item_aliases(item_id,alias)
+SELECT DISTINCT i.id,lower(btrim(alias)) FROM catalog_expansion_006_inserted i
+JOIN catalog_expansion_006_items p ON p.key=i.canonical_key
+CROSS JOIN LATERAL jsonb_array_elements_text(p.aliases) alias
+WHERE btrim(alias)<>'' ON CONFLICT(item_id,alias) DO NOTHING;

@@ -1,0 +1,18 @@
+Use case: ui-mockup
+Edit the supplied Lista Escolar administrative templates screenshot into a more compact functional working interface. Preserve the existing image dimensions, colors, navy top header, persistent left navigation, selected Plantillas section, serif title, white panels, typography, and left template-picker layout. Keep the original available/retired template behavior and the "Retirar plantilla" control plus "Las listas ya creadas se conservan." Keep "Nueva plantilla", all existing navigation labels, and a visible persistent bottom action bar with "+ Agregar artículo" and green "Guardar plantilla".
+
+Change only the main template editor and the selected template's item count:
+1. Selected left template "5° básico" must show exactly "7 artículos" instead of "12 artículos", matching the seven visible editor rows. Other left template cards and their counts stay unchanged.
+2. Compact the school-neutral metadata at top of the editor: paired fields "Nombre" = "Materiales para 5° básico", "Nivel o curso" = "5° básico"; below them one compact textarea "Instrucciones generales" = "Reutiliza los materiales que tengas en buen estado. No se exige una marca." Do not add school identity, logo, year, or publishing controls.
+3. Replace the three large item cards with exactly SEVEN comfortable repeatable rows, all visible within the screenshot above the action footer. Use aligned column headers "Artículo", "Cantidad", "Unidad", "Categoría", and per-row actions. Each row places editable item-name field, plain numeric quantity input, unit selector, category selector, note disclosure and a small remove control on ONE line wherever width allows. Quantity is a free numeric input, never a dropdown or special size selector. Maintain readable sans-serif text around 16px and inputs approximately 40-44px high. No horizontal clipping or overflow.
+The seven rows must be:
+"Cuaderno universitario 100 hojas" | 4 | unidad | Cuadernos
+"Lápiz grafito" | 3 | unidad | Escritura
+"Lápices de colores" | 1 | caja | Arte y dibujo
+"Goma de borrar" | 2 | unidad | Escritura
+"Sacapuntas" | 1 | unidad | Escritura
+"Regla de 30 cm" | 1 | unidad | Geometría
+"Pegamento en barra" | 2 | unidad | Pegado y corte
+4. Optional notes must be hidden behind a per-row "Nota" chevron disclosure. Show only the FIRST row's note expanded in a compact indented secondary line: label "Nota" with input value "Cuadriculado de 7 mm". The other six note disclosures remain closed. All rows retain a small clear remove icon/button with no oversized red block.
+5. Show "Artículos · 7" as the small editor subsection title. Retain realistic whitespace and a clear visual rhythm but remove wasteful repeated field labels and tall item cards. Keep the footer buttons visible without scrolling. This is one coherent desktop application screenshot, not a collage, diagram, presentation, or marketing page.
+Output one opaque PNG. Preserve every unaffected element of the original screenshot.

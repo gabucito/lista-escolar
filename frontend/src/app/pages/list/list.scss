@@ -1,0 +1,416 @@
+:host {
+  display: block;
+}
+.published-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.2rem;
+  margin-bottom: 1rem;
+}
+.list-title {
+  min-width: 0;
+  gap: 0.8rem;
+}
+.school-logo {
+  width: 52px;
+  height: 58px;
+  object-fit: contain;
+  flex: none;
+}
+.school-identity {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.list-title h1 {
+  font-size: clamp(1.5rem, 2.2vw, 2rem);
+  margin-bottom: 0.3rem;
+}
+.list-subtitle {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+.school-identity p {
+  margin: 0.3rem 0 0;
+  font-size: 0.8rem;
+}
+.heading-actions {
+  justify-content: end;
+  flex-shrink: 0;
+}
+.heading-actions .btn {
+  font-size: 0.8rem;
+}
+.published-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  border-top: 1px solid var(--line);
+  padding: 0.75rem 0;
+}
+.version-owner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.65rem;
+  font-size: 0.78rem;
+}
+.published-toolbar label {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.65rem;
+  font-size: 0.78rem;
+  min-width: 0;
+}
+.published-toolbar select {
+  width: auto;
+  max-width: 330px;
+  min-width: 0;
+  min-height: 38px;
+  margin: 0;
+  font-size: 0.78rem;
+}
+.participation-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 0.2rem 0 1rem;
+}
+.participation-toolbar .actions {
+  gap: 0.5rem;
+}
+.participation-toolbar .text-button {
+  font-size: 0.77rem;
+}
+.secondary-actions {
+  display: flex;
+  flex: 1;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.65rem;
+}
+.secondary-actions .report-link {
+  margin-left: auto;
+}
+.more-actions-toggle {
+  display: none;
+}
+.report-link {
+  flex-shrink: 0;
+}
+.published-workspace {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 350px;
+  gap: 1.2rem;
+  align-items: start;
+}
+.checklist-panel {
+  padding: 1.1rem 1.2rem;
+  min-width: 0;
+}
+.checklist-panel > .section-row {
+  margin: 0;
+  align-items: center;
+}
+.checklist-panel > .section-row h2 {
+  font: 700 1.05rem system-ui;
+  margin: 0;
+}
+.checklist-panel > .section-row > span {
+  font-size: 0.82rem;
+}
+.progress-bar {
+  margin: 0.65rem 0 1rem;
+  height: 8px;
+}
+.checklist-group {
+  margin-bottom: 0.9rem;
+}
+.checklist-group h2 {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font: 700 0.87rem system-ui;
+  padding: 0.55rem 0.7rem;
+  border-radius: 5px;
+  margin-bottom: 0;
+}
+.checklist-group h2 span {
+  font-size: 0.72rem;
+  color: var(--green);
+  background: white;
+  border-radius: 10px;
+  min-width: 21px;
+  padding: 0.1rem 0.3rem;
+  text-align: center;
+}
+.checklist-item {
+  display: flex;
+  align-items: start;
+  gap: 0.7rem;
+  padding: 0.7rem 0.35rem;
+}
+.checklist-item > input[type='checkbox'],
+.empty-checkbox {
+  width: 19px;
+  height: 19px;
+  flex: none;
+  margin: 0.15rem 0 0;
+}
+.empty-checkbox {
+  border: 1px solid #9aa89b;
+  border-radius: 3px;
+}
+.checklist-item .item-copy {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.checklist-item .item-name {
+  font-size: 0.88rem;
+  margin-bottom: 0.15rem;
+  line-height: 1.4;
+}
+.checklist-item small {
+  font-size: 0.76rem;
+  line-height: 1.5;
+  white-space: pre-wrap;
+}
+.checklist-item .quantity {
+  font-size: 0.81rem;
+  max-width: 110px;
+  white-space: normal;
+  text-align: right;
+  flex-shrink: 0;
+  overflow-wrap: anywhere;
+}
+.review-note {
+  font-size: 0.77rem;
+  line-height: 1.5;
+  padding: 0.6rem 0.7rem;
+}
+.review-note .text-button {
+  font-size: 0.75rem;
+}
+.published-aside {
+  min-width: 0;
+}
+.published-aside .panel {
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+.published-aside h2 {
+  font-size: 1.18rem;
+  margin-bottom: 0.65rem;
+}
+.instructions-panel {
+  background: #fcf6e8;
+}
+.list-instructions {
+  background: none;
+  border: 0;
+  padding: 0;
+  font-size: 0.8rem;
+  line-height: 1.65;
+  overflow-wrap: anywhere;
+}
+.comments-panel .section-row {
+  margin: 0 0 0.8rem;
+  gap: 0.5rem;
+}
+.comments-panel .section-row h2 {
+  margin: 0;
+}
+.comment-count {
+  font: 600 0.8rem system-ui;
+  color: var(--muted);
+}
+.comments-panel .badge {
+  font-size: 0.65rem;
+}
+.comments-panel label {
+  font-size: 0.8rem;
+}
+.comments-panel textarea {
+  min-height: 86px;
+  font-size: 0.8rem;
+}
+.comments-panel form > .btn {
+  font-size: 0.78rem;
+  min-height: 38px;
+  margin-top: 0.6rem;
+}
+.comments-panel > p {
+  font-size: 0.8rem;
+}
+.comment {
+  padding: 0.8rem 0;
+}
+.comment-head {
+  align-items: start;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+.comment-head strong {
+  font-size: 0.8rem;
+  overflow-wrap: anywhere;
+}
+.comment-head time {
+  font-size: 0.68rem;
+}
+.comment p {
+  font-size: 0.8rem;
+  margin: 0.4rem 0;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+.comment .text-button {
+  font-size: 0.72rem;
+}
+.list-provenance {
+  color: var(--muted);
+  font-size: 0.73rem;
+  line-height: 1.6;
+}
+.report-backdrop {
+  justify-content: flex-end;
+  align-items: stretch;
+  padding: 0;
+}
+.report-drawer {
+  width: min(100%, 440px);
+  max-width: 440px;
+  height: 100dvh;
+  max-height: 100dvh;
+  border-radius: 0;
+  padding: 1.5rem;
+  overflow-y: auto;
+}
+.report-drawer h2 {
+  font-size: 1.5rem;
+}
+.report-drawer > p {
+  font-size: 0.84rem;
+}
+.report-drawer label {
+  font-size: 0.84rem;
+}
+.report-drawer .form-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+.notice {
+  font-size: 0.82rem;
+}
+@media (max-width: 1100px) {
+  .published-workspace {
+    grid-template-columns: minmax(0, 1fr) 300px;
+  }
+  .published-heading {
+    align-items: start;
+  }
+  .heading-actions {
+    max-width: 270px;
+  }
+  .participation-toolbar {
+    align-items: start;
+    flex-wrap: wrap;
+  }
+  .published-toolbar label {
+    max-width: 52%;
+  }
+  .published-toolbar select {
+    max-width: 100%;
+  }
+}
+@media (max-width: 760px) {
+  .heading-actions > button {
+    display: none;
+  }
+  .secondary-actions {
+    display: none;
+    flex-basis: 100%;
+  }
+  .secondary-actions.expanded {
+    display: flex;
+  }
+  .secondary-actions .report-link {
+    margin-left: 0;
+  }
+  .more-actions-toggle {
+    display: inline-block;
+  }
+  .published-workspace {
+    grid-template-columns: 1fr;
+  }
+  .published-heading {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.8rem;
+  }
+  .heading-actions {
+    max-width: none;
+    justify-content: start;
+  }
+  .heading-actions .btn {
+    min-height: 38px;
+  }
+  .published-toolbar {
+    flex-wrap: wrap;
+    gap: 0.65rem;
+  }
+  .published-toolbar label {
+    max-width: 100%;
+    width: 100%;
+  }
+  .published-toolbar select {
+    flex: 1;
+  }
+  .participation-toolbar {
+    padding-bottom: 0.8rem;
+  }
+  .participation-toolbar .btn {
+    font-size: 0.74rem;
+  }
+  .participation-toolbar .text-button {
+    font-size: 0.74rem;
+  }
+  .checklist-panel {
+    padding: 0.9rem;
+  }
+  .checklist-item {
+    padding: 0.7rem 0.1rem;
+    gap: 0.55rem;
+  }
+  .checklist-item .quantity {
+    max-width: 78px;
+    font-size: 0.76rem;
+    grid-column: auto;
+    margin-top: 0;
+  }
+  .checklist-item .item-name {
+    font-size: 0.84rem;
+  }
+  .checklist-item small {
+    font-size: 0.73rem;
+  }
+  .published-aside .comments-panel {
+    padding: 1rem;
+  }
+  .report-drawer {
+    padding: 1.1rem;
+  }
+  .published-mobile-actions {
+    z-index: 40;
+  }
+}
+@media (min-width: 761px) {
+  .published-mobile-actions {
+    display: none;
+  }
+}

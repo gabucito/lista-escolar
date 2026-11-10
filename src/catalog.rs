@@ -17,6 +17,7 @@ use crate::{
 pub fn routes() -> Router<AppState> {
     Router::new()
         .route("/catalog", get(browse).post(create))
+        .route("/catalog/browse", get(crate::catalog_browse::browse))
         .route("/catalog/categories", get(categories))
         .route("/catalog/match", post(match_names))
 }
@@ -78,27 +79,7 @@ pub async fn catalog_rows(
     search: &Search,
     include_rejected: bool,
 ) -> ApiResult<Value> {
-    let result = sqlx::query_scalar::<_, Value>(r#"
-        SELECT COALESCE(jsonb_agg(to_jsonb(x)), '[]'::jsonb) FROM (
-          SELECT i.id,i.name,i.review_status,c.id AS category_id,c.name AS category,c.slug AS category_slug,
-            s.id AS subcategory_id,s.name AS subcategory,
-            COALESCE((SELECT jsonb_agg(a.alias ORDER BY a.alias) FROM catalog.item_aliases a WHERE a.item_id=i.id),'[]'::jsonb) AS aliases,
-            COALESCE((SELECT jsonb_object_agg(d.key,jsonb_build_object('name',d.name,'unit',d.unit,'data_type',d.data_type,'value',
-              COALESCE(to_jsonb(a.text_value),to_jsonb(a.number_value),to_jsonb(a.boolean_value))))
-              FROM catalog.item_attributes a JOIN catalog.attribute_definitions d ON d.id=a.attribute_id
-              WHERE a.item_id=i.id),'{}'::jsonb) AS attributes
-          FROM catalog.items i JOIN catalog.categories c ON c.id=i.category_id
-          LEFT JOIN catalog.subcategories s ON s.id=i.subcategory_id
-          WHERE ($3 OR i.review_status IN ('pending','approved'))
-            AND ($2='' OR c.slug=$2)
-            AND ($1='' OR i.name ILIKE '%' || $1 || '%'
-              OR EXISTS(SELECT 1 FROM catalog.item_aliases a WHERE a.item_id=i.id AND a.alias ILIKE '%' || $1 || '%')
-              OR EXISTS(SELECT 1 FROM catalog.store_product_matches m JOIN store_snapshot.products p ON p.id=m.source_product_id
-                WHERE m.item_id=i.id AND m.review_status='approved' AND p.name ILIKE '%' || $1 || '%'))
-          ORDER BY CASE i.review_status WHEN 'approved' THEN 0 WHEN 'pending' THEN 1 ELSE 2 END,i.name,i.id
-          LIMIT 200
-        ) x"#).bind(search.q.trim()).bind(search.category.trim()).bind(include_rejected).fetch_one(pool).await?;
-    Ok(result)
+    crate::catalog_browse::legacy_rows(pool, &search.q, &search.category, include_rejected).await
 }
 
 async fn browse(
@@ -111,7 +92,11 @@ async fn browse(
 async fn categories(State(state): State<AppState>) -> ApiResult<Json<Value>> {
     let result = sqlx::query_scalar::<_, Value>(r#"
       SELECT COALESCE(jsonb_agg(to_jsonb(c)), '[]'::jsonb) FROM (
-        SELECT c.id,c.slug,c.name,COALESCE((SELECT jsonb_agg(to_jsonb(s) ORDER BY s.sort_order,s.name) FROM (
+        SELECT c.id,c.slug,c.name,
+          (SELECT d.key FROM catalog.category_type_attributes t JOIN catalog.attribute_definitions d ON d.id=t.attribute_id WHERE t.category_id=c.id) AS type_attribute,
+          COALESCE((SELECT jsonb_agg(jsonb_build_object('key',d.key,'name',CASE WHEN d.key<>'tipo_cuaderno' AND EXISTS(SELECT 1 FROM catalog.category_type_attributes t WHERE t.category_id=c.id AND t.attribute_id=d.id) THEN 'Tipo' ELSE d.name END,'data_type',d.data_type,'unit',d.unit,'options',a.options,'applies_to_types',a.applies_to_types,'sort_order',a.sort_order) ORDER BY a.sort_order,d.name)
+            FROM catalog.category_attributes a JOIN catalog.attribute_definitions d ON d.id=a.attribute_id WHERE a.category_id=c.id),'[]'::jsonb) AS attributes,
+          COALESCE((SELECT jsonb_agg(to_jsonb(s) ORDER BY s.sort_order,s.name) FROM (
           SELECT s.id,s.slug,s.name,s.sort_order,
             COALESCE((SELECT jsonb_agg(jsonb_build_object('key',a.key,'name',a.name,'data_type',a.data_type,'unit',a.unit) ORDER BY sa.sort_order)
               FROM catalog.subcategory_attributes sa JOIN catalog.attribute_definitions a ON a.id=sa.attribute_id
@@ -145,12 +130,19 @@ pub async fn insert_supply(
     input: NewSupply,
 ) -> ApiResult<Uuid> {
     let name = checked_text(&input.name, 300, "Nombre")?;
-    validate_classification(tx, input.category_id, input.subcategory_id).await?;
+    let (subcategory_id, attributes) = crate::category_attributes::prepare(
+        tx,
+        input.category_id,
+        input.subcategory_id,
+        input.attributes,
+        None,
+    )
+    .await?;
     let id = Uuid::new_v4();
     sqlx::query("INSERT INTO catalog.items(id,category_id,subcategory_id,name,canonical_key,review_status) VALUES($1,$2,$3,$4,$5,'pending')")
-        .bind(id).bind(input.category_id).bind(input.subcategory_id).bind(name).bind(format!("custom:{id}"))
+        .bind(id).bind(input.category_id).bind(subcategory_id).bind(name).bind(format!("custom:{id}"))
         .execute(&mut **tx).await?;
-    replace_attributes(tx, id, input.attributes).await?;
+    replace_attributes(tx, id, attributes).await?;
     Ok(id)
 }
 
@@ -163,7 +155,7 @@ pub async fn validate_classification(
         .bind(category_id).bind(subcategory_id).fetch_one(&mut **tx).await?;
     if !valid {
         return Err(ApiError::bad_request(
-            "Selecciona una categoría y subcategoría válidas",
+            "Selecciona una categoría válida y una clasificación compatible",
         ));
     }
     Ok(())
@@ -198,7 +190,7 @@ pub async fn replace_attributes(
     Ok(())
 }
 
-fn validate_attribute(
+pub(crate) fn validate_attribute(
     kind: &str,
     value: &Value,
 ) -> ApiResult<(Option<String>, Option<String>, Option<bool>)> {

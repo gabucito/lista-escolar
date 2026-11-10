@@ -5,33 +5,8 @@ import { Session } from '../../core/session';
 @Component({
   selector: 'app-invitation',
   imports: [RouterLink],
-  template: `<div class="auth-wrap">
-    <section class="panel">
-      <p class="eyebrow">Compartir con confianza</p>
-      <h1>{{ request ? 'Solicitar acceso' : 'Te invitaron a una lista' }}</h1>
-      <p>
-        {{
-          request
-            ? 'El propietario o un editor debe aprobar tu solicitud antes de que puedas ver la lista.'
-            : 'Solo la cuenta con el correo invitado puede aceptar este enlace.'
-        }}
-      </p>
-      <p>
-        Estás conectado como <strong>{{ session.user()?.email }}</strong
-        >.
-      </p>
-      @if (done()) {
-        <div class="notice success" role="status">
-          Solicitud enviada. La lista aparecerá en Mis listas cuando te den acceso.
-        </div>
-      } @else {
-        <button class="btn" [disabled]="busy()" (click)="accept()">
-          {{ busy() ? 'Un momento…' : request ? 'Enviar solicitud' : 'Aceptar invitación' }}
-        </button>
-      }
-      <p class="spaced"><a routerLink="/mis-listas">Ir a mis listas</a></p>
-    </section>
-  </div>`,
+  templateUrl: './invitation.html',
+  styleUrl: './invitation.scss',
 })
 export class Invitation {
   private api = inject(Api);
@@ -41,7 +16,21 @@ export class Invitation {
   readonly request = (this.route.snapshot.routeConfig?.path || '').startsWith('solicitar');
   readonly busy = signal(false);
   readonly done = signal(false);
+  readonly error = signal('');
+  readonly returnUrl = this.router.url;
+  async changeAccount() {
+    this.busy.set(true);
+    try {
+      await this.session.logout();
+      await this.router.navigate(['/ingresar'], { queryParams: { next: this.returnUrl } });
+    } catch (error) {
+      this.error.set(error instanceof Error ? error.message : 'No se pudo cambiar de cuenta.');
+    } finally {
+      this.busy.set(false);
+    }
+  }
   async accept() {
+    this.error.set('');
     this.busy.set(true);
     try {
       const token = this.route.snapshot.paramMap.get('token') || '';
@@ -57,7 +46,7 @@ export class Invitation {
         this.api.success('Invitación aceptada.');
       }
     } catch (error) {
-      this.api.fail(error);
+      this.error.set(error instanceof Error ? error.message : 'No se pudo completar la solicitud.');
     } finally {
       this.busy.set(false);
     }

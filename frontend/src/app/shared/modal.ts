@@ -9,27 +9,37 @@ export class Modal {
     document.activeElement instanceof HTMLElement ? document.activeElement : undefined;
   private readonly previousOverflow = document.body.style.overflow;
   private readonly siblings: { element: HTMLElement; inert: boolean }[] = [];
+  private readonly isolated = new Set<HTMLElement>();
+  private readonly observer = new MutationObserver(() => this.isolateBackground());
+
+  private isolateBackground() {
+    let branch: HTMLElement | null = this.element;
+    while (branch?.parentElement && branch !== document.body) {
+      for (const sibling of Array.from(branch.parentElement.children)) {
+        if (
+          sibling !== branch &&
+          sibling instanceof HTMLElement &&
+          !['SCRIPT', 'STYLE', 'LINK'].includes(sibling.tagName) &&
+          !this.isolated.has(sibling)
+        ) {
+          this.siblings.push({ element: sibling, inert: sibling.inert });
+          this.isolated.add(sibling);
+          sibling.inert = true;
+        }
+      }
+      this.observer.observe(branch.parentElement, { childList: true });
+      branch = branch.parentElement;
+    }
+  }
 
   constructor() {
     afterNextRender(() => {
-      let branch: HTMLElement | null = this.element;
-      while (branch?.parentElement && branch !== document.body) {
-        for (const sibling of Array.from(branch.parentElement.children)) {
-          if (
-            sibling !== branch &&
-            sibling instanceof HTMLElement &&
-            !['SCRIPT', 'STYLE', 'LINK'].includes(sibling.tagName)
-          ) {
-            this.siblings.push({ element: sibling, inert: sibling.inert });
-            sibling.inert = true;
-          }
-        }
-        branch = branch.parentElement;
-      }
+      this.isolateBackground();
       document.body.style.overflow = 'hidden';
       (this.focusable()[0] || this.element).focus();
     });
     inject(DestroyRef).onDestroy(() => {
+      this.observer.disconnect();
       for (const sibling of this.siblings) sibling.element.inert = sibling.inert;
       document.body.style.overflow = this.previousOverflow;
       if (this.previousFocus?.isConnected) this.previousFocus.focus();
@@ -43,7 +53,7 @@ export class Modal {
       ),
     ).filter(
       (element) =>
-        !element.hasAttribute('disabled') &&
+        !element.matches(':disabled, [aria-disabled="true"]') &&
         !element.closest('[inert]') &&
         element.getClientRects().length > 0,
     );
@@ -64,13 +74,19 @@ export class Modal {
       this.element.focus();
       return;
     }
-    if (
-      event.shiftKey &&
-      (document.activeElement === first || document.activeElement === this.element)
-    ) {
+    const active = document.activeElement;
+    // Navigation may focus a heading with tabindex=-1 before the first control.
+    // Reverse tabbing from that heading must stay inside the modal too.
+    const beforeFirst =
+      active !== null &&
+      !!(first.compareDocumentPosition(active) & Node.DOCUMENT_POSITION_PRECEDING);
+    const afterLast =
+      active !== null &&
+      !!(last!.compareDocumentPosition(active) & Node.DOCUMENT_POSITION_FOLLOWING);
+    if (event.shiftKey && (active === first || active === this.element || beforeFirst)) {
       event.preventDefault();
       last!.focus();
-    } else if (!event.shiftKey && document.activeElement === last) {
+    } else if (!event.shiftKey && (active === last || afterLast)) {
       event.preventDefault();
       first.focus();
     }

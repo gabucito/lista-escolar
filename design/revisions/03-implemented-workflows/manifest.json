@@ -1,0 +1,688 @@
+{
+  "date": "2026-11-10",
+  "scope": "Local implementation; synthetic QA data only; unmodified browser PNG copies",
+  "workflows": [
+    {
+      "number": "01",
+      "title": "Editor de listas · escritorio",
+      "reference": "../02-functional-workflows/01-editor-escritorio.png",
+      "note": "Catálogo y lista editable comparten el espacio. Las cantidades y los nombres reflejan los datos de cada escenario de prueba.",
+      "captures": [
+        {
+          "label": "Editor con catálogo y dos apariciones independientes de un útil",
+          "source": ".local/qa/ui/editor-workspace-desktop-1440.png",
+          "file": "captures/editor-workspace-desktop-1440.png",
+          "source_modified_utc": "2026-11-10T04:58:41.957378+00:00",
+          "width": 1440,
+          "height": 900,
+          "bytes": 134583,
+          "sha256": "70a39890b27a4b3234a1f5bb7c7e4a44363286a9146cfdeaecace00389eee721"
+        },
+        {
+          "label": "Editor con una lista de diez útiles",
+          "source": ".local/qa/ui/desktop-editor-viewport.png",
+          "file": "captures/desktop-editor-viewport.png",
+          "source_modified_utc": "2026-11-10T04:59:51.963549+00:00",
+          "width": 1440,
+          "height": 1000,
+          "bytes": 200980,
+          "sha256": "a518e5d3ede5e954f73504cf1de7949af40a0239dcc64eed7b5f46ef641b5f65"
+        }
+      ]
+    },
+    {
+      "number": "02",
+      "title": "Editor de listas · móvil",
+      "reference": "../02-functional-workflows/02-editor-movil.png",
+      "note": "La lista ocupa la pantalla; el catálogo se abre como selector. Las acciones de vista previa y publicación permanecen accesibles.",
+      "captures": [
+        {
+          "label": "Lista editable en móvil",
+          "source": ".local/qa/ui/mobile-editor-viewport.png",
+          "file": "captures/mobile-editor-viewport.png",
+          "source_modified_utc": "2026-11-10T04:59:57.087415+00:00",
+          "width": 390,
+          "height": 844,
+          "bytes": 57345,
+          "sha256": "d11abd316d0aeb0b3276a01815ad02915aef3b0684392038cda9391a7c76ac23"
+        },
+        {
+          "label": "Selector de útiles abierto en móvil",
+          "source": ".local/qa/ui/editor-workspace-mobile-picker.png",
+          "file": "captures/editor-workspace-mobile-picker.png",
+          "source_modified_utc": "2026-11-10T04:58:44.221319+00:00",
+          "width": 390,
+          "height": 844,
+          "bytes": 54841,
+          "sha256": "9240dc531a069e1362c193562deb0ccea97c3a03967d98756551adb32fd557b9"
+        }
+      ]
+    },
+    {
+      "number": "03",
+      "title": "Datos del curso y útil personalizado",
+      "reference": "../02-functional-workflows/03-datos-y-util-personalizado-v2.png",
+      "note": "Los datos de la lista y el útil personalizado se editan en diálogos independientes. Compartir un útil con el catálogo es una elección explícita.",
+      "captures": [
+        {
+          "label": "Formulario de útil personalizado",
+          "source": ".local/qa/ui/editor-workspace-custom-desktop.png",
+          "file": "captures/editor-workspace-custom-desktop.png",
+          "source_modified_utc": "2026-11-10T04:58:45.477286+00:00",
+          "width": 1440,
+          "height": 1000,
+          "bytes": 165854,
+          "sha256": "ff8fe9b9ac4b40dabf5766d44ec87776781576f928b1b478a90e9709a166fc67"
+        },
+        {
+          "label": "Datos de la lista · edición pendiente antes de cancelar",
+          "source": ".local/qa/ui/editor-workspace-metadata.png",
+          "file": "captures/editor-workspace-metadata.png",
+          "source_modified_utc": "2026-11-10T04:58:45.157294+00:00",
+          "width": 1440,
+          "height": 1000,
+          "bytes": 123435,
+          "sha256": "a908647d603350324c0d9942820a4f5431cbfcc33f728ea0aa8ac81081428a5b"
+        },
+        {
+          "label": "Formulario de útil personalizado en móvil",
+          "source": ".local/qa/ui/editor-workspace-custom.png",
+          "file": "captures/editor-workspace-custom.png",
+          "source_modified_utc": "2026-11-10T04:58:44.457313+00:00",
+          "width": 390,
+          "height": 844,
+          "bytes": 39231,
+          "sha256": "6262fab3fb3bf1f34472ba30f6c60c64ede5e910447bdb2d5b42483ba2245ce8"
+        }
+      ]
+    },
+    {
+      "number": "04",
+      "title": "Importar una planilla",
+      "reference": "../02-functional-workflows/04-importar-planilla-v2.png",
+      "note": "La revisión usa filas paginadas y distingue Incluir de Revisé. Esta captura muestra un archivo de prueba de 1.000 filas antes de confirmar la revisión.",
+      "captures": [
+        {
+          "label": "Revisión de importación · primera página, sin filas revisadas",
+          "source": ".local/qa/ui/editor-workspace-import-review.png",
+          "file": "captures/editor-workspace-import-review.png",
+          "source_modified_utc": "2026-11-10T04:59:03.548814+00:00",
+          "width": 1440,
+          "height": 1000,
+          "bytes": 134017,
+          "sha256": "04addd25906aaed95769f4472f611cb5e03ad6bd6341e9521915d637bde8ec6d"
+        }
+      ]
+    },
+    {
+      "number": "05",
+      "title": "Buscar listas",
+      "reference": "../02-functional-workflows/05-buscar-listas.png",
+      "note": "Los filtros, resultados y contadores muestran el estado real de la búsqueda. La ubicación se despliega como filtro adicional en móvil.",
+      "captures": [
+        {
+          "label": "Búsqueda de listas en escritorio",
+          "source": ".local/qa/ui/desktop-search-viewport.png",
+          "file": "captures/desktop-search-viewport.png",
+          "source_modified_utc": "2026-11-10T04:59:50.827579+00:00",
+          "width": 1440,
+          "height": 1000,
+          "bytes": 132213,
+          "sha256": "49efb806a5be0ebe06079d39ab6d50c4cd98bc952a94663da3553f4cb2a7c39b"
+        },
+        {
+          "label": "Búsqueda de listas en móvil",
+          "source": ".local/qa/user-workflows/mobile-05-buscar-listas-viewport.png",
+          "file": "captures/mobile-05-buscar-listas-viewport.png",
+          "source_modified_utc": "2026-11-10T05:00:07.655139+00:00",
+          "width": 390,
+          "height": 844,
+          "bytes": 60037,
+          "sha256": "eea54bac4b0a1b7b525213865d3ec0fc625769d0c131404c5ad01255b7f43d43"
+        },
+        {
+          "label": "Filtros de ubicación desplegados en móvil",
+          "source": ".local/qa/user-workflows/mobile-05-buscar-ubicacion-viewport.png",
+          "file": "captures/mobile-05-buscar-ubicacion-viewport.png",
+          "source_modified_utc": "2026-11-10T05:00:07.907132+00:00",
+          "width": 390,
+          "height": 844,
+          "bytes": 61018,
+          "sha256": "9ebe5bfa5aad818a1e03497f5c05f070ca0b54dfad32d1bcfcdff68a6b92d7aa"
+        }
+      ]
+    },
+    {
+      "number": "06",
+      "title": "Mis listas",
+      "reference": "../02-functional-workflows/06-mis-listas.png",
+      "note": "Las tarjetas separan estado, curso y acciones. Los datos de prueba incluyen listas propias y colaboraciones.",
+      "captures": [
+        {
+          "label": "Mis listas en escritorio",
+          "source": ".local/qa/user-workflows/desktop-06-mis-listas-viewport.png",
+          "file": "captures/desktop-06-mis-listas-viewport.png",
+          "source_modified_utc": "2026-11-10T05:00:08.899106+00:00",
+          "width": 1440,
+          "height": 1000,
+          "bytes": 175533,
+          "sha256": "15dbdc9b2732ba0f92c751792cb230ccdc3ec047f56589e9cf5e0130082d2d2a"
+        },
+        {
+          "label": "Mis listas en móvil",
+          "source": ".local/qa/user-workflows/mobile-06-mis-listas-viewport.png",
+          "file": "captures/mobile-06-mis-listas-viewport.png",
+          "source_modified_utc": "2026-11-10T04:54:00.368738+00:00",
+          "width": 390,
+          "height": 844,
+          "bytes": 66096,
+          "sha256": "5022d6d852d52a8406229e5ad3cbd4d1b92705cf7515cac96166cc1dc4efa33f"
+        }
+      ]
+    },
+    {
+      "number": "07",
+      "title": "Acceso y registro",
+      "reference": "../02-functional-workflows/07-acceso-v2.png",
+      "note": "Ingreso y registro son formularios distintos. La captura de registro provoca errores de validación para mostrar mensajes junto a los campos.",
+      "captures": [
+        {
+          "label": "Formulario de ingreso",
+          "source": ".local/qa/user-workflows/desktop-07-ingresar-viewport.png",
+          "file": "captures/desktop-07-ingresar-viewport.png",
+          "source_modified_utc": "2026-11-10T04:53:54.728885+00:00",
+          "width": 1440,
+          "height": 1000,
+          "bytes": 72311,
+          "sha256": "ee90810f1d32c6faca9049b685a789913b671d58fabbcb3916b05f8400adae5d"
+        },
+        {
+          "label": "Registro · errores de validación provocados en la prueba",
+          "source": ".local/qa/user-workflows/desktop-07-registro-validacion-viewport.png",
+          "file": "captures/desktop-07-registro-validacion-viewport.png",
+          "source_modified_utc": "2026-11-10T04:53:55.044877+00:00",
+          "width": 1440,
+          "height": 1000,
+          "bytes": 84293,
+          "sha256": "ca91b76ff2aa35422cbe24db98d898fc67a50884206d5cf44aadcbabc42077f9"
+        },
+        {
+          "label": "Ingreso en móvil",
+          "source": ".local/qa/user-workflows/mobile-07-ingresar-viewport.png",
+          "file": "captures/mobile-07-ingresar-viewport.png",
+          "source_modified_utc": "2026-11-10T04:54:01.120718+00:00",
+          "width": 390,
+          "height": 844,
+          "bytes": 54045,
+          "sha256": "216c86b9b206841676a81d78e6a6c225fa0eacfe93dae9a9cd0cd9c2b49d0ed4"
+        },
+        {
+          "label": "Registro con validación en móvil",
+          "source": ".local/qa/user-workflows/mobile-07-registro-validacion-viewport.png",
+          "file": "captures/mobile-07-registro-validacion-viewport.png",
+          "source_modified_utc": "2026-11-10T04:54:01.436710+00:00",
+          "width": 390,
+          "height": 844,
+          "bytes": 55107,
+          "sha256": "e9a4d5b1e66f0156ccaf2dcfad8461302c03794e11c1cfcbfedc7d51cef44513"
+        }
+      ]
+    },
+    {
+      "number": "08",
+      "title": "Lista publicada",
+      "reference": "../02-functional-workflows/08-lista-publicada-v2.png",
+      "note": "La lista muestra cantidades, avance personal y participación. Reportar abre un formulario independiente; su evidencia sigue los permisos del caso.",
+      "captures": [
+        {
+          "label": "Lista publicada y avance personal",
+          "source": ".local/qa/user-workflows/desktop-08-lista-publicada-viewport.png",
+          "file": "captures/desktop-08-lista-publicada-viewport.png",
+          "source_modified_utc": "2026-11-10T04:53:57.384816+00:00",
+          "width": 1440,
+          "height": 1000,
+          "bytes": 157480,
+          "sha256": "7d42d6a0529d662872dcf9ffa7947e707f9444d232b1101678faf97a832be690"
+        },
+        {
+          "label": "Formulario para reportar contenido o privacidad",
+          "source": ".local/qa/user-workflows/desktop-08-reporte-viewport.png",
+          "file": "captures/desktop-08-reporte-viewport.png",
+          "source_modified_utc": "2026-11-10T04:53:57.576811+00:00",
+          "width": 1440,
+          "height": 1000,
+          "bytes": 115325,
+          "sha256": "25045bd661a448f932bc4942b016350462dfd185aa462606f2bc93dd47ee2e97"
+        },
+        {
+          "label": "Lista publicada en móvil",
+          "source": ".local/qa/user-workflows/mobile-08-lista-publicada-viewport.png",
+          "file": "captures/mobile-08-lista-publicada-viewport.png",
+          "source_modified_utc": "2026-11-10T04:54:03.772649+00:00",
+          "width": 390,
+          "height": 844,
+          "bytes": 64380,
+          "sha256": "0473780c6b09e1fcb58a49a8b5d8af4d35ea1e05169c0a1c0f36dd197392fa7b"
+        },
+        {
+          "label": "Formulario de reporte en móvil",
+          "source": ".local/qa/user-workflows/mobile-08-reporte-viewport.png",
+          "file": "captures/mobile-08-reporte-viewport.png",
+          "source_modified_utc": "2026-11-10T04:54:04.000643+00:00",
+          "width": 390,
+          "height": 844,
+          "bytes": 30220,
+          "sha256": "f74075663c42548cc25c5856cce24102cf425e481e04aef860d1b5a08f57802e"
+        }
+      ]
+    },
+    {
+      "number": "09",
+      "title": "Preparar el PDF",
+      "reference": "../02-functional-workflows/09-pdf.png",
+      "note": "La vista previa contiene el PDF generado. Las opciones de diseño, papel, color y preferencias conservan su alcance explícito.",
+      "captures": [
+        {
+          "label": "Vista previa real del PDF y opciones",
+          "source": ".local/qa/ui-pdf/1366-preview.png",
+          "file": "captures/1366-preview.png",
+          "source_modified_utc": "2026-11-10T04:59:16.040487+00:00",
+          "width": 1366,
+          "height": 768,
+          "bytes": 121022,
+          "sha256": "547b4496d3b1b9767178fd6e5fa273719275095e58a28ecfec6d872a470e4e8a"
+        },
+        {
+          "label": "Opciones antes de actualizar la vista previa",
+          "source": ".local/qa/ui-pdf/1366-settings.png",
+          "file": "captures/1366-settings.png",
+          "source_modified_utc": "2026-11-10T04:59:16.256482+00:00",
+          "width": 1366,
+          "height": 768,
+          "bytes": 57937,
+          "sha256": "6d5f5b71a563154c98b88051db7839ffb76cb7abf21e96c97be48538167894c0"
+        },
+        {
+          "label": "Vista previa del PDF en móvil",
+          "source": ".local/qa/ui-pdf/390-preview.png",
+          "file": "captures/390-preview.png",
+          "source_modified_utc": "2026-11-10T04:59:17.892439+00:00",
+          "width": 390,
+          "height": 844,
+          "bytes": 54272,
+          "sha256": "16670ec44817b90157c24b5d719adfcb1b345ce2f38bef13b3ce23cc09df9660"
+        },
+        {
+          "label": "Opciones del PDF en móvil",
+          "source": ".local/qa/ui-pdf/390-settings.png",
+          "file": "captures/390-settings.png",
+          "source_modified_utc": "2026-11-10T04:59:18.076434+00:00",
+          "width": 390,
+          "height": 844,
+          "bytes": 35533,
+          "sha256": "64aa42243a690c7cf88b1ee45f339c963c9d3feaaa19eaab8dd1c5326ecbd575"
+        }
+      ]
+    },
+    {
+      "number": "10",
+      "title": "Compartir y colaborar",
+      "reference": "../02-functional-workflows/10-compartir.png",
+      "note": "Personas, invitaciones y solicitudes se muestran en vistas separadas. Las acciones disponibles dependen del rol de la cuenta y del estado de la lista.",
+      "captures": [
+        {
+          "label": "Personas con acceso y transferencia de propiedad",
+          "source": ".local/qa/user-workflows/desktop-10-compartir-personas-viewport.png",
+          "file": "captures/desktop-10-compartir-personas-viewport.png",
+          "source_modified_utc": "2026-11-10T04:53:58.304792+00:00",
+          "width": 1440,
+          "height": 1000,
+          "bytes": 166628,
+          "sha256": "b2446a4ed0b4d33c2e74a7467d5105f9f7423394fb4ba5b077a6eac93afed313"
+        },
+        {
+          "label": "Crear y gestionar invitaciones",
+          "source": ".local/qa/user-workflows/desktop-10-compartir-invitaciones-viewport.png",
+          "file": "captures/desktop-10-compartir-invitaciones-viewport.png",
+          "source_modified_utc": "2026-11-10T04:53:58.488787+00:00",
+          "width": 1440,
+          "height": 1000,
+          "bytes": 164279,
+          "sha256": "42ecc24702373b220e4091fe69a2b63193eb1ca25a9bcd7310c301446d884620"
+        },
+        {
+          "label": "Revisar solicitudes de acceso",
+          "source": ".local/qa/user-workflows/desktop-10-compartir-solicitudes-viewport.png",
+          "file": "captures/desktop-10-compartir-solicitudes-viewport.png",
+          "source_modified_utc": "2026-11-10T04:53:58.676782+00:00",
+          "width": 1440,
+          "height": 1000,
+          "bytes": 177757,
+          "sha256": "0bb65497ae226dd0b18c4a50f40d92025d185dea65d304517f591805be22c53c"
+        },
+        {
+          "label": "Visibilidad e invitación en móvil",
+          "source": ".local/qa/user-workflows/mobile-10-compartir-personas-viewport.png",
+          "file": "captures/mobile-10-compartir-personas-viewport.png",
+          "source_modified_utc": "2026-11-10T04:54:04.704624+00:00",
+          "width": 390,
+          "height": 844,
+          "bytes": 61177,
+          "sha256": "9c83f5495ba6d6cb6c79ac896ba61bc9738c3110c2c8bf4f0371329b55aae597"
+        },
+        {
+          "label": "Invitaciones en móvil",
+          "source": ".local/qa/user-workflows/mobile-10-compartir-invitaciones-viewport.png",
+          "file": "captures/mobile-10-compartir-invitaciones-viewport.png",
+          "source_modified_utc": "2026-11-10T04:54:04.852621+00:00",
+          "width": 390,
+          "height": 844,
+          "bytes": 55429,
+          "sha256": "c5de88bad3cb033f0d2df328b70367d249ff96d4aec257e80f5122f5465c48fb"
+        },
+        {
+          "label": "Solicitudes de acceso en móvil",
+          "source": ".local/qa/user-workflows/mobile-10-compartir-solicitudes-viewport.png",
+          "file": "captures/mobile-10-compartir-solicitudes-viewport.png",
+          "source_modified_utc": "2026-11-10T04:54:05.020616+00:00",
+          "width": 390,
+          "height": 844,
+          "bytes": 57709,
+          "sha256": "a02ebd52173b35f9ac9c07005de7e3678a92487621865f5f639ea50510cfc572"
+        }
+      ]
+    },
+    {
+      "number": "11",
+      "title": "Mi cuenta",
+      "reference": "../02-functional-workflows/11-cuenta.png",
+      "note": "La revisión de eliminación enumera efectos reales sobre listas y transferencias antes de pedir confirmación. En móvil esa revisión recibe el foco de la pantalla.",
+      "captures": [
+        {
+          "label": "Cuenta · revisión de eliminación",
+          "source": ".local/qa/user-workflows/desktop-11-cuenta-revision-viewport.png",
+          "file": "captures/desktop-11-cuenta-revision-viewport.png",
+          "source_modified_utc": "2026-11-10T04:53:59.504761+00:00",
+          "width": 1440,
+          "height": 1000,
+          "bytes": 133234,
+          "sha256": "9d6d6753cc7976e9fdad7b38c93dc8d23884d289c6c3fd37cea8ee1163636403"
+        },
+        {
+          "label": "Cuenta · revisión de eliminación en móvil",
+          "source": ".local/qa/user-workflows/mobile-11-cuenta-revision-viewport.png",
+          "file": "captures/mobile-11-cuenta-revision-viewport.png",
+          "source_modified_utc": "2026-11-10T04:54:05.804596+00:00",
+          "width": 390,
+          "height": 844,
+          "bytes": 64339,
+          "sha256": "862cd27c94c9220d97117b9796750bd8ccad8108c01ac315597fb8497938f015"
+        }
+      ]
+    },
+    {
+      "number": "12",
+      "title": "Administración · catálogo",
+      "reference": "../02-functional-workflows/12-admin-catalogo-v2.png",
+      "note": "Los resultados y el editor aparecen juntos. Los atributos conservan su tipo; corregir datos y aprobar o rechazar son acciones independientes.",
+      "captures": [
+        {
+          "label": "Catálogo · revisión de un útil seleccionado",
+          "source": ".local/qa/ui-admin/desktop-catalog-review-viewport.png",
+          "file": "captures/desktop-catalog-review-viewport.png",
+          "source_modified_utc": "2026-11-10T04:59:22.896308+00:00",
+          "width": 1440,
+          "height": 1000,
+          "bytes": 131164,
+          "sha256": "b915303e500a789fa8afbf3c0a9f605f40a7677676ca0d7e6a7cd948dab3ac36"
+        },
+        {
+          "label": "Catálogo · creación de un útil",
+          "source": ".local/qa/ui-admin/desktop-catalog-viewport.png",
+          "file": "captures/desktop-catalog-viewport.png",
+          "source_modified_utc": "2026-11-10T04:59:23.424294+00:00",
+          "width": 1440,
+          "height": 1000,
+          "bytes": 119852,
+          "sha256": "af1dbaa5ad92d2a728326019dc060a372b21315d7e183b433fe29f124e373057"
+        },
+        {
+          "label": "Revisión de un útil en móvil",
+          "source": ".local/qa/ui-admin/mobile-catalog-review-viewport.png",
+          "file": "captures/mobile-catalog-review-viewport.png",
+          "source_modified_utc": "2026-11-10T04:59:32.724051+00:00",
+          "width": 390,
+          "height": 844,
+          "bytes": 60058,
+          "sha256": "1aa9418a4e4ea669b48b7407d0f35beeac3818f4a4e3c20c07ab87c3efb175ce"
+        }
+      ]
+    },
+    {
+      "number": "13",
+      "title": "Administración · categorías",
+      "reference": "../02-functional-workflows/13-admin-categorias.png",
+      "note": "El árbol de categorías acompaña al formulario. Los contadores son de subcategorías; las restricciones de eliminación y traslado se validan al guardar.",
+      "captures": [
+        {
+          "label": "Árbol de categorías y formulario de subcategoría",
+          "source": ".local/qa/ui-admin/desktop-taxonomy-viewport.png",
+          "file": "captures/desktop-taxonomy-viewport.png",
+          "source_modified_utc": "2026-11-10T04:59:24.476267+00:00",
+          "width": 1440,
+          "height": 1000,
+          "bytes": 117676,
+          "sha256": "9557aee920fced46fac2d6b1b461df27bf6a9846fefc0d6acc87f82cf4ba7f60"
+        },
+        {
+          "label": "Categorías y subcategorías en móvil",
+          "source": ".local/qa/ui-admin/mobile-taxonomy-viewport.png",
+          "file": "captures/mobile-taxonomy-viewport.png",
+          "source_modified_utc": "2026-11-10T04:59:34.208013+00:00",
+          "width": 390,
+          "height": 844,
+          "bytes": 51988,
+          "sha256": "53346b23ae9c5fcbc581a2c12c5110cdbcec0622c33a1af3bd36bbe41141ba84"
+        }
+      ]
+    },
+    {
+      "number": "14",
+      "title": "Administración · productos",
+      "reference": "../02-functional-workflows/14-admin-productos.png",
+      "note": "Después de elegir un producto, los resultados se contraen para dejar visible la comparación de atributos y Confirmar vínculo. La equivalencia requiere revisión manual.",
+      "captures": [
+        {
+          "label": "Comparación del producto importado y el útil genérico",
+          "source": ".local/qa/ui-admin/desktop-products-viewport.png",
+          "file": "captures/desktop-products-viewport.png",
+          "source_modified_utc": "2026-11-10T04:59:25.916229+00:00",
+          "width": 1440,
+          "height": 1000,
+          "bytes": 127737,
+          "sha256": "0544036ccb67f70ad520eb2bfd83780be3246c768ace7443752b5a8eb77f7519"
+        },
+        {
+          "label": "Resultados de origen con variantes desplegadas",
+          "source": ".local/qa/ui-admin/desktop-products-variants-viewport.png",
+          "file": "captures/desktop-products-variants-viewport.png",
+          "source_modified_utc": "2026-11-10T04:59:25.372244+00:00",
+          "width": 1440,
+          "height": 1000,
+          "bytes": 113583,
+          "sha256": "be6f15861f3956064591436f47518c6842f24cfbd60de34b6df84186f7ad0348"
+        },
+        {
+          "label": "Selección y comparación de productos en móvil",
+          "source": ".local/qa/ui-admin/mobile-products-viewport.png",
+          "file": "captures/mobile-products-viewport.png",
+          "source_modified_utc": "2026-11-10T04:59:35.691974+00:00",
+          "width": 390,
+          "height": 844,
+          "bytes": 57242,
+          "sha256": "5955e42b5d1a0ef1080edd976f729fbf436f494d86e88790d4ed1716c4a4af86"
+        }
+      ]
+    },
+    {
+      "number": "15",
+      "title": "Administración · reportes",
+      "reference": "../02-functional-workflows/15-admin-reportes.png",
+      "note": "La cola, la evidencia capturada y la decisión forman un mismo espacio de trabajo. El acceso administrativo se limita a la evidencia del reporte abierto.",
+      "captures": [
+        {
+          "label": "Caso abierto · cola, evidencia y decisión",
+          "source": ".local/qa/ui-admin/desktop-reports-viewport.png",
+          "file": "captures/desktop-reports-viewport.png",
+          "source_modified_utc": "2026-11-10T04:59:26.908203+00:00",
+          "width": 1440,
+          "height": 1000,
+          "bytes": 137157,
+          "sha256": "38128fb6b75606333d1c5f746f96b205d3b915a9414a9dd3f5885f75ec5579f0"
+        },
+        {
+          "label": "Caso abierto en móvil",
+          "source": ".local/qa/ui-admin/mobile-reports-viewport.png",
+          "file": "captures/mobile-reports-viewport.png",
+          "source_modified_utc": "2026-11-10T04:59:36.623950+00:00",
+          "width": 390,
+          "height": 844,
+          "bytes": 56297,
+          "sha256": "a3b2481b53e3d8d476d3a359f9924e3b2dfe2068430ed1df8eae0add79d66456"
+        }
+      ]
+    },
+    {
+      "number": "16",
+      "title": "Administración · plantillas",
+      "reference": "../02-functional-workflows/16-admin-plantillas-v2.png",
+      "note": "Siete útiles quedan visibles en escritorio. Las notas se despliegan por fila y la cantidad admite entrada numérica; la plantilla permanece neutral respecto al colegio.",
+      "captures": [
+        {
+          "label": "Plantilla con siete útiles y una nota desplegada",
+          "source": ".local/qa/ui-admin/desktop-templates-viewport.png",
+          "file": "captures/desktop-templates-viewport.png",
+          "source_modified_utc": "2026-11-10T04:59:28.404164+00:00",
+          "width": 1440,
+          "height": 1000,
+          "bytes": 161871,
+          "sha256": "6a18510e0395220fb22a82934f6d10d6269936bf1d231d8a0c3354ec546fc038"
+        },
+        {
+          "label": "Filas de plantilla y acciones persistentes en móvil",
+          "source": ".local/qa/ui-admin/mobile-templates-viewport.png",
+          "file": "captures/mobile-templates-viewport.png",
+          "source_modified_utc": "2026-11-10T04:59:38.171909+00:00",
+          "width": 390,
+          "height": 844,
+          "bytes": 42066,
+          "sha256": "88559bb3eeff78269ca2e101f26aa0d14cd5a0bf7de176759aef3a48328da15f"
+        }
+      ]
+    },
+    {
+      "number": "17",
+      "title": "Administración · colegios",
+      "reference": "../02-functional-workflows/17-admin-colegios.png",
+      "note": "El formulario asocia nombres dentro de una comuna y región. Los nombres originales de las listas se conservan.",
+      "captures": [
+        {
+          "label": "Formulario y asociaciones de nombres existentes",
+          "source": ".local/qa/ui-admin/desktop-schools-viewport.png",
+          "file": "captures/desktop-schools-viewport.png",
+          "source_modified_utc": "2026-11-10T04:59:29.556134+00:00",
+          "width": 1440,
+          "height": 1000,
+          "bytes": 101382,
+          "sha256": "50a5b56126ceae7df810dc440b92d0648ebee0ae81d4ac9d5d748aec68bc7b3c"
+        },
+        {
+          "label": "Asociaciones de colegios en móvil",
+          "source": ".local/qa/ui-admin/mobile-schools-viewport.png",
+          "file": "captures/mobile-schools-viewport.png",
+          "source_modified_utc": "2026-11-10T04:59:39.155884+00:00",
+          "width": 390,
+          "height": 844,
+          "bytes": 44417,
+          "sha256": "cce55fca86c836ed5a4417297c2ba5e6944029a0f7093fe231d7aa332fdcddd8"
+        }
+      ]
+    },
+    {
+      "number": "18",
+      "title": "Administración · cuentas",
+      "reference": "../02-functional-workflows/18-admin-cuentas.png",
+      "note": "La creación de administradores utiliza una sesión administrativa independiente. La captura muestra la creación; el ingreso se realiza en la pantalla de acceso del mismo portal.",
+      "captures": [
+        {
+          "label": "Crear una cuenta administrativa",
+          "source": ".local/qa/ui-admin/desktop-accounts-viewport.png",
+          "file": "captures/desktop-accounts-viewport.png",
+          "source_modified_utc": "2026-11-10T04:59:30.468111+00:00",
+          "width": 1440,
+          "height": 1000,
+          "bytes": 91945,
+          "sha256": "9ee6a0d8be8b04d161ce2908c57de6e6906fe39f110bd16bedef3095ebe51851"
+        },
+        {
+          "label": "Crear una cuenta administrativa en móvil",
+          "source": ".local/qa/ui-admin/mobile-accounts-viewport.png",
+          "file": "captures/mobile-accounts-viewport.png",
+          "source_modified_utc": "2026-11-10T04:59:40.023861+00:00",
+          "width": 390,
+          "height": 844,
+          "bytes": 50965,
+          "sha256": "e23ae1037a42a5c3105aa31bed703bc2eb8f94b1f214ae5b491ee69156d05077"
+        }
+      ]
+    },
+    {
+      "number": "19",
+      "title": "Invitaciones y solicitudes de acceso",
+      "reference": "../02-functional-workflows/19-invitaciones.png",
+      "note": "Aceptar una invitación y enviar una solicitud son recorridos distintos. La confirmación de solicitud no concede acceso inmediato.",
+      "captures": [
+        {
+          "label": "Invitación pendiente de aceptación",
+          "source": ".local/qa/user-workflows/desktop-19-invitacion-viewport.png",
+          "file": "captures/desktop-19-invitacion-viewport.png",
+          "source_modified_utc": "2026-11-10T04:53:55.660861+00:00",
+          "width": 1440,
+          "height": 1000,
+          "bytes": 79282,
+          "sha256": "437e5b3a8e4559d82ba10f18cf6466f697ddc8d50dc2a60ac750fe4db00c5441"
+        },
+        {
+          "label": "Solicitud de acceso enviada",
+          "source": ".local/qa/user-workflows/desktop-19-solicitud-enviada-viewport.png",
+          "file": "captures/desktop-19-solicitud-enviada-viewport.png",
+          "source_modified_utc": "2026-11-10T04:53:56.580837+00:00",
+          "width": 1440,
+          "height": 1000,
+          "bytes": 75829,
+          "sha256": "7e8c55e56c40610d4380f8b68f3bc4b6161f6ec92d8cb076dee12a3cdd404c2e"
+        },
+        {
+          "label": "Invitación en móvil",
+          "source": ".local/qa/user-workflows/mobile-19-invitacion-viewport.png",
+          "file": "captures/mobile-19-invitacion-viewport.png",
+          "source_modified_utc": "2026-11-10T04:54:02.104692+00:00",
+          "width": 390,
+          "height": 844,
+          "bytes": 56105,
+          "sha256": "6d4fe79f0f2029a2239bf11b01c3c8d8a105927abc6d7871f97ed000001eca1c"
+        },
+        {
+          "label": "Solicitud enviada en móvil",
+          "source": ".local/qa/user-workflows/mobile-19-solicitud-enviada-viewport.png",
+          "file": "captures/mobile-19-solicitud-enviada-viewport.png",
+          "source_modified_utc": "2026-11-10T04:54:03.000669+00:00",
+          "width": 390,
+          "height": 844,
+          "bytes": 59313,
+          "sha256": "6e311fbd9cfa8f6515f471bb61b80f1a577b5ae5b36226135955262c06ab1463"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,127 @@
+{
+  "created_at": "2026-11-10",
+  "status": "implemented-browser-captures",
+  "selected_desktop": "B · Comparar y agregar",
+  "selected_mobile": "M1 · Filas legibles",
+  "references": [
+    {
+      "file": "../09-sidenav-design-exploration/02-comparar-y-agregar.png",
+      "kind": "imagegen-approved-mockup",
+      "sha256": "3cc74032ab77386b3311c871e6aad3efea788a285fad0fac8145eb7a572957e5"
+    },
+    {
+      "file": "../10-desktop-b-mobile/01-movil-filas-legibles-v3.png",
+      "kind": "imagegen-approved-mockup",
+      "sha256": "4aa7acdc2e01204e47e1809cde99e60a0190f284e8ef37578866dd5b14b146eb"
+    }
+  ],
+  "source": "Local Angular/Rust application with isolated QA PostgreSQL",
+  "screenshots": [
+    {
+      "file": "1366-initial-categories.png",
+      "source": ".local/qa/comparison-catalog/1366-initial-categories.png",
+      "title": "Escritorio · categorías",
+      "width": 1366,
+      "height": 768,
+      "sha256": "d033952c7e534f2ed6065ee02018cc9e378fb0655e0fce38f4edcf290daee993"
+    },
+    {
+      "file": "1366-comparison-populated.png",
+      "source": ".local/qa/comparison-catalog/1366-comparison-populated.png",
+      "title": "Escritorio · cinco variantes de cuaderno",
+      "width": 1366,
+      "height": 768,
+      "sha256": "762750bf6af71075e48b3cafe69a3f95ae1565ffa8427788f2f2e577339769e2"
+    },
+    {
+      "file": "1440-comparison-populated.png",
+      "source": ".local/qa/comparison-catalog/1440-comparison-populated.png",
+      "title": "Escritorio amplio · cinco variantes",
+      "width": 1440,
+      "height": 900,
+      "sha256": "2c49b0cfcae10b15cc3585320746fd85e58423157af51fa3605769b2f5734a05"
+    },
+    {
+      "file": "1024-initial-categories.png",
+      "source": ".local/qa/comparison-catalog/1024-initial-categories.png",
+      "title": "Pantalla mediana · categorías",
+      "width": 1024,
+      "height": 900,
+      "sha256": "ad07d2edcc365df28bce2cd532f5bee26e30328fd175b1991cbb175b11c5039d"
+    },
+    {
+      "file": "1024-comparison-populated.png",
+      "source": ".local/qa/comparison-catalog/1024-comparison-populated.png",
+      "title": "Pantalla mediana · comparación de cuadernos",
+      "width": 1024,
+      "height": 900,
+      "sha256": "b447139ceaded2d7678b0e2e51120cba7d4dc9b019de00246fbbd2eef66f76a7"
+    },
+    {
+      "file": "390-populated-categories.png",
+      "source": ".local/qa/comparison-catalog/390-populated-categories.png",
+      "title": "Móvil · categorías",
+      "width": 390,
+      "height": 844,
+      "sha256": "da9b54d075bc64663a3f30d4768f601094a201de17c7e6329cfb0f7246825f2b"
+    },
+    {
+      "file": "390-populated-filters.png",
+      "source": ".local/qa/comparison-catalog/390-populated-filters.png",
+      "title": "Móvil · características de cuadernos",
+      "width": 390,
+      "height": 844,
+      "sha256": "203bd32563cd2dee39493c3abd531482b7155b3d03e22baf6642566dde782bcc"
+    },
+    {
+      "file": "390-comparison-populated.png",
+      "source": ".local/qa/comparison-catalog/390-comparison-populated.png",
+      "title": "Móvil · resultados en filas",
+      "width": 390,
+      "height": 844,
+      "sha256": "0b893f1f2de8eaa4a8c9ee73b2e12736af89e0e2f39288f5193d2ce9b855bd9a"
+    },
+    {
+      "file": "320-populated-categories.png",
+      "source": ".local/qa/comparison-catalog/320-populated-categories.png",
+      "title": "Móvil estrecho · categorías",
+      "width": 320,
+      "height": 800,
+      "sha256": "837a41e8c175e10fce7141bc6f40c05923199f8a639aff21f7d2c0d22c86101d"
+    },
+    {
+      "file": "320-populated-filters.png",
+      "source": ".local/qa/comparison-catalog/320-populated-filters.png",
+      "title": "Móvil estrecho · características",
+      "width": 320,
+      "height": 800,
+      "sha256": "b597ce1f2c1c99ec89e5f1b2f7c70374623e37f96f00250c4083e33510664b8d"
+    },
+    {
+      "file": "320-comparison-populated.png",
+      "source": ".local/qa/comparison-catalog/320-comparison-populated.png",
+      "title": "Móvil estrecho · resultados",
+      "width": 320,
+      "height": 800,
+      "sha256": "a9ea879cde724dabc32461ac818b50b8e61dbcc17b443d92ee3543d202b1f0c7"
+    },
+    {
+      "file": "390-populated-list.png",
+      "source": ".local/qa/comparison-catalog/390-populated-list.png",
+      "title": "Mi lista · tres útiles",
+      "width": 390,
+      "height": 844,
+      "sha256": "b1568ce3064a9444d4032b34f4494e83761f3cda24a41cc7cb9409b950b8f836"
+    },
+    {
+      "file": "320-populated-list.png",
+      "source": ".local/qa/comparison-catalog/320-populated-list.png",
+      "title": "Mi lista · tres útiles",
+      "width": 320,
+      "height": 800,
+      "sha256": "d0b2c348234667e9a325c6b9823f5656fc6f90ad9ae58aebc003561583092d0a"
+    }
+  ],
+  "validation": "../../../docs/VALIDATION.md",
+  "captured_at": "2026-11-10"
+}
