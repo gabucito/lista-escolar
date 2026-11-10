@@ -168,6 +168,15 @@ def sketchbook_suggestion(name: str) -> dict | None:
     # them into an ordinary sketchbook until their meaning is reviewed.
     if re.search(r"\+|\b(?:SET|KIT|PACK|MANGA|COMIC|MARKER|LETTERING|MULTITECHNIQUE|DESSIN|KRAFT|MANTEQUILLA|ACUAREL\w*|AQUARELL\w*)\b|\b\d{2,3}\s*(?:GRAMOS|GRS|GR|G)(?![A-Z])|\bD\s*/\s*F\b|\bDOBLE\s+FAZ\b", text):
         return None
+    # Bare dimensions follow the store's existing centimetre convention.
+    # Explicit other units must never be relabeled as cm or dropped entirely,
+    # including when the unit occurs between the two dimensions.
+    if re.search(
+        r"(?<![A-Z])(?:MMS?|MILIMETROS?|M|MTS?|MTRS?|METROS?|METERS?|METRES?|PULG(?:S|ADAS?)?|"
+        r"IN(?:CH(?:ES)?)?|FT|FOOT|FEET|PIES?)(?=$|[^A-Z]|X\s*\d)|\d\s*[\"'′″]",
+        text,
+    ):
+        return None
     half = re.search(r"(?<!\d)1\s*/\s*2\s*OF(?:ICIO)?\b", text)
     remaining = re.sub(r"(?<!\d)1\s*/\s*2\s*OF(?:ICIO)?\b", " ", text)
     formats = [("medio-oficio", "medio oficio")] if half else []
@@ -178,7 +187,10 @@ def sketchbook_suggestion(name: str) -> dict | None:
         if re.search(pattern, remaining):
             formats.append((key, label))
     sheets = {int(n) for n in re.findall(r"(?<!\d)(\d{1,3})\s*(?:HOJAS|HJS|H)\b", text)}
-    dimensions = re.findall(r"(?<![\d.,])(\d{1,3}(?:[.,]\d+)?)\s*X\s*(\d{1,3}(?:[.,]\d+)?)(?![\d.,])", text)
+    dimensions = re.findall(
+        r"(?<![\d.,])(\d{1,3}(?:[.,]\d+)?)\s*(?:CMS?|CENTIMETROS?)?\s*"
+        r"[X×]\s*(\d{1,3}(?:[.,]\d+)?)(?![\d.,])", text,
+    )
     if len(formats) != 1 or len(sheets) != 1 or len(dimensions) > 1:
         return None
     count = next(iter(sheets))
@@ -262,7 +274,16 @@ def glue_stick_suggestion(name: str) -> dict | None:
         return None
     if re.search(r"\+|\b(?:SET|KIT|PACK)\b|\bX\s*\d+\b", text):
         return None
-    weights = {int(n) for n in re.findall(r"(?<![\d.,])(\d{1,3})\s*(?:G|GR|GRAMOS)\b", text)}
+    # Read the complete numeric specification before deciding whether it is
+    # supported. Otherwise e.g. 8grs, 8.5g or 0.5oz become an unweighted item.
+    measurement_pattern = r"(?<![\w.,/])([+-]?\d+(?:[.,]\d+)?)\s*([A-Z]+)\b"
+    measurements = re.findall(measurement_pattern, text)
+    if any(not amount.isdecimal() or unit not in {"G", "GR", "GRS", "GRAMO", "GRAMOS"}
+           for amount, unit in measurements):
+        return None
+    if re.search(r"\d", re.sub(measurement_pattern, "", text)):
+        return None  # Leave unparsed numeric specifications for review too.
+    weights = {int(amount) for amount, _ in measurements}
     if len(weights) > 1:
         return None
     weight = next(iter(weights)) if weights else None

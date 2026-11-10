@@ -1,0 +1,33 @@
+import { test, expect } from '@playwright/test';
+import { randomUUID } from 'node:crypto';
+
+test('1000-row import review stays paged, retains explicit checks and cancels atomically', async ({ page, context }) => {
+  test.setTimeout(90_000);
+  const headers = { 'X-Requested-With': 'lista-escolar' };
+  let response = await context.request.post('/api/auth/register', { headers, data: { email: `import-scale-${randomUUID()}@example.invalid`, password: 'QA-import-scale-2026', display_name: 'Importación QA' } });
+  expect(response.status()).toBe(200);
+  response = await context.request.post('/api/lists', { headers, data: {} });
+  expect(response.status()).toBe(200); const { id } = await response.json();
+  await page.goto(`/editar/${id}`);
+  const csv = 'Nombre;Cantidad\n' + Array.from({ length: 1000 }, (_, index) => `Material importado QA ${index + 1};1`).join('\n');
+  await page.getByLabel('Archivo', { exact: true }).setInputFiles({ name: '1000-utiles.csv', mimeType: 'text/csv', buffer: Buffer.from(csv) });
+  await page.getByRole('button', { name: 'Revisar archivo', exact: true }).click();
+  const dialog = page.getByRole('dialog', { name: 'Revisar importación' });
+  await dialog.getByRole('button', { name: 'Aplicar columnas y revisar' }).click();
+  const reviewed = dialog.getByLabel('Revisé este útil, su cantidad, unidad y nota');
+  await expect(reviewed).toHaveCount(25);
+  await expect(dialog.getByText('Página 1 de 40', { exact: true })).toBeVisible();
+  for (const checkbox of await reviewed.all()) await checkbox.check();
+  await dialog.getByRole('button', { name: 'Página siguiente', exact: true }).click();
+  await expect(dialog.getByText('Página 2 de 40', { exact: true })).toBeVisible();
+  await expect(reviewed).toHaveCount(25); await expect(reviewed.first()).not.toBeChecked();
+  await dialog.getByRole('button', { name: 'Página anterior', exact: true }).click();
+  await expect(reviewed.first()).toBeChecked(); await expect(reviewed.last()).toBeChecked();
+  await dialog.getByRole('button', { name: 'Agregar 1000 útiles', exact: true }).click();
+  await expect(dialog).toBeVisible();
+  await expect(dialog.getByRole('alert')).toContainText('Revisa');
+  await dialog.getByRole('button', { name: 'Cancelar', exact: true }).click();
+  await expect(dialog).toBeHidden();
+  response = await context.request.get(`/api/lists/${id}/draft`);
+  expect((await response.json()).content.items).toHaveLength(0);
+});

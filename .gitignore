@@ -3,4 +3,7 @@ melqui.dump
 /.local/
 __pycache__/
 *.py[cod]
+/.env
+/.env.*
+!/.env.example
 

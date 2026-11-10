@@ -26,6 +26,8 @@ The working app name is **Lista Escolar**. The preferred domain is **`listacole.
 
 ## 2. Scope of the first release
 
+**Current implementation phase:** build and validate the local core application. Live email/Gmail integration and production deployment are deferred to later phases. The first-public-release requirements below remain in scope; local development checks do not establish email delivery or production readiness.
+
 The first release includes all of the following:
 
 1. Public and private lists; creation, autosaved drafts, editing, publication, version history, archiving, and deletion.
@@ -372,7 +374,7 @@ The first release uses one administrative role with separate administrative iden
 - **Hosting:** Vultr has been considered, but no hosting provider or production deployment arrangement has been selected.
 - **Development:** Rust and Angular can run directly on Linux. PostgreSQL can be installed locally; an optional Docker Compose setup for PostgreSQL is also acceptable. Docker is not a prerequisite for all development.
 
-The project owner created a local PostgreSQL database named **`escolar`**. Its initially empty `catalog` and `store_snapshot` schemas have since been created and populated with a starter taxonomy, generic items, a catalog-only store snapshot, and pending match suggestions. The remaining application data model and the user-facing catalog and administrator interfaces are not yet implemented. See the [catalog database guide](../db/README.md) for the connection and review workflow.
+The project owner created a local PostgreSQL database named **`escolar`**. Inspection on **2026-11-10** found the `catalog` and `store_snapshot` schemas and starter taxonomy, with 20 generic items, all approved, and **no source products, source variants, or product matches**. The local Rust/Angular implementation subsequently added the `app` schema and three starter templates, preserving the existing catalog. The store-product snapshot still requires a separate import. These are dated observations, not guaranteed future counts. See the [catalog database guide](../db/README.md) for schema/import workflows and [validation record](VALIDATION.md) for implementation evidence and remaining external boundaries.
 
 An earlier catalog experiment in this workspace used a **separate**, isolated local PostgreSQL cluster under `.local/` and a database named `lista_escolar`; it did not use the owner's `escolar` database. Its schema and import scripts are prototypes, not a substitute for implementing this specification.
 

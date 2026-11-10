@@ -85,6 +85,25 @@ class OtherSupplySuggestionsTest(unittest.TestCase):
         self.assertIsNone(catalog_import.sketchbook_suggestion("Croquera A4 90grs 120H"))
         self.assertIsNone(catalog_import.sketchbook_suggestion("Croquera A4 20H 200g24x32"))
 
+    def test_sketchbook_keeps_centimeter_dimensions_and_rejects_other_units(self):
+        expected = catalog_import.product_suggestion("Croquera Carta 80H 21x28 Artel")
+        self.assertIsNotNone(expected)
+        self.assertEqual(expected["attributes"]["dimension_menor_cm"], 21)
+        self.assertEqual(expected["attributes"]["dimension_mayor_cm"], 28)
+        for dimensions in ("21x28 cm", "21 cm x 28 cm", "21×28 centímetros"):
+            with self.subTest(dimensions=dimensions):
+                self.assertEqual(
+                    catalog_import.product_suggestion(f"Croquera Carta 80H {dimensions} Artel"),
+                    expected,
+                )
+        for dimensions in (
+            "8.5x11 pulgadas", "8,5×11 pulg.", "8.5x11in", "8.5 in x 11 in",
+            '8.5"x11"', "8.5″×11″", "21x28 mm", "21mm x 28mm", "21x28 metros",
+            "21x28 mts", "21mtsx28cm", "21x28 meters",
+        ):
+            with self.subTest(dimensions=dimensions):
+                self.assertIsNone(catalog_import.product_suggestion(f"Croquera Carta 80H {dimensions} Artel"))
+
     def test_drawing_block_attributes_are_preserved(self):
         item = catalog_import.drawing_block_suggestion("Block Dibujo Medio 99 1/8 20H Mas+Arte")
         self.assertEqual(item["attributes"], {"tipo_block": "medio", "numero_hojas": 20,
@@ -101,6 +120,28 @@ class OtherSupplySuggestionsTest(unittest.TestCase):
         glue = catalog_import.glue_stick_suggestion("Pegamento en barra 21g Artel")
         self.assertEqual(glue["attributes"]["peso_g"], 21)
         self.assertNotEqual(glue["key"], catalog_import.glue_stick_suggestion("Pegamento en barra 8g Artel")["key"])
+
+    def test_glue_preserves_weights_with_gram_abbreviations(self):
+        keys = set()
+        for weight in (8, 21):
+            expected = catalog_import.product_suggestion(f"Pegamento en barra {weight}g Artel")
+            for unit in ("g", "gr", "grs", "grs.", "gramo", "gramos"):
+                with self.subTest(weight=weight, unit=unit):
+                    item = catalog_import.product_suggestion(f"Pegamento en barra {weight}{unit} Artel")
+                    self.assertEqual(item, expected)
+                    self.assertEqual(item["attributes"]["peso_g"], weight)
+                    keys.add(item["key"])
+        self.assertEqual(len(keys), 2)
+        self.assertEqual(
+            catalog_import.product_suggestion("Pegamento en barra Artel")["key"],
+            "manual:pegamento-barra",
+        )
+
+    def test_glue_does_not_drop_explicit_unsupported_or_conflicting_weights(self):
+        for weight in ("8.5g", "8,5grs", "0.5 oz", "21mg", "21kg", "21ml", "21gms",
+                       "0grs", "-21grs", "251grs", "1000grs", "8grs 21g"):
+            with self.subTest(weight=weight):
+                self.assertIsNone(catalog_import.product_suggestion(f"Pegamento en barra {weight} Artel"))
 
 
 class ExtractionTest(unittest.TestCase):

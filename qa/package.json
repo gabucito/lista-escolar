@@ -1,0 +1,14 @@
+{
+  "name": "lista-escolar-qa",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "playwright test"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.11.0",
+    "@napi-rs/canvas": "^1.1.0",
+    "@playwright/test": "^1.58.0",
+    "pdfjs-dist": "^6.5.438"
+  }
+}

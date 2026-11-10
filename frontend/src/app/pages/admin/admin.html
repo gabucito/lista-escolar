@@ -1,0 +1,843 @@
+@if (!administrator()) {
+  <section class="auth-wrap">
+    <p class="eyebrow">Lista Escolar · Administración</p>
+    <div class="panel">
+      <h1>Acceso administrativo</h1>
+      <p class="muted">Revisa útiles, plantillas y reportes de la comunidad.</p>
+      @if (loading()) {
+        <p class="loading" role="status">Comprobando sesión…</p>
+      } @else {
+        <form (submit)="login(); $event.preventDefault()">
+          <label>Usuario<input [formField]="loginFields.username" autocomplete="username" /></label>
+          <label
+            >Contraseña<input
+              type="password"
+              [formField]="loginFields.password"
+              autocomplete="current-password"
+          /></label>
+          @if (error()) {
+            <p class="error-inline" role="alert">{{ error() }}</p>
+          }
+          <button class="btn" type="submit" [disabled]="busy()">
+            {{ busy() ? 'Ingresando…' : 'Ingresar' }}
+          </button>
+        </form>
+        <p class="muted spaced">
+          Las cuentas administrativas son independientes de las cuentas de la comunidad.
+        </p>
+      }
+    </div>
+  </section>
+} @else {
+  <header class="page-head">
+    <div>
+      <p class="eyebrow">Administración</p>
+      <h1>Cuida el catálogo y la comunidad</h1>
+      <p class="muted">Sesión de {{ administrator()?.username }}</p>
+    </div>
+    <button class="btn secondary" (click)="logout()" [disabled]="busy()">Cerrar sesión</button>
+  </header>
+  <nav class="tabs" aria-label="Secciones de administración">
+    @for (item of tabs; track item.id) {
+      <button
+        type="button"
+        [class.selected]="tab() === item.id"
+        [attr.aria-current]="tab() === item.id ? 'page' : undefined"
+        [disabled]="busy()"
+        (click)="selectTab(item.id)"
+      >
+        {{ item.label }}
+      </button>
+    }
+  </nav>
+  @if (error()) {
+    <p class="notice error" role="alert">{{ error() }}</p>
+  }
+  @if (loading()) {
+    <p class="loading" role="status">Cargando…</p>
+  } @else {
+    @switch (tab()) {
+      @case ('summary') {
+        <div class="stats">
+          <div class="stat">
+            <strong>{{ counts()['users'] || 0 }}</strong
+            ><span>Personas registradas</span>
+          </div>
+          <div class="stat">
+            <strong>{{ counts()['lists'] || 0 }}</strong
+            ><span>Listas</span>
+          </div>
+          <div class="stat">
+            <strong>{{ counts()['pending_supplies'] || 0 }}</strong
+            ><span>Útiles pendientes</span>
+          </div>
+          <div class="stat">
+            <strong>{{ counts()['open_reports'] || 0 }}</strong
+            ><span>Reportes abiertos</span>
+          </div>
+        </div>
+        <div class="admin-grid">
+          <button class="panel admin-shortcut" (click)="selectTab('catalog')">
+            <h2>Revisar útiles</h2>
+            <p>Aprueba nombres genéricos y reúne duplicados.</p></button
+          ><button class="panel admin-shortcut" (click)="selectTab('reports')">
+            <h2>Atender reportes</h2>
+            <p>Revisa únicamente el contenido adjunto a cada caso.</p></button
+          ><button class="panel admin-shortcut" (click)="selectTab('products')">
+            <h2>Vínculos de productos</h2>
+            <p>
+              {{ counts()['pending_matches'] || 0 }} propuestas pendientes ·
+              {{ counts()['source_products'] || 0 }} productos de origen.
+            </p>
+          </button>
+        </div>
+      }
+      @case ('catalog') {
+        <section class="panel">
+          <div class="section-row">
+            <h2>Catálogo compartido</h2>
+            <button class="btn" (click)="newSupply()">Nuevo útil</button>
+          </div>
+          <form class="admin-search" (submit)="refresh(); $event.preventDefault()">
+            <label
+              >Buscar útil<input
+                [formField]="searchFields.q"
+                placeholder="Nombre o alternativa" /></label
+            ><label
+              >Estado<select [formField]="searchFields.status">
+                <option value="">Todos</option>
+                <option value="pending">Pendientes</option>
+                <option value="approved">Aprobados</option>
+                <option value="rejected">Rechazados</option>
+              </select></label
+            ><button class="btn" type="submit">Buscar</button>
+          </form>
+          <div class="table-wrap" role="region" tabindex="0" aria-label="Catálogo de útiles">
+            <table>
+              <thead>
+                <tr>
+                  <th>Útil y características</th>
+                  <th>Categoría</th>
+                  <th>Estado</th>
+                  <th>Acción</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (item of shownCatalog(); track item.id) {
+                  <tr>
+                    <td>
+                      <strong>{{ item.name }}</strong
+                      ><small>{{ attributeLabel(item) }}</small>
+                    </td>
+                    <td>
+                      {{ item.category }}<small>{{ item.subcategory }}</small>
+                    </td>
+                    <td>
+                      <span
+                        class="badge"
+                        [class.warm]="item.review_status === 'pending'"
+                        [class.red]="item.review_status === 'rejected'"
+                        >{{ status(item.review_status) }}</span
+                      >
+                    </td>
+                    <td>
+                      <button class="btn small secondary" (click)="chooseItem(item)">
+                        Revisar<span class="visually-hidden"> {{ item.name }}</span>
+                      </button>
+                    </td>
+                  </tr>
+                } @empty {
+                  <tr>
+                    <td colspan="4">No hay útiles para esta búsqueda.</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        </section>
+        @if (itemEditing()) {
+          <section class="panel spaced" aria-label="Revisión del útil">
+            <div class="section-row">
+              <h2>
+                {{ selectedItem() ? 'Revisar ' + selectedItem()?.name : 'Nuevo útil genérico' }}
+              </h2>
+              <button class="btn small secondary" (click)="closeSupply()">Cerrar</button>
+            </div>
+            <form (submit)="review(selectedItem() ? 'update' : 'approve'); $event.preventDefault()">
+              <div class="fields">
+                <label class="wide">Nombre genérico<input [formField]="reviewFields.name" /></label>
+                <label
+                  >Categoría del útil<select
+                    [formField]="reviewFields.category_id"
+                    (change)="changeReviewCategory($any($event.target).value)"
+                  >
+                    <option value="">Selecciona una categoría</option>
+                    @for (category of categories(); track category.id) {
+                      <option [value]="category.id">{{ category.name }}</option>
+                    }
+                  </select></label
+                >
+                <label
+                  >Subcategoría del útil<select [formField]="reviewFields.subcategory_id">
+                    <option value="">Sin subcategoría</option>
+                    @for (sub of reviewSubcategories(); track sub.id) {
+                      <option [value]="sub.id">{{ sub.name }}</option>
+                    }
+                  </select></label
+                >
+                <label class="wide"
+                  >Nombres alternativos<textarea
+                    [formField]="reviewFields.aliases"
+                    rows="3"
+                    placeholder="Un nombre por línea"
+                  ></textarea
+                  ><small
+                    >Hasta 30 nombres. Quita una línea para eliminar esa alternativa.</small
+                  ></label
+                >
+              </div>
+              <h3 class="spaced">Características del útil</h3>
+              @for (attribute of reviewFields.attributes; track $index; let index = $index) {
+                <div class="attribute-row">
+                  <label
+                    >Atributo {{ index + 1
+                    }}<select [formField]="attribute.key">
+                      <option value="">Selecciona</option>
+                      @for (definition of attributeDefinitions(); track definition.key) {
+                        <option [value]="definition.key">
+                          {{ definition.name
+                          }}{{ definition.unit ? ' (' + definition.unit + ')' : '' }}
+                        </option>
+                      }
+                    </select></label
+                  >
+                  <label
+                    >Valor {{ index + 1 }}
+                    @if (
+                      attributeDefinition(reviewModel().attributes[index].key)?.data_type ===
+                      'boolean'
+                    ) {
+                      <select [formField]="attribute.value">
+                        <option value="">Selecciona</option>
+                        <option value="true">Sí</option>
+                        <option value="false">No</option>
+                      </select>
+                    } @else {
+                      <input
+                        [formField]="attribute.value"
+                        [attr.inputmode]="
+                          attributeDefinition(reviewModel().attributes[index].key)?.data_type ===
+                          'number'
+                            ? 'decimal'
+                            : 'text'
+                        "
+                      />
+                    }
+                  </label>
+                  <button
+                    type="button"
+                    class="btn small danger"
+                    (click)="removeAttribute(index)"
+                    [attr.aria-label]="'Quitar atributo ' + (index + 1)"
+                  >
+                    Quitar
+                  </button>
+                </div>
+              }
+              <button
+                type="button"
+                class="btn small secondary spaced"
+                (click)="addAttribute()"
+                [disabled]="reviewModel().attributes.length >= 30"
+              >
+                Agregar atributo
+              </button>
+              <p class="muted spaced">
+                Las correcciones se aplican al catálogo. Las listas publicadas conservan el nombre y
+                las características de su versión.
+              </p>
+              <div class="form-actions">
+                @if (selectedItem()) {
+                  <button type="submit" class="btn" [disabled]="busy()">Guardar correcciones</button
+                  ><button
+                    type="button"
+                    class="btn secondary"
+                    [disabled]="busy()"
+                    (click)="review('approve')"
+                  >
+                    Aprobar y guardar</button
+                  ><button
+                    type="button"
+                    class="btn danger"
+                    [disabled]="busy()"
+                    (click)="review('reject')"
+                  >
+                    Rechazar
+                  </button>
+                } @else {
+                  <button type="submit" class="btn" [disabled]="busy()">
+                    Crear y aprobar útil
+                  </button>
+                }
+              </div>
+            </form>
+            @if (selectedItem(); as item) {
+              <hr />
+              <form class="admin-search" (submit)="findMergeTargets(); $event.preventDefault()">
+                <label
+                  >Buscar destino<input
+                    [formField]="mergeFields.q"
+                    placeholder="Nombre del útil aprobado" /></label
+                ><button type="submit" class="btn secondary">Buscar destino</button>
+              </form>
+              <label
+                >Unir con un útil aprobado<select [formField]="reviewFields.target_id">
+                  <option value="">Selecciona el destino</option>
+                  @for (target of approvedItems(); track target.id) {
+                    @if (target.id !== item.id) {
+                      <option [value]="target.id">{{ target.name }}</option>
+                    }
+                  }
+                </select></label
+              >
+              <p class="muted">
+                El nombre original quedará como alternativa. Los vínculos trasladados requieren
+                revisión. Guarda las correcciones antes de unir.
+              </p>
+              <button
+                class="btn secondary"
+                [disabled]="busy() || !reviewModel().target_id"
+                (click)="review('merge')"
+              >
+                Unir útiles
+              </button>
+            }
+          </section>
+        }
+      }
+      @case ('taxonomy') {
+        <div class="admin-grid">
+          <section class="panel">
+            <h2>{{ taxonomyModel().id ? 'Editar categoría' : 'Nueva categoría' }}</h2>
+            <form (submit)="saveTaxonomy(); $event.preventDefault()">
+              <div class="fields">
+                <label
+                  >Tipo<select [formField]="taxonomyFields.kind">
+                    <option value="category">Categoría</option>
+                    <option value="subcategory">Subcategoría</option>
+                  </select></label
+                >
+                @if (taxonomyModel().kind === 'subcategory') {
+                  <label
+                    >Categoría principal<select [formField]="taxonomyFields.category_id">
+                      <option value="">Selecciona</option>
+                      @for (category of categories(); track category.id) {
+                        <option [value]="category.id">{{ category.name }}</option>
+                      }
+                    </select></label
+                  >
+                }
+                <label>Nombre<input [formField]="taxonomyFields.name" /></label
+                ><label
+                  >Identificador<input
+                    [formField]="taxonomyFields.slug"
+                    placeholder="arte-y-dibujo"
+                  /><small>Minúsculas, números y guiones.</small></label
+                >
+              </div>
+              <div class="form-actions">
+                <button class="btn" type="submit" [disabled]="busy()">Guardar</button
+                ><button class="btn secondary" type="button" (click)="clearTaxonomy()">
+                  Nueva
+                </button>
+              </div>
+            </form>
+          </section>
+          <section class="panel">
+            <h2>Organización del catálogo</h2>
+            @for (category of categories(); track category.id) {
+              <details class="taxonomy-group">
+                <summary>
+                  {{ category.name }}
+                  <span class="muted">({{ category.subcategories.length }})</span>
+                </summary>
+                <div class="form-actions">
+                  <button class="btn small secondary" (click)="editCategory(category)">
+                    Editar categoría</button
+                  ><button
+                    class="btn small danger"
+                    [disabled]="busy()"
+                    (click)="removeTaxonomy('categories', category.id)"
+                  >
+                    Eliminar categoría
+                  </button>
+                </div>
+                @for (sub of category.subcategories; track sub.id) {
+                  <div class="share-row">
+                    <span>{{ sub.name }}</span>
+                    <div class="actions">
+                      <button class="btn small secondary" (click)="editSubcategory(category, sub)">
+                        Editar<span class="visually-hidden"> {{ sub.name }}</span></button
+                      ><button
+                        class="btn small danger"
+                        [disabled]="busy()"
+                        (click)="removeTaxonomy('subcategories', sub.id)"
+                      >
+                        Eliminar<span class="visually-hidden"> {{ sub.name }}</span>
+                      </button>
+                    </div>
+                  </div>
+                }
+              </details>
+            }
+          </section>
+        </div>
+      }
+      @case ('products') {
+        <section class="panel">
+          <h2>Productos de origen</h2>
+          <p class="review-note">
+            Datos de una importación puntual. Los precios y la disponibilidad no representan
+            información actual de la tienda.
+          </p>
+          <form class="admin-search" (submit)="refresh(); $event.preventDefault()">
+            <label
+              >Buscar producto<input
+                [formField]="productSearchFields.q"
+                placeholder="Nombre del producto" /></label
+            ><button class="btn" type="submit">Buscar</button>
+          </form>
+          <div class="table-wrap" role="region" tabindex="0" aria-label="Productos de origen">
+            <table>
+              <thead>
+                <tr>
+                  <th>Producto</th>
+                  <th>Marca</th>
+                  <th>Precio importado</th>
+                  <th>Acción</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (product of products(); track product.id) {
+                  <tr>
+                    <td>
+                      {{ product.name }}
+                      @if (product.variants.length) {
+                        <details>
+                          <summary>{{ product.variants.length }} variantes</summary>
+                          @for (variant of product.variants; track $index) {
+                            <p>
+                              {{ variant.name }} <small>{{ variant.sku }}</small
+                              ><small class="variant-attributes">{{
+                                variantAttributes(variant.attributes)
+                              }}</small>
+                            </p>
+                          }
+                        </details>
+                      }
+                    </td>
+                    <td>{{ product.brand || 'Sin marca' }}</td>
+                    <td>${{ product.snapshot_price_clp }}</td>
+                    <td>
+                      <button class="btn small secondary" (click)="chooseProduct(product)">
+                        Vincular<span class="visually-hidden"> {{ product.name }}</span>
+                      </button>
+                    </td>
+                  </tr>
+                } @empty {
+                  <tr>
+                    <td colspan="4">No hay productos importados para esta búsqueda.</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        </section>
+        @if (selectedProduct(); as product) {
+          <section class="panel spaced">
+            <h2>Vincular {{ product.name }}</h2>
+            <form class="admin-search" (submit)="findLinkTargets(); $event.preventDefault()">
+              <label
+                >Buscar útil para vincular<input
+                  [formField]="linkSearchFields.q"
+                  placeholder="Nombre o alternativa del útil" /></label
+              ><button type="submit" class="btn secondary">Buscar equivalente</button>
+            </form>
+            <form (submit)="addLink(); $event.preventDefault()">
+              <label
+                >Útil genérico<select [formField]="linkFields.item_id">
+                  <option value="">Selecciona el útil equivalente</option>
+                  @for (item of usableItems(); track item.id) {
+                    <option [value]="item.id">
+                      {{ item.name }} · {{ status(item.review_status) }}
+                    </option>
+                  }
+                </select></label
+              >
+              <div class="form-actions">
+                <button type="submit" class="btn" [disabled]="busy()">Confirmar vínculo</button
+                ><button
+                  type="button"
+                  class="btn secondary"
+                  (click)="selectedProduct.set(undefined)"
+                >
+                  Cancelar
+                </button>
+              </div>
+            </form>
+          </section>
+        }
+        <section class="panel spaced">
+          <h2>Propuestas y vínculos revisados</h2>
+          <div class="table-wrap" role="region" tabindex="0" aria-label="Vínculos de productos">
+            <table>
+              <thead>
+                <tr>
+                  <th>Útil genérico</th>
+                  <th>Producto</th>
+                  <th>Estado</th>
+                  <th>Revisión</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (match of matches(); track match.item_id + match.source_product_id) {
+                  <tr>
+                    <td>{{ match.generic_name }}</td>
+                    <td>{{ match.source_product_name }}</td>
+                    <td>
+                      <span class="badge" [class.warm]="match.review_status === 'pending'">{{
+                        status(match.review_status)
+                      }}</span>
+                    </td>
+                    <td>
+                      <div class="actions">
+                        <button
+                          class="btn small"
+                          [disabled]="busy()"
+                          (click)="reviewLink(match, 'approved')"
+                        >
+                          Aprobar</button
+                        ><button
+                          class="btn small secondary"
+                          [disabled]="busy()"
+                          (click)="reviewLink(match, 'rejected')"
+                        >
+                          Rechazar</button
+                        ><button
+                          class="btn small danger"
+                          [disabled]="busy()"
+                          (click)="removeLink(match)"
+                        >
+                          Eliminar
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                } @empty {
+                  <tr>
+                    <td colspan="4">No hay vínculos para revisar.</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        </section>
+      }
+      @case ('reports') {
+        <section class="panel">
+          <div class="section-row">
+            <h2>Reportes de la comunidad</h2>
+            <button class="btn small secondary" (click)="showClosed.set(!showClosed())">
+              {{ showClosed() ? 'Mostrar abiertos' : 'Incluir cerrados' }}
+            </button>
+          </div>
+          <p class="muted">
+            La revisión se limita a la evidencia adjunta. Cerrar un caso elimina su copia del
+            contenido.
+          </p>
+          <div class="table-wrap" role="region" tabindex="0" aria-label="Reportes de la comunidad">
+            <table>
+              <thead>
+                <tr>
+                  <th>Fecha y motivo</th>
+                  <th>Tipo</th>
+                  <th>Estado</th>
+                  <th>Acción</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (report of shownReports(); track report.id) {
+                  <tr>
+                    <td>
+                      {{ dateLabel(report.created_at)
+                      }}<small>{{ report.reason || report.note }}</small>
+                    </td>
+                    <td>
+                      {{ report.kind === 'privacy' ? 'Privacidad' : 'Contenido' }} ·
+                      {{ report.comment_id ? 'Comentario' : 'Lista' }}
+                    </td>
+                    <td>
+                      <span class="badge" [class.warm]="report.status === 'open'">{{
+                        status(report.status)
+                      }}</span>
+                    </td>
+                    <td>
+                      <button class="btn small secondary" (click)="chooseReport(report)">
+                        {{ report.status === 'open' ? 'Revisar' : 'Ver decisión' }}
+                      </button>
+                    </td>
+                  </tr>
+                } @empty {
+                  <tr>
+                    <td colspan="4">No hay reportes en esta vista.</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        </section>
+        @if (selectedReport(); as report) {
+          <section class="panel spaced">
+            <div class="section-row">
+              <h2>{{ report.status === 'open' ? 'Revisión del caso' : 'Caso cerrado' }}</h2>
+              <button class="btn small secondary" (click)="selectedReport.set(undefined)">
+                Cerrar vista
+              </button>
+            </div>
+            @if (report.status === 'open') {
+              <div class="evidence" role="region" tabindex="0" aria-label="Evidencia del reporte">
+                <h3>Evidencia · versión {{ report.version }}</h3>
+                @if (report.evidence.body) {
+                  <p>{{ report.evidence.school }} · {{ report.evidence.class_name }}</p>
+                  <blockquote>{{ report.evidence.body }}</blockquote>
+                }
+                @if (report.evidence.content; as content) {
+                  @if (content.logo_id) {
+                    <img
+                      class="evidence-logo"
+                      [src]="'/api/admin/reports/' + report.id + '/logo'"
+                      alt="Logo adjunto a la versión reportada"
+                      referrerpolicy="no-referrer"
+                    />
+                  }
+                  <h3>{{ content.school }}</h3>
+                  <p>{{ content.class_name }} · {{ content.school_year }}</p>
+                  <p class="evidence-copy">{{ content.instructions }}</p>
+                  <ul>
+                    @for (item of content.items.slice(0, evidenceLimit()); track item.id) {
+                      <li>
+                        <strong>{{ item.quantity }} {{ item.unit }} · {{ item.name }}</strong
+                        ><small>{{ item.note }}</small>
+                      </li>
+                    }
+                  </ul>
+                  @if (content.items.length > evidenceLimit()) {
+                    <button class="btn small secondary" (click)="evidenceLimit.update(showMore)">
+                      Mostrar 50 artículos más
+                    </button>
+                  }
+                }
+                @if (!report.evidence.body && !report.evidence.content) {
+                  <p>La evidencia ya fue retirada por una acción de privacidad.</p>
+                }
+              </div>
+              <form class="spaced" (submit)="decide(); $event.preventDefault()">
+                <label
+                  >Decisión<select [formField]="decisionFields.action">
+                    <option value="dismiss">Descartar reporte y cerrar</option>
+                    <option value="hide">Ocultar mientras se revisa</option>
+                    <option value="restore">Restaurar contenido y cerrar</option>
+                    <option value="remove">Eliminar contenido y cerrar</option>
+                  </select></label
+                ><label class="spaced"
+                  >Motivo de la decisión<textarea
+                    [formField]="decisionFields.note"
+                    placeholder="Explica la decisión sin copiar información personal del contenido"
+                  ></textarea></label
+                ><button class="btn spaced" type="submit" [disabled]="busy()">
+                  Registrar decisión
+                </button>
+              </form>
+            } @else {
+              <p>
+                <strong>{{ status(report.outcome) }}</strong>
+              </p>
+              <p>{{ report.note }}</p>
+              <p class="muted">La evidencia del caso cerrado ya no está disponible.</p>
+            }
+          </section>
+        }
+      }
+      @case ('templates') {
+        <section class="panel">
+          <div class="section-row">
+            <h2>Plantillas por nivel</h2>
+            <button class="btn" (click)="newTemplate()">Nueva plantilla</button>
+          </div>
+          @for (template of templates(); track template.id) {
+            <div class="share-row">
+              <div>
+                <strong>{{ template.name }}</strong
+                ><small
+                  >{{ template.grade }} · {{ template.content.items.length }} artículos ·
+                  {{ template.active ? 'Disponible' : 'Retirada' }}</small
+                >
+              </div>
+              <div class="actions">
+                <button class="btn small secondary" (click)="editTemplate(template)">Editar</button>
+                @if (template.active) {
+                  <button
+                    class="btn small danger"
+                    [disabled]="busy()"
+                    (click)="removeTemplate(template)"
+                  >
+                    Retirar
+                  </button>
+                }
+              </div>
+            </div>
+          } @empty {
+            <p class="muted">
+              Crea una primera plantilla para que las familias y docentes puedan comenzar.
+            </p>
+          }
+        </section>
+        @if (templateEditing()) {
+          <section class="panel spaced">
+            <h2>{{ templateModel().id ? 'Editar plantilla' : 'Nueva plantilla' }}</h2>
+            <form (submit)="saveTemplate(); $event.preventDefault()">
+              <div class="fields">
+                <label>Nombre<input [formField]="templateFields.name" /></label
+                ><label
+                  >Nivel o curso<input
+                    [formField]="templateFields.grade"
+                    placeholder="1° básico" /></label
+                ><label class="wide"
+                  >Instrucciones generales<textarea
+                    [formField]="templateFields.instructions"
+                  ></textarea>
+                </label>
+              </div>
+              @for (item of templateFields.items; track $index; let index = $index) {
+                <div class="template-item">
+                  <label>Útil<input [formField]="item.name" /></label
+                  ><label>Cantidad<input inputmode="decimal" [formField]="item.quantity" /></label
+                  ><label
+                    >Unidad<select [formField]="item.unit">
+                      @for (unit of units; track unit) {
+                        <option [value]="unit">{{ unit }}</option>
+                      }
+                    </select></label
+                  ><label
+                    >Categoría<input
+                      [formField]="item.category"
+                      list="admin-category-names" /></label
+                  ><label>Nota<input [formField]="item.note" /></label
+                  ><button
+                    type="button"
+                    class="btn small danger"
+                    (click)="removeTemplateItem(index)"
+                    [attr.aria-label]="'Quitar artículo ' + (index + 1)"
+                  >
+                    Quitar
+                  </button>
+                </div>
+              }
+              <datalist id="admin-category-names">
+                @for (category of categories(); track category.id) {
+                  <option [value]="category.name"></option>
+                }
+              </datalist>
+              <div class="form-actions">
+                <button type="button" class="btn secondary" (click)="addTemplateItem()">
+                  Agregar artículo</button
+                ><button type="submit" class="btn" [disabled]="busy()">Guardar plantilla</button>
+              </div>
+            </form>
+          </section>
+        }
+      }
+      @case ('schools') {
+        <section class="panel">
+          <h2>Asociar nombres de colegios</h2>
+          <p class="muted">
+            La comuna y región son necesarias para distinguir colegios con nombres similares. Esta
+            asociación mejora la búsqueda y conserva el texto de las listas.
+          </p>
+          <form (submit)="saveSchool(); $event.preventDefault()">
+            <div class="fields">
+              <label>Nombre del colegio<input [formField]="schoolFields.canonical_name" /></label
+              ><label>Nombre alternativo<input [formField]="schoolFields.alias" /></label
+              ><label>Comuna<input [formField]="schoolFields.comuna" /></label
+              ><label>Región<input [formField]="schoolFields.region" /></label>
+            </div>
+            <button class="btn spaced" type="submit" [disabled]="busy()">Guardar asociación</button>
+          </form>
+          <div
+            class="table-wrap spaced"
+            role="region"
+            tabindex="0"
+            aria-label="Nombres asociados de colegios"
+          >
+            <table>
+              <thead>
+                <tr>
+                  <th>Colegio</th>
+                  <th>Nombre alternativo</th>
+                  <th>Ubicación</th>
+                  <th>Acción</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (school of schools(); track school.id) {
+                  <tr>
+                    <td>{{ school.canonical_name }}</td>
+                    <td>{{ school.alias }}</td>
+                    <td>
+                      {{ school.comuna }}<small>{{ school.region }}</small>
+                    </td>
+                    <td>
+                      <button
+                        class="btn small danger"
+                        [disabled]="busy()"
+                        (click)="removeSchool(school)"
+                      >
+                        Eliminar
+                      </button>
+                    </td>
+                  </tr>
+                } @empty {
+                  <tr>
+                    <td colspan="4">No hay asociaciones de nombres.</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        </section>
+      }
+      @case ('accounts') {
+        <section class="panel account-panel">
+          <h2>Crear una cuenta administrativa</h2>
+          <p class="muted">
+            Esta cuenta tendrá acceso a la administración del catálogo y a los casos de moderación.
+          </p>
+          <form (submit)="createAccount(); $event.preventDefault()">
+            <label>Usuario<input [formField]="accountFields.username" autocomplete="off" /></label
+            ><label class="spaced"
+              >Contraseña inicial<input
+                type="password"
+                [formField]="accountFields.password"
+                autocomplete="new-password"
+              /><small
+                >Al menos 8 caracteres. Comparte las credenciales por un medio privado.</small
+              ></label
+            ><button class="btn spaced" type="submit" [disabled]="busy()">
+              Crear administrador
+            </button>
+          </form>
+        </section>
+      }
+    }
+  }
+}
