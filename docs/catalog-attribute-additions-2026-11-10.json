@@ -1,0 +1,3606 @@
+{
+  "researched_on": "2026-11-10",
+  "scope": "Source-backed optional school-supply attributes and exact generic variants; no brands, prices, stock, unsupported Cartesian products or tighter defaults for existing generic requirements.",
+  "baseline": {
+    "items": 183,
+    "categories": 14,
+    "attribute_definitions": 49,
+    "attribute_values": 397
+  },
+  "research_dataset": "catalog-attribute-research-2026-11-10.json",
+  "sources": [
+    {
+      "id": "ac_chile",
+      "title": "Colegio Chile: eighth grade 2026",
+      "url": "https://www.colegiochile.cl/wp-content/uploads/2026/01/Utiles8Bas2026.pdf",
+      "locator": "Page 1 technology and page 2 art",
+      "evidence": "Specifies sketchbook 21×32 cm/80 sheets, block 26.5×37.2 cm, 12 mm masking tape, a 20×20 canvas and flat brushes 4/10. It also lists glue-stick and white-glue requirements separately.",
+      "verification": "directly fetched"
+    },
+    {
+      "id": "ac_crep",
+      "title": "CREP: Educación Parvularia NT2 2026",
+      "url": "https://crep.cl/docs/listadeutiles/2026/Lista_de_utiles_NT2_2026.pdf",
+      "locator": "Page 1, academic materials",
+      "evidence": "Requests 250 ml tempera with suggested individual colors; 250 g white glue; brush sizes 8 and 10; glitter pompoms; a 50 m yarn ball.",
+      "verification": "directly fetched"
+    },
+    {
+      "id": "ac_fila_das",
+      "title": "FILA: DAS modeling clay",
+      "url": "https://www.fila.it/int/en/product/das/",
+      "locator": "Product description, format, lines43–49",
+      "evidence": "Manufacturer lists air-drying modeling clay in 150 g,250 g,500 g and 1 kg blocks.",
+      "verification": "directly fetched"
+    },
+    {
+      "id": "ac_palitos",
+      "title": "Artel: Palitos de helado colores, bolsa 50 unidades",
+      "url": "https://www.artel.cl/producto/palitos-de-helado-colores-bolsa-50-unidades/",
+      "locator": "Product description, SKU 20110015",
+      "evidence": "The consumer bag contains 50 colored sticks; wholesale pack counts are separate.",
+      "verification": "directly fetched"
+    },
+    {
+      "id": "ac_particularuno",
+      "title": "Colegio Bicentenario N°1 de Ñuñoa: eighth grade 2026",
+      "url": "https://particularuno.cl/wp-content/uploads/2022/02/8%C2%B0-BASICO-2026.pdf",
+      "locator": "Materials table",
+      "evidence": "Requests washable white glue, separate glue-stick and liquid silicone, and a twelve-color gel tempera set.",
+      "verification": "official indexed PDF text; direct fetch cache miss"
+    },
+    {
+      "id": "ac_proarte",
+      "title": "Proarte: Croquera 22×32 cms",
+      "url": "https://proarte.cl/producto/croquera/",
+      "locator": "Product description, SKU 12926-7",
+      "evidence": "Explicitly describes bond paper at 70 g/m², 22×32 cm, 100 sheets.",
+      "verification": "directly fetched"
+    },
+    {
+      "id": "ac_sanisidro",
+      "title": "Colegio San Isidro: second grade 2026",
+      "url": "https://www.colegiosanisidro.cl/wp-content/uploads/2025/12/Lista-de-utiles-2%C2%B0Basico-2026.pdf",
+      "locator": "Art box and pencil-case requirements",
+      "evidence": "Specifies 20 g glue-stick and 225 g school white glue as different requirements.",
+      "verification": "official indexed PDF text; direct fetch cache miss"
+    },
+    {
+      "id": "ac_santo",
+      "title": "Colegio Santo Domingo de Guzmán: school lists 2026",
+      "url": "https://santodomingovalparaiso.cl/wp-content/uploads/2025/12/LISTA-DE-UTILES-2026.pdf",
+      "locator": "Pages 7 and 11, art materials",
+      "evidence": "Explicitly requests white glue in 250 ml. This validates the existing volume-based entry; it must not be changed to grams.",
+      "verification": "directly fetched"
+    },
+    {
+      "id": "ac_scissor",
+      "title": "Artel/Maped: Tijera Zurdo Essential 13 cm",
+      "url": "https://www.artel.cl/producto/blister-tijera-zurdo-essential-13cm/",
+      "locator": "Product description, SKU 50320417",
+      "evidence": "Specifies a 13 cm left-handed school scissor with rounded tip.",
+      "verification": "directly fetched"
+    },
+    {
+      "id": "ac_staedtler_glue",
+      "title": "STAEDTLER Noris960 glue stick20g",
+      "url": "https://www.staedtler.com/intl/en/products/products-for-colouring/crafting-accessories/glue-sticks/noris-960-glue-stick-96020pca12/",
+      "locator": "Product heading and information, article96020PCA12",
+      "evidence": "The individual glue stick contains 20 g; the display contains 12 such sticks.",
+      "verification": "official indexed product text; direct fetch returnedHTTP429"
+    },
+    {
+      "id": "ac_tape_crystal",
+      "title": "Torre: Cinta Tradicional Cristal 18 mm × 30 m",
+      "url": "https://www.torre.cl/catalogo/cinta-tradicional-cristal-set-8-unid-18-mm-x-30-mt/",
+      "locator": "Description, SKU 35045",
+      "evidence": "Identifies each roll as 18 mm wide and 30 m long; the sale pack contains eight rolls.",
+      "verification": "directly fetched"
+    },
+    {
+      "id": "ac_tape_masking",
+      "title": "Torre: Cinta Masking Color Crema 36 mm × 40 m",
+      "url": "https://www.torre.cl/catalogo/cinta-masking-color-crema-36-mm-x-40-mt/",
+      "locator": "Description, SKU 35032",
+      "evidence": "Separately identifies tape width 36 mm and roll length 40 m.",
+      "verification": "directly fetched"
+    },
+    {
+      "id": "ac_torre_glue",
+      "title": "Torre: Cola Fría 225 Gr",
+      "url": "https://www.torre.cl/catalogo/cola-fria-225-gr/",
+      "locator": "Description, SKU26195, lines1097–1100",
+      "evidence": "Manufacturer identifies a 225 g school white glue and explicitly describes it as washable.",
+      "verification": "directly fetched"
+    },
+    {
+      "id": "add_artel_markers",
+      "title": "Artel: marcadores",
+      "url": "https://tienda.artel.cl/collections/marcadores",
+      "evidence": "Manufacturer product family includes permanent black chisel-tip and whiteboard round-tip markers.",
+      "verification": "directly fetched on 2026-11-10"
+    },
+    {
+      "id": "add_artel_tempera100",
+      "title": "Artel: témpera metálica negra 100 ml",
+      "url": "https://tienda.artel.cl/products/frasco-tempera-metalica-negro-100ml-artel",
+      "evidence": "Manufacturer identifies black metallic tempera in a100ml bottle.",
+      "verification": "official indexed product text reverified 2026-11-10"
+    },
+    {
+      "id": "add_artel_tempera500",
+      "title": "Artel: frasco de témpera 500 ml",
+      "url": "https://tienda.artel.cl/products/frasco-tempera-500ml-artel",
+      "evidence": "Manufacturer specifies 500 ml bottles, including white paint.",
+      "verification": "directly fetched on 2026-11-10"
+    },
+    {
+      "id": "add_kingston_usb16",
+      "title": "Kingston: DataTraveler I de 16 GB",
+      "url": "https://www.kingston.com/en/memory/search/discontinuedmodels?partId=DTI%2F16GB",
+      "evidence": "Manufacturer confirms an exact 16 GB USB flash-drive format. This discontinued model establishes the generic capacity only; no current availability, brand requirement or minimum-acceptance rule is inferred.",
+      "verification": "directly fetched on 2026-11-10"
+    },
+    {
+      "id": "add_torre_graphite_without",
+      "title": "Torre: grafito HB triangular sin goma",
+      "url": "https://www.torre.cl/catalogo/lapices-grafito-hb-n2-triangulares-12-unid-sin-goma/",
+      "evidence": "Manufacturer title and description explicitly identify HB triangular graphite pencils without an eraser; box quantity is not imposed on the generic pencil.",
+      "verification": "directly fetched on 2026-11-10"
+    },
+    {
+      "id": "of_brs6",
+      "title": "Lista de útiles 6° básico 2026 — BRS",
+      "url": "https://brs.cl/wp-content/uploads/2025/11/6%C2%B0-Basico-2026-Lista-de-Utiles.docx.pdf",
+      "locator": "Page 1, Artes y Música; page 2, Matemática",
+      "evidence": "Specifies soprano recorder with German fingering. Separately requests a basic calculator.",
+      "verification": "opened"
+    },
+    {
+      "id": "of_caleman25",
+      "title": "Colegio Alemán: Kínder supplies 2025",
+      "url": "https://www.caleman.cl/listas/2025/Lista%20de%20utiles%20escolares%20-%20Kinder%202025.pdf",
+      "locator": "Page 2, Útiles de aseo",
+      "evidence": "Historical school list specifies 500 ml liquid soap with dispenser and 250 ml alcohol gel. Evidence is for generic formats, not a claim about 2026 requirements.",
+      "verification": "opened"
+    },
+    {
+      "id": "of_cpfd6",
+      "title": "Lista de útiles 6° básico 2026 — cpfd.cl",
+      "url": "https://www.cpfd.cl/utiles2026/LISTA%20DE%20UTILES%206%20BASICO%202026.pdf",
+      "locator": "Page 1, Matemáticas",
+      "evidence": "Requests a plastic semicircular 180-degree protractor and a plastic 45-degree set square labeled 15 cm.",
+      "verification": "opened"
+    },
+    {
+      "id": "of_cpv2",
+      "title": "CPV Peñalolén: second grade supplies 2026",
+      "url": "https://cpvpenalolen.cl/wp-content/uploads/2025/12/2%C2%B0-basico-2026.docx.pdf",
+      "locator": "Page 1, Música",
+      "evidence": "Requests a 22-note chromatic metallophone without colored bars.",
+      "verification": "opened"
+    },
+    {
+      "id": "of_csac3",
+      "title": "CSAC: third grade supplies 2026",
+      "url": "https://csac.cl/wp-content/uploads/2025/12/3%C2%B0-Basico-LISTA-DE-UTILES-2026.pdf",
+      "locator": "Page 1, Tecnología",
+      "evidence": "Requires a USB drive with a minimum capacity of 16 GB; the minimum must not be rewritten as exactly 16 GB.",
+      "verification": "opened"
+    },
+    {
+      "id": "of_kinderland",
+      "title": "Kinderland: Medio Menor materials 2026",
+      "url": "https://kinderland.cl/wp-content/uploads/2025/10/LISTA-DE-MATERIALES-M.Menor-2026.pdf",
+      "locator": "Page 1, first materials rows",
+      "evidence": "Specifies six tissue boxes containing 90 tissues each and five wet-wipe packages containing 80 wipes each.",
+      "verification": "opened"
+    },
+    {
+      "id": "of_lasalle4",
+      "title": "Instituto La Salle: fourth grade supplies 2026",
+      "url": "https://www.institutolasalle.cl/PDFs/2026/lista_de_utiles_4_2026.pdf",
+      "locator": "Page 2, Música",
+      "evidence": "Lists a 25-note chromatic metallophone and, later in the year, a choice between German-fingering recorder and 32-note melodica.",
+      "verification": "opened"
+    },
+    {
+      "id": "of_pirque",
+      "title": "Escuela de Lenguaje Pirque: Kínder materials 2026",
+      "url": "https://escueladelenguajepirque.cl/lista-de-materiales-kinder-2026/",
+      "locator": "Útiles de aseo",
+      "evidence": "Requests two liquid-soap refills, each containing one liter. This supports a 1000 ml per-container attribute, separate from quantity two.",
+      "verification": "opened"
+    },
+    {
+      "id": "of_pumahuek",
+      "title": "Colegio Pumahue Temuco: Kínder Bilingüe supplies 2026",
+      "url": "https://www.ddee.cl/upload_archivos/lista_utiles/upload/2026/TEM/Bilingue/K/archivo.pdf",
+      "locator": "Page 2, first materials row",
+      "evidence": "Requires a white board with a square grid, measuring 20 by 30 cm. Grid spacing is unspecified.",
+      "verification": "opened"
+    },
+    {
+      "id": "of_santaclara",
+      "title": "Liceo Santa Clara: 5°–8° básico supplies 2026",
+      "url": "https://lsantaclara.cl/web/content/6947?download=true&unique=7da92104e49ee32ed896e76a7c7ba90cd8a9bdcc",
+      "locator": "Page 2, Educación Física",
+      "evidence": "Specifies a 30 by 40 cm towel. The document also requests a protractor with two numbered scales on page 1.",
+      "verification": "opened"
+    },
+    {
+      "id": "of_stmonica4",
+      "title": "St Monica: fourth grade supplies 2026",
+      "url": "https://stmonica.cl/wp-content/uploads/2026/01/Lista-de-utiles-cuartos-basicos-ok-1.docx-2.pdf",
+      "locator": "Page 1, Lenguaje y Comunicación",
+      "evidence": "Requests both a Spanish-language dictionary and a separate synonyms-and-antonyms dictionary.",
+      "verification": "opened"
+    },
+    {
+      "id": "of_yamaha",
+      "title": "Yamaha: Baroque style and German style recorders",
+      "url": "https://www.yamaha.com/en/musical_instrument_guide/recorder/selection/selection002.html",
+      "locator": "Differences between Baroque style and German style",
+      "evidence": "The manufacturer identifies German and Baroque as distinct fingering systems, so this is a functional choice rather than a brand distinction.",
+      "verification": "opened"
+    },
+    {
+      "id": "pw-artel-marker",
+      "title": "Artel — catálogo 2022, marcadores",
+      "url": "https://www.artel.cl/wp-content/uploads/2021/10/catalogo%20artel%202022.pdf",
+      "locator": "Printed page 62; section 2.1 Marcadores",
+      "evidence": "Lists permanent markers with round and chisel tips and whiteboard markers with round tips. Used only to corroborate tip distinctions, not current stock.",
+      "verification": "indexed_official_pdf"
+    },
+    {
+      "id": "pw-chamex",
+      "title": "Chamex — Sobre Chamex",
+      "url": "https://chamex.com.br/es/sobre-chamex",
+      "locator": "Nossos papéis; lines 86–102 in fetched page",
+      "evidence": "Manufacturer distinguishes paper grammages from 75 to 90 g/m², packs with 300 or 500 sheets, and separate wholesale boxes.",
+      "verification": "opened"
+    },
+    {
+      "id": "pw-chuqui",
+      "title": "Colegio Chuquicamata — séptimo básico 2026",
+      "url": "https://colegiochuquicamata.cl/2019/wp-content/uploads/2025/12/Lista_Materiales_7_BASICO_2026.pdf",
+      "locator": "PDF pages 2–3; general and visual-art supplies",
+      "evidence": "Names HB and 2B pencils, a fine-tip black permanent marker, and liquid correction fluid.",
+      "verification": "opened"
+    },
+    {
+      "id": "pw-cvd",
+      "title": "Colegio del Verbo Divino — séptimo básico 2026",
+      "url": "https://www.cvd.cl/documents/38730/3264604/7B%2BLista_Utiles_Apo_2026.pdf/9590c514-e1a5-81d0-40d2-afbf12b23d09?t=1767881431529",
+      "locator": "PDF pages 1–3; subject supply lists and Música",
+      "evidence": "Specifies subject-colored plastic notebook covers and folders, plus a black oficio folder containing 20 transparent sleeves.",
+      "verification": "opened"
+    },
+    {
+      "id": "pw-ldv",
+      "title": "Colegio Leonardo Da Vinci de Las Condes — listas 2026",
+      "url": "https://www.corplascondes.cl/descargas/educacion/ldv/2026-alumnos-lista-utiles.pdf",
+      "locator": "PDF pages 1 and 3; Pre Kínder and Kínder",
+      "evidence": "Specifies fluorescent cardstock, colored folders with clips and a fine-tip permanent marker.",
+      "verification": "opened"
+    },
+    {
+      "id": "pw-mayor",
+      "title": "Colegio Mayor Peñalolén — Play Group 2026",
+      "url": "https://webpe.colegiomayor.cl/wp-content/uploads/2026/01/Lista-PLAY-GROUP-2026-1.pdf",
+      "locator": "PDF pages 1–2; Papeles and Lápices",
+      "evidence": "Requests a carta ream of 500 sheets, metallic cardstock, an EVA pack with 10 colors, and permanent markers with fine and broad tips.",
+      "verification": "opened"
+    },
+    {
+      "id": "pw-monteverde",
+      "title": "Colegio Monteverde Chiloé — segundo básico 2026",
+      "url": "https://www.monteverdechiloe.cl/documentos/lista-utiles-2-basico-2026.pdf",
+      "locator": "PDF page 1; Cuadernos and Estuche",
+      "evidence": "Specifies college notebooks with 100 sheets without spiral binding, and 2B graphite pencils. A later left-handed adaptation note should remain a list-level instruction.",
+      "verification": "opened"
+    },
+    {
+      "id": "pw-staedtler-catalogue",
+      "title": "STAEDTLER general catalogue 2022",
+      "url": "https://www.staedtler.com/fileadmin/user_upload/Product/PDF/STAEDTLER-General-Catalogue-2022_GB.1645707372.pdf",
+      "locator": "Printed pages114–115, sharpeners513001 and51260F",
+      "evidence": "Official catalogue corroborates the double-hole category with an explicit two-hole description. Used for the attribute distinction, not current availability.",
+      "verification": "indexed_official_pdf"
+    },
+    {
+      "id": "pw-staedtler-holes",
+      "title": "STAEDTLER 512 07 double-hole tub sharpener",
+      "url": "https://www.staedtler.com/us/en/products/pencils-and-accessories/sharpeners/staedtler-512-07-double-hole-tub-sharpener-51207sbka6/",
+      "locator": "Product information, article51207SBKA6",
+      "evidence": "Manufacturer explicitly states two holes for different pencils and a shavings container; hole count is distinct from physical sharpener size.",
+      "verification": "indexed_official; direct open returned HTTP429"
+    },
+    {
+      "id": "pw-tis",
+      "title": "The International School La Serena — quinto básico 2026",
+      "url": "https://www.tisls.cl/portal/wp-content/uploads/2025/12/Lista05-2026.pdf",
+      "locator": "PDF pages 1–2; Language Arts/Matemática, general supplies",
+      "evidence": "Requires margins on notebooks, HB pencils, a green-or-yellow highlighter and subject-specific folder colors.",
+      "verification": "opened"
+    },
+    {
+      "id": "pw-torre-cardstock",
+      "title": "Torre — Bolsón Cartulina 18 hojas Imagia",
+      "url": "https://www.torre.cl/catalogo/cartulina/",
+      "locator": "Product description; SKU 17894",
+      "evidence": "Product contents are 18 sheets in 14 colors, with sheet dimensions 26.5 × 37.5 cm. Separate site summary dimensions describe the package, not the sheets.",
+      "verification": "opened"
+    },
+    {
+      "id": "pw-torre-graphite",
+      "title": "Torre — lápices grafito official product family",
+      "url": "https://www.torre.cl/product-category/escritura-y-dibujo/lapices-grafito/",
+      "locator": "Manufacturer product titles for HB hexagonal and HB triangular with/without eraser",
+      "evidence": "Lists triangular and hexagonal graphite pencils; also lists triangular HB pencils explicitly with and without erasers.",
+      "verification": "directly reopened on 2026-11-10"
+    },
+    {
+      "id": "pw-torre-notebook",
+      "title": "Torre — Cuaderno Triple Liso 7 mm 150 hojas",
+      "url": "https://www.torre.cl/catalogo/cuaderno-triple-liso-7mm-150hjs/",
+      "locator": "Product description; SKU 25303",
+      "evidence": "Manufacturer identifies 150 sheets, 7 mm squared ruling and single spiral binding. The word Liso in its title does not mean blank inner pages.",
+      "verification": "opened"
+    },
+    {
+      "id": "pw-torre-sleeves",
+      "title": "Torre — Carpeta tradicional 20 fundas oficio negra",
+      "url": "https://www.torre.cl/catalogo/carpeta-con-fundas-tradicional-20-fundas-formato-oficio-negra/",
+      "locator": "Product description; SKU 35288",
+      "evidence": "An oficio polypropylene folder contains 20 transparent sleeves; the sleeve count is separate from the number of folders requested.",
+      "verification": "opened"
+    }
+  ],
+  "categories": [
+    {
+      "slug": "cuadernos",
+      "name": "Cuadernos",
+      "type_key": "tipo_cuaderno",
+      "type_name": "Tipo de cuaderno",
+      "new": false,
+      "sort_order": 10
+    },
+    {
+      "slug": "escritura",
+      "name": "Escritura",
+      "type_key": "tipo_escritura",
+      "type_name": "Tipo de escritura",
+      "new": false,
+      "sort_order": 20
+    },
+    {
+      "slug": "arte-y-dibujo",
+      "name": "Arte y dibujo",
+      "type_key": "tipo_arte",
+      "type_name": "Tipo de arte y dibujo",
+      "new": false,
+      "sort_order": 30
+    },
+    {
+      "slug": "manualidades",
+      "name": "Manualidades",
+      "type_key": "tipo_manualidades",
+      "type_name": "Tipo de manualidades",
+      "new": false,
+      "sort_order": 35
+    },
+    {
+      "slug": "geometria",
+      "name": "Geometría",
+      "type_key": "tipo_geometria",
+      "type_name": "Tipo de geometría",
+      "new": false,
+      "sort_order": 40
+    },
+    {
+      "slug": "material-didactico",
+      "name": "Material didáctico",
+      "type_key": "tipo_material_didactico",
+      "type_name": "Tipo de material didáctico",
+      "new": false,
+      "sort_order": 45
+    },
+    {
+      "slug": "papeles",
+      "name": "Papeles y cartulinas",
+      "type_key": "tipo_papel",
+      "type_name": "Tipo de papeles y cartulinas",
+      "new": false,
+      "sort_order": 50
+    },
+    {
+      "slug": "pegado-y-corte",
+      "name": "Pegado y corte",
+      "type_key": "tipo_pegado_corte",
+      "type_name": "Tipo de pegado y corte",
+      "new": false,
+      "sort_order": 60
+    },
+    {
+      "slug": "musica",
+      "name": "Música",
+      "type_key": "tipo_musica",
+      "type_name": "Tipo de música",
+      "new": false,
+      "sort_order": 65
+    },
+    {
+      "slug": "organizacion",
+      "name": "Organización",
+      "type_key": "tipo_organizacion",
+      "type_name": "Tipo de organización",
+      "new": false,
+      "sort_order": 70
+    },
+    {
+      "slug": "tecnologia",
+      "name": "Tecnología",
+      "type_key": "tipo_tecnologia",
+      "type_name": "Tipo de tecnología",
+      "new": false,
+      "sort_order": 75
+    },
+    {
+      "slug": "lectura-y-consulta",
+      "name": "Lectura y consulta",
+      "type_key": "tipo_lectura_y_consulta",
+      "type_name": "Tipo de lectura y consulta",
+      "new": false,
+      "sort_order": 76
+    },
+    {
+      "slug": "aseo",
+      "name": "Aseo",
+      "type_key": "tipo_aseo",
+      "type_name": "Tipo de aseo",
+      "new": false,
+      "sort_order": 80
+    }
+  ],
+  "definitions": [
+    {
+      "key": "acabado",
+      "name": "Acabado",
+      "data_type": "text",
+      "unit": null
+    },
+    {
+      "key": "alcance_transportador_grados",
+      "name": "Alcance del transportador",
+      "data_type": "number",
+      "unit": "°"
+    },
+    {
+      "key": "ancho_mm",
+      "name": "Ancho",
+      "data_type": "number",
+      "unit": "mm"
+    },
+    {
+      "key": "angulo_escuadra_grados",
+      "name": "Ángulo de la escuadra",
+      "data_type": "number",
+      "unit": "°"
+    },
+    {
+      "key": "capacidad_gb",
+      "name": "Capacidad de almacenamiento",
+      "data_type": "number",
+      "unit": "GB"
+    },
+    {
+      "key": "color",
+      "name": "Color",
+      "data_type": "text",
+      "unit": null
+    },
+    {
+      "key": "con_espiral",
+      "name": "Con espiral",
+      "data_type": "boolean",
+      "unit": null
+    },
+    {
+      "key": "con_margen",
+      "name": "Con margen",
+      "data_type": "boolean",
+      "unit": null
+    },
+    {
+      "key": "contenido_diccionario",
+      "name": "Contenido del diccionario",
+      "data_type": "text",
+      "unit": null
+    },
+    {
+      "key": "cuadricula_mm",
+      "name": "Separación de la cuadrícula",
+      "data_type": "number",
+      "unit": "mm"
+    },
+    {
+      "key": "digitacion_flauta",
+      "name": "Digitación de flauta",
+      "data_type": "text",
+      "unit": null
+    },
+    {
+      "key": "dimension_mayor_cm",
+      "name": "Dimensión mayor",
+      "data_type": "number",
+      "unit": "cm"
+    },
+    {
+      "key": "dimension_menor_cm",
+      "name": "Dimensión menor",
+      "data_type": "number",
+      "unit": "cm"
+    },
+    {
+      "key": "dureza_grafito",
+      "name": "Dureza del grafito",
+      "data_type": "text",
+      "unit": null
+    },
+    {
+      "key": "forma_cuerpo",
+      "name": "Forma del cuerpo",
+      "data_type": "text",
+      "unit": null
+    },
+    {
+      "key": "forma_pincel",
+      "name": "Forma del pincel",
+      "data_type": "text",
+      "unit": null
+    },
+    {
+      "key": "formato",
+      "name": "Formato",
+      "data_type": "text",
+      "unit": null
+    },
+    {
+      "key": "gramaje_g_m2",
+      "name": "Gramaje",
+      "data_type": "number",
+      "unit": "g/m²"
+    },
+    {
+      "key": "grosor_punta",
+      "name": "Grosor de punta",
+      "data_type": "text",
+      "unit": null
+    },
+    {
+      "key": "idioma",
+      "name": "Idioma",
+      "data_type": "text",
+      "unit": null
+    },
+    {
+      "key": "incluye_goma",
+      "name": "Incluye goma",
+      "data_type": "boolean",
+      "unit": null
+    },
+    {
+      "key": "largo_cm",
+      "name": "Largo",
+      "data_type": "number",
+      "unit": "cm"
+    },
+    {
+      "key": "largo_m",
+      "name": "Largo",
+      "data_type": "number",
+      "unit": "m"
+    },
+    {
+      "key": "lateralidad",
+      "name": "Lateralidad",
+      "data_type": "text",
+      "unit": null
+    },
+    {
+      "key": "lavable",
+      "name": "Lavable",
+      "data_type": "boolean",
+      "unit": null
+    },
+    {
+      "key": "material",
+      "name": "Material",
+      "data_type": "text",
+      "unit": null
+    },
+    {
+      "key": "numero_colores",
+      "name": "Número de colores",
+      "data_type": "number",
+      "unit": "colores"
+    },
+    {
+      "key": "numero_fundas",
+      "name": "Número de fundas",
+      "data_type": "number",
+      "unit": "fundas"
+    },
+    {
+      "key": "numero_hojas",
+      "name": "Número de hojas",
+      "data_type": "number",
+      "unit": "hojas"
+    },
+    {
+      "key": "numero_notas",
+      "name": "Número de notas",
+      "data_type": "number",
+      "unit": "notas"
+    },
+    {
+      "key": "numero_orificios",
+      "name": "Número de orificios",
+      "data_type": "number",
+      "unit": "orificios"
+    },
+    {
+      "key": "numero_pincel",
+      "name": "Número de pincel",
+      "data_type": "number",
+      "unit": null
+    },
+    {
+      "key": "orientacion",
+      "name": "Orientación",
+      "data_type": "text",
+      "unit": null
+    },
+    {
+      "key": "peso_g",
+      "name": "Peso",
+      "data_type": "number",
+      "unit": "g"
+    },
+    {
+      "key": "presentacion",
+      "name": "Presentación",
+      "data_type": "text",
+      "unit": null
+    },
+    {
+      "key": "tipo_adhesivo",
+      "name": "Familia de adhesivo",
+      "data_type": "text",
+      "unit": null
+    },
+    {
+      "key": "tipo_pauta",
+      "name": "Tipo de pauta",
+      "data_type": "text",
+      "unit": null
+    },
+    {
+      "key": "tipo_punta",
+      "name": "Tipo de punta",
+      "data_type": "text",
+      "unit": null
+    },
+    {
+      "key": "unidades_por_envase",
+      "name": "Unidades por envase",
+      "data_type": "number",
+      "unit": "unidades"
+    },
+    {
+      "key": "uso_marcador",
+      "name": "Uso del marcador",
+      "data_type": "text",
+      "unit": null
+    },
+    {
+      "key": "volumen_ml",
+      "name": "Contenido",
+      "data_type": "number",
+      "unit": "ml"
+    }
+  ],
+  "bindings": [
+    {
+      "category": "arte-y-dibujo",
+      "key": "acabado",
+      "applies_to_types": [
+        "Témperas"
+      ],
+      "sort_order": 100
+    },
+    {
+      "category": "arte-y-dibujo",
+      "key": "color",
+      "applies_to_types": [
+        "Témperas"
+      ],
+      "sort_order": 101
+    },
+    {
+      "category": "arte-y-dibujo",
+      "key": "dimension_mayor_cm",
+      "applies_to_types": [
+        "Block",
+        "Croquera"
+      ],
+      "sort_order": 50
+    },
+    {
+      "category": "arte-y-dibujo",
+      "key": "dimension_menor_cm",
+      "applies_to_types": [
+        "Block",
+        "Croquera"
+      ],
+      "sort_order": 40
+    },
+    {
+      "category": "arte-y-dibujo",
+      "key": "forma_pincel",
+      "applies_to_types": [
+        "Pincel"
+      ],
+      "sort_order": 135
+    },
+    {
+      "category": "arte-y-dibujo",
+      "key": "gramaje_g_m2",
+      "applies_to_types": [
+        "Block",
+        "Croquera"
+      ],
+      "sort_order": 105
+    },
+    {
+      "category": "arte-y-dibujo",
+      "key": "numero_hojas",
+      "applies_to_types": [
+        "Croquera"
+      ],
+      "sort_order": 30
+    },
+    {
+      "category": "arte-y-dibujo",
+      "key": "numero_pincel",
+      "applies_to_types": [
+        "Pincel"
+      ],
+      "sort_order": 147
+    },
+    {
+      "category": "arte-y-dibujo",
+      "key": "peso_g",
+      "applies_to_types": [
+        "Arcilla",
+        "Masa para modelar"
+      ],
+      "sort_order": 108
+    },
+    {
+      "category": "arte-y-dibujo",
+      "key": "volumen_ml",
+      "applies_to_types": [
+        "Témperas"
+      ],
+      "sort_order": 109
+    },
+    {
+      "category": "aseo",
+      "key": "dimension_mayor_cm",
+      "applies_to_types": [
+        "Toalla"
+      ],
+      "sort_order": 110
+    },
+    {
+      "category": "aseo",
+      "key": "dimension_menor_cm",
+      "applies_to_types": [
+        "Toalla"
+      ],
+      "sort_order": 111
+    },
+    {
+      "category": "aseo",
+      "key": "presentacion",
+      "applies_to_types": [
+        "Jabón"
+      ],
+      "sort_order": 112
+    },
+    {
+      "category": "aseo",
+      "key": "unidades_por_envase",
+      "applies_to_types": [
+        "Pañuelos",
+        "Toallas húmedas"
+      ],
+      "sort_order": 113
+    },
+    {
+      "category": "aseo",
+      "key": "volumen_ml",
+      "applies_to_types": [
+        "Alcohol gel",
+        "Jabón"
+      ],
+      "sort_order": 114
+    },
+    {
+      "category": "cuadernos",
+      "key": "con_espiral",
+      "applies_to_types": [
+        "Caligrafía",
+        "Cuadriculado"
+      ],
+      "sort_order": 115
+    },
+    {
+      "category": "cuadernos",
+      "key": "con_margen",
+      "applies_to_types": [
+        "Composición",
+        "Cuadriculado"
+      ],
+      "sort_order": 116
+    },
+    {
+      "category": "cuadernos",
+      "key": "cuadricula_mm",
+      "applies_to_types": [
+        "Cuadriculado"
+      ],
+      "sort_order": 40
+    },
+    {
+      "category": "cuadernos",
+      "key": "formato",
+      "applies_to_types": [
+        "Caligrafía",
+        "Composición",
+        "Cuadriculado"
+      ],
+      "sort_order": 20
+    },
+    {
+      "category": "cuadernos",
+      "key": "numero_hojas",
+      "applies_to_types": [
+        "Caligrafía",
+        "Composición",
+        "Cuadriculado"
+      ],
+      "sort_order": 30
+    },
+    {
+      "category": "cuadernos",
+      "key": "orientacion",
+      "applies_to_types": [
+        "Caligrafía"
+      ],
+      "sort_order": 40
+    },
+    {
+      "category": "escritura",
+      "key": "color",
+      "applies_to_types": [
+        "Destacador",
+        "Marcador"
+      ],
+      "sort_order": 129
+    },
+    {
+      "category": "escritura",
+      "key": "dureza_grafito",
+      "applies_to_types": [
+        "Grafito"
+      ],
+      "sort_order": 20
+    },
+    {
+      "category": "escritura",
+      "key": "forma_cuerpo",
+      "applies_to_types": [
+        "Grafito"
+      ],
+      "sort_order": 123
+    },
+    {
+      "category": "escritura",
+      "key": "grosor_punta",
+      "applies_to_types": [
+        "Marcador"
+      ],
+      "sort_order": 124
+    },
+    {
+      "category": "escritura",
+      "key": "incluye_goma",
+      "applies_to_types": [
+        "Grafito"
+      ],
+      "sort_order": 30
+    },
+    {
+      "category": "escritura",
+      "key": "numero_orificios",
+      "applies_to_types": [
+        "Sacapuntas"
+      ],
+      "sort_order": 126
+    },
+    {
+      "category": "escritura",
+      "key": "presentacion",
+      "applies_to_types": [
+        "Corrector"
+      ],
+      "sort_order": 127
+    },
+    {
+      "category": "escritura",
+      "key": "tipo_punta",
+      "applies_to_types": [
+        "Marcador"
+      ],
+      "sort_order": 128
+    },
+    {
+      "category": "escritura",
+      "key": "uso_marcador",
+      "applies_to_types": [
+        "Marcador"
+      ],
+      "sort_order": 156
+    },
+    {
+      "category": "geometria",
+      "key": "alcance_transportador_grados",
+      "applies_to_types": [
+        "Transportador"
+      ],
+      "sort_order": 130
+    },
+    {
+      "category": "geometria",
+      "key": "angulo_escuadra_grados",
+      "applies_to_types": [
+        "Escuadra"
+      ],
+      "sort_order": 131
+    },
+    {
+      "category": "geometria",
+      "key": "largo_cm",
+      "applies_to_types": [
+        "Escuadra"
+      ],
+      "sort_order": 20
+    },
+    {
+      "category": "geometria",
+      "key": "material",
+      "applies_to_types": [
+        "Escuadra",
+        "Transportador"
+      ],
+      "sort_order": 133
+    },
+    {
+      "category": "lectura-y-consulta",
+      "key": "contenido_diccionario",
+      "applies_to_types": [
+        "Diccionario"
+      ],
+      "sort_order": 134
+    },
+    {
+      "category": "lectura-y-consulta",
+      "key": "idioma",
+      "applies_to_types": [
+        "Diccionario"
+      ],
+      "sort_order": 138
+    },
+    {
+      "category": "manualidades",
+      "key": "acabado",
+      "applies_to_types": [
+        "Pompones"
+      ],
+      "sort_order": 136
+    },
+    {
+      "category": "manualidades",
+      "key": "color",
+      "applies_to_types": [
+        "Palitos"
+      ],
+      "sort_order": 137
+    },
+    {
+      "category": "manualidades",
+      "key": "largo_m",
+      "applies_to_types": [
+        "Lana"
+      ],
+      "sort_order": 138
+    },
+    {
+      "category": "manualidades",
+      "key": "unidades_por_envase",
+      "applies_to_types": [
+        "Palitos"
+      ],
+      "sort_order": 139
+    },
+    {
+      "category": "material-didactico",
+      "key": "dimension_mayor_cm",
+      "applies_to_types": [
+        "Pizarra"
+      ],
+      "sort_order": 111
+    },
+    {
+      "category": "material-didactico",
+      "key": "dimension_menor_cm",
+      "applies_to_types": [
+        "Pizarra"
+      ],
+      "sort_order": 110
+    },
+    {
+      "category": "material-didactico",
+      "key": "tipo_pauta",
+      "applies_to_types": [
+        "Pizarra"
+      ],
+      "sort_order": 142
+    },
+    {
+      "category": "musica",
+      "key": "digitacion_flauta",
+      "applies_to_types": [
+        "Flauta"
+      ],
+      "sort_order": 143
+    },
+    {
+      "category": "musica",
+      "key": "numero_notas",
+      "applies_to_types": [
+        "Melódica",
+        "Metalófono"
+      ],
+      "sort_order": 145
+    },
+    {
+      "category": "organizacion",
+      "key": "color",
+      "applies_to_types": [
+        "Carpeta",
+        "Forro"
+      ],
+      "sort_order": 129
+    },
+    {
+      "category": "organizacion",
+      "key": "formato",
+      "applies_to_types": [
+        "Carpeta",
+        "Forro"
+      ],
+      "sort_order": 101
+    },
+    {
+      "category": "organizacion",
+      "key": "material",
+      "applies_to_types": [
+        "Forro"
+      ],
+      "sort_order": 141
+    },
+    {
+      "category": "organizacion",
+      "key": "numero_fundas",
+      "applies_to_types": [
+        "Carpeta"
+      ],
+      "sort_order": 148
+    },
+    {
+      "category": "papeles",
+      "key": "acabado",
+      "applies_to_types": [
+        "Cartulina"
+      ],
+      "sort_order": 125
+    },
+    {
+      "category": "papeles",
+      "key": "color",
+      "applies_to_types": [
+        "Cartulina"
+      ],
+      "sort_order": 129
+    },
+    {
+      "category": "papeles",
+      "key": "dimension_mayor_cm",
+      "applies_to_types": [
+        "Cartulina"
+      ],
+      "sort_order": 111
+    },
+    {
+      "category": "papeles",
+      "key": "dimension_menor_cm",
+      "applies_to_types": [
+        "Cartulina"
+      ],
+      "sort_order": 110
+    },
+    {
+      "category": "papeles",
+      "key": "formato",
+      "applies_to_types": [
+        "Papel"
+      ],
+      "sort_order": 101
+    },
+    {
+      "category": "papeles",
+      "key": "gramaje_g_m2",
+      "applies_to_types": [
+        "Papel"
+      ],
+      "sort_order": 154
+    },
+    {
+      "category": "papeles",
+      "key": "numero_colores",
+      "applies_to_types": [
+        "Cartulina",
+        "Goma EVA"
+      ],
+      "sort_order": 155
+    },
+    {
+      "category": "papeles",
+      "key": "numero_hojas",
+      "applies_to_types": [
+        "Cartulina",
+        "Papel"
+      ],
+      "sort_order": 156
+    },
+    {
+      "category": "pegado-y-corte",
+      "key": "ancho_mm",
+      "applies_to_types": [
+        "Cinta adhesiva"
+      ],
+      "sort_order": 157
+    },
+    {
+      "category": "pegado-y-corte",
+      "key": "color",
+      "applies_to_types": [
+        "Cinta adhesiva"
+      ],
+      "sort_order": 129
+    },
+    {
+      "category": "pegado-y-corte",
+      "key": "largo_cm",
+      "applies_to_types": [
+        "Tijeras"
+      ],
+      "sort_order": 159
+    },
+    {
+      "category": "pegado-y-corte",
+      "key": "largo_m",
+      "applies_to_types": [
+        "Cinta adhesiva"
+      ],
+      "sort_order": 160
+    },
+    {
+      "category": "pegado-y-corte",
+      "key": "lateralidad",
+      "applies_to_types": [
+        "Tijeras"
+      ],
+      "sort_order": 140
+    },
+    {
+      "category": "pegado-y-corte",
+      "key": "lavable",
+      "applies_to_types": [
+        "Pegamento"
+      ],
+      "sort_order": 162
+    },
+    {
+      "category": "pegado-y-corte",
+      "key": "material",
+      "applies_to_types": [
+        "Cinta adhesiva"
+      ],
+      "sort_order": 141
+    },
+    {
+      "category": "pegado-y-corte",
+      "key": "peso_g",
+      "applies_to_types": [
+        "Pegamento"
+      ],
+      "sort_order": 20
+    },
+    {
+      "category": "pegado-y-corte",
+      "key": "presentacion",
+      "applies_to_types": [
+        "Pegamento"
+      ],
+      "sort_order": 150
+    },
+    {
+      "category": "pegado-y-corte",
+      "key": "tipo_adhesivo",
+      "applies_to_types": [
+        "Pegamento"
+      ],
+      "sort_order": 166
+    },
+    {
+      "category": "pegado-y-corte",
+      "key": "tipo_punta",
+      "applies_to_types": [
+        "Tijeras"
+      ],
+      "sort_order": 20
+    },
+    {
+      "category": "tecnologia",
+      "key": "capacidad_gb",
+      "applies_to_types": [
+        "Memoria USB"
+      ],
+      "sort_order": 127
+    }
+  ],
+  "items": [
+    {
+      "key": "manual:cuaderno-universitario-cuadriculado-con-margen-100-hojas",
+      "category": "cuadernos",
+      "name": "Cuaderno universitario cuadriculado con margen, 100 hojas",
+      "type": "Cuadriculado",
+      "attributes": {
+        "formato": "universitario",
+        "numero_hojas": 100,
+        "con_margen": true
+      },
+      "aliases": [],
+      "sources": [
+        "pw-tis"
+      ],
+      "finding_ids": [
+        "pw-01"
+      ]
+    },
+    {
+      "key": "manual:cuaderno-universitario-de-composicion-con-margen-100-hojas",
+      "category": "cuadernos",
+      "name": "Cuaderno universitario de composición con margen, 100 hojas",
+      "type": "Composición",
+      "attributes": {
+        "formato": "universitario",
+        "numero_hojas": 100,
+        "con_margen": true
+      },
+      "aliases": [],
+      "sources": [
+        "pw-tis"
+      ],
+      "finding_ids": [
+        "pw-01"
+      ]
+    },
+    {
+      "key": "manual:cuaderno-college-de-caligrafia-horizontal-sin-espiral-100-hojas",
+      "category": "cuadernos",
+      "name": "Cuaderno college de caligrafía horizontal sin espiral, 100 hojas",
+      "type": "Caligrafía",
+      "attributes": {
+        "formato": "college",
+        "numero_hojas": 100,
+        "orientacion": "horizontal",
+        "con_espiral": false
+      },
+      "aliases": [],
+      "sources": [
+        "pw-monteverde"
+      ],
+      "finding_ids": [
+        "pw-02"
+      ]
+    },
+    {
+      "key": "manual:cuaderno-cuadriculado-7-mm-con-espiral-150-hojas",
+      "category": "cuadernos",
+      "name": "Cuaderno cuadriculado 7 mm con espiral, 150 hojas",
+      "type": "Cuadriculado",
+      "attributes": {
+        "numero_hojas": 150,
+        "cuadricula_mm": 7,
+        "con_espiral": true
+      },
+      "aliases": [],
+      "sources": [
+        "pw-torre-notebook"
+      ],
+      "finding_ids": [
+        "pw-02",
+        "pw-03"
+      ]
+    },
+    {
+      "key": "lapiz-grafito:hb:no-especificada",
+      "category": "escritura",
+      "name": "Lápiz grafito HB",
+      "type": "Grafito",
+      "attributes": {
+        "dureza_grafito": "HB"
+      },
+      "aliases": [],
+      "sources": [
+        "pw-tis"
+      ],
+      "finding_ids": [
+        "pw-04"
+      ]
+    },
+    {
+      "key": "lapiz-grafito:2b:no-especificada",
+      "category": "escritura",
+      "name": "Lápiz grafito 2B",
+      "type": "Grafito",
+      "attributes": {
+        "dureza_grafito": "2B"
+      },
+      "aliases": [],
+      "sources": [
+        "pw-chuqui"
+      ],
+      "finding_ids": [
+        "pw-04"
+      ]
+    },
+    {
+      "key": "lapiz-grafito:hb:con-goma",
+      "category": "escritura",
+      "name": "Lápiz grafito HB, con goma",
+      "type": "Grafito",
+      "attributes": {
+        "dureza_grafito": "HB",
+        "incluye_goma": true
+      },
+      "aliases": [],
+      "sources": [
+        "pw-torre-graphite"
+      ],
+      "finding_ids": [
+        "pw-16"
+      ]
+    },
+    {
+      "key": "lapiz-grafito:hb:sin-goma",
+      "category": "escritura",
+      "name": "Lápiz grafito HB, sin goma",
+      "type": "Grafito",
+      "attributes": {
+        "dureza_grafito": "HB",
+        "incluye_goma": false
+      },
+      "aliases": [],
+      "sources": [
+        "add_torre_graphite_without"
+      ],
+      "finding_ids": [
+        "pw-16"
+      ]
+    },
+    {
+      "key": "manual:lapiz-grafito-hb-hexagonal",
+      "category": "escritura",
+      "name": "Lápiz grafito HB hexagonal",
+      "type": "Grafito",
+      "attributes": {
+        "dureza_grafito": "HB",
+        "forma_cuerpo": "Hexagonal"
+      },
+      "aliases": [],
+      "sources": [
+        "pw-torre-graphite"
+      ],
+      "finding_ids": [
+        "pw-05"
+      ]
+    },
+    {
+      "key": "manual:marcador-permanente-negro-de-punta-redonda",
+      "category": "escritura",
+      "name": "Marcador permanente negro de punta redonda",
+      "type": "Marcador",
+      "attributes": {
+        "uso_marcador": "Permanente",
+        "color": "Negro",
+        "tipo_punta": "Redonda"
+      },
+      "aliases": [],
+      "sources": [
+        "pw-artel-marker",
+        "add_artel_markers"
+      ],
+      "finding_ids": [
+        "pw-06"
+      ]
+    },
+    {
+      "key": "manual:marcador-permanente-negro-de-punta-biselada",
+      "category": "escritura",
+      "name": "Marcador permanente negro de punta biselada",
+      "type": "Marcador",
+      "attributes": {
+        "uso_marcador": "Permanente",
+        "color": "Negro",
+        "tipo_punta": "Biselada"
+      },
+      "aliases": [],
+      "sources": [
+        "pw-artel-marker",
+        "add_artel_markers"
+      ],
+      "finding_ids": [
+        "pw-06"
+      ]
+    },
+    {
+      "key": "manual:plumon-de-pizarra-negro-de-punta-redonda",
+      "category": "escritura",
+      "name": "Plumón de pizarra negro de punta redonda",
+      "type": "Marcador",
+      "attributes": {
+        "uso_marcador": "Pizarra",
+        "color": "Negro",
+        "tipo_punta": "Redonda"
+      },
+      "aliases": [],
+      "sources": [
+        "pw-artel-marker",
+        "ac_crep"
+      ],
+      "finding_ids": [
+        "pw-06"
+      ]
+    },
+    {
+      "key": "manual:marcador-permanente-negro-de-punta-fina",
+      "category": "escritura",
+      "name": "Marcador permanente negro de punta fina",
+      "type": "Marcador",
+      "attributes": {
+        "uso_marcador": "Permanente",
+        "color": "Negro",
+        "grosor_punta": "Fina"
+      },
+      "aliases": [],
+      "sources": [
+        "pw-chuqui"
+      ],
+      "finding_ids": [
+        "pw-17"
+      ]
+    },
+    {
+      "key": "manual:marcador-permanente-de-punta-gruesa",
+      "category": "escritura",
+      "name": "Marcador permanente de punta gruesa",
+      "type": "Marcador",
+      "attributes": {
+        "uso_marcador": "Permanente",
+        "grosor_punta": "Gruesa"
+      },
+      "aliases": [],
+      "sources": [
+        "pw-mayor"
+      ],
+      "finding_ids": [
+        "pw-17"
+      ]
+    },
+    {
+      "key": "manual:corrector-liquido",
+      "category": "escritura",
+      "name": "Corrector líquido",
+      "type": "Corrector",
+      "attributes": {
+        "presentacion": "Líquida"
+      },
+      "aliases": [],
+      "sources": [
+        "pw-chuqui"
+      ],
+      "finding_ids": [
+        "pw-07"
+      ]
+    },
+    {
+      "key": "manual:destacador-verde",
+      "category": "escritura",
+      "name": "Destacador verde",
+      "type": "Destacador",
+      "attributes": {
+        "color": "Verde"
+      },
+      "aliases": [],
+      "sources": [
+        "pw-tis"
+      ],
+      "finding_ids": [
+        "pw-08"
+      ]
+    },
+    {
+      "key": "manual:destacador-amarillo",
+      "category": "escritura",
+      "name": "Destacador amarillo",
+      "type": "Destacador",
+      "attributes": {
+        "color": "Amarillo"
+      },
+      "aliases": [],
+      "sources": [
+        "pw-tis"
+      ],
+      "finding_ids": [
+        "pw-08"
+      ]
+    },
+    {
+      "key": "manual:papel-de-75-g-m2",
+      "category": "papeles",
+      "name": "Papel de 75 g/m²",
+      "type": "Papel",
+      "attributes": {
+        "gramaje_g_m2": 75
+      },
+      "aliases": [],
+      "sources": [
+        "pw-chamex"
+      ],
+      "finding_ids": [
+        "pw-09"
+      ]
+    },
+    {
+      "key": "manual:papel-de-90-g-m2",
+      "category": "papeles",
+      "name": "Papel de 90 g/m²",
+      "type": "Papel",
+      "attributes": {
+        "gramaje_g_m2": 90
+      },
+      "aliases": [],
+      "sources": [
+        "pw-chamex"
+      ],
+      "finding_ids": [
+        "pw-09"
+      ]
+    },
+    {
+      "key": "manual:resma-de-papel-tamano-carta-500-hojas",
+      "category": "papeles",
+      "name": "Resma de papel tamaño carta, 500 hojas",
+      "type": "Papel",
+      "attributes": {
+        "formato": "carta",
+        "numero_hojas": 500
+      },
+      "aliases": [],
+      "sources": [
+        "pw-mayor"
+      ],
+      "finding_ids": [
+        "pw-10"
+      ]
+    },
+    {
+      "key": "manual:paquete-de-cartulina-26-5-37-5-cm-18-hojas-y-14-colores",
+      "category": "papeles",
+      "name": "Paquete de cartulina 26,5 × 37,5 cm, 18 hojas y 14 colores",
+      "type": "Cartulina",
+      "attributes": {
+        "numero_hojas": 18,
+        "numero_colores": 14,
+        "dimension_menor_cm": 26.5,
+        "dimension_mayor_cm": 37.5,
+        "color": "Surtido"
+      },
+      "aliases": [],
+      "sources": [
+        "pw-torre-cardstock"
+      ],
+      "finding_ids": [
+        "pw-10",
+        "pw-11",
+        "pw-15"
+      ]
+    },
+    {
+      "key": "manual:cartulina-metalica",
+      "category": "papeles",
+      "name": "Cartulina metálica",
+      "type": "Cartulina",
+      "attributes": {
+        "acabado": "Metálico"
+      },
+      "aliases": [],
+      "sources": [
+        "pw-mayor"
+      ],
+      "finding_ids": [
+        "pw-12"
+      ]
+    },
+    {
+      "key": "manual:cartulina-fluorescente",
+      "category": "papeles",
+      "name": "Cartulina fluorescente",
+      "type": "Cartulina",
+      "attributes": {
+        "acabado": "Fluorescente"
+      },
+      "aliases": [],
+      "sources": [
+        "pw-ldv"
+      ],
+      "finding_ids": [
+        "pw-12"
+      ]
+    },
+    {
+      "key": "manual:paquete-de-goma-eva-10-colores",
+      "category": "papeles",
+      "name": "Paquete de goma EVA, 10 colores",
+      "type": "Goma EVA",
+      "attributes": {
+        "numero_colores": 10
+      },
+      "aliases": [],
+      "sources": [
+        "pw-mayor"
+      ],
+      "finding_ids": [
+        "pw-15"
+      ]
+    },
+    {
+      "key": "manual:forro-plastico-azul-para-cuaderno-universitario",
+      "category": "organizacion",
+      "name": "Forro plástico azul para cuaderno universitario",
+      "type": "Forro",
+      "attributes": {
+        "formato": "universitario",
+        "material": "Plástico",
+        "color": "Azul"
+      },
+      "aliases": [],
+      "sources": [
+        "pw-cvd"
+      ],
+      "finding_ids": [
+        "pw-13"
+      ]
+    },
+    {
+      "key": "manual:forro-plastico-verde-claro-para-cuaderno-universitario",
+      "category": "organizacion",
+      "name": "Forro plástico verde claro para cuaderno universitario",
+      "type": "Forro",
+      "attributes": {
+        "formato": "universitario",
+        "material": "Plástico",
+        "color": "Verde claro"
+      },
+      "aliases": [],
+      "sources": [
+        "pw-cvd"
+      ],
+      "finding_ids": [
+        "pw-13"
+      ]
+    },
+    {
+      "key": "manual:forro-plastico-negro-para-cuaderno-universitario",
+      "category": "organizacion",
+      "name": "Forro plástico negro para cuaderno universitario",
+      "type": "Forro",
+      "attributes": {
+        "formato": "universitario",
+        "material": "Plástico",
+        "color": "Negro"
+      },
+      "aliases": [],
+      "sources": [
+        "pw-cvd"
+      ],
+      "finding_ids": [
+        "pw-13"
+      ]
+    },
+    {
+      "key": "manual:forro-plastico-blanco-para-cuaderno-universitario",
+      "category": "organizacion",
+      "name": "Forro plástico blanco para cuaderno universitario",
+      "type": "Forro",
+      "attributes": {
+        "formato": "universitario",
+        "material": "Plástico",
+        "color": "Blanco"
+      },
+      "aliases": [],
+      "sources": [
+        "pw-cvd"
+      ],
+      "finding_ids": [
+        "pw-13"
+      ]
+    },
+    {
+      "key": "manual:forro-plastico-amarillo-para-cuaderno-universitario",
+      "category": "organizacion",
+      "name": "Forro plástico amarillo para cuaderno universitario",
+      "type": "Forro",
+      "attributes": {
+        "formato": "universitario",
+        "material": "Plástico",
+        "color": "Amarillo"
+      },
+      "aliases": [],
+      "sources": [
+        "pw-cvd"
+      ],
+      "finding_ids": [
+        "pw-13"
+      ]
+    },
+    {
+      "key": "manual:forro-plastico-celeste-para-cuaderno-universitario",
+      "category": "organizacion",
+      "name": "Forro plástico celeste para cuaderno universitario",
+      "type": "Forro",
+      "attributes": {
+        "formato": "universitario",
+        "material": "Plástico",
+        "color": "Celeste"
+      },
+      "aliases": [],
+      "sources": [
+        "pw-cvd"
+      ],
+      "finding_ids": [
+        "pw-13"
+      ]
+    },
+    {
+      "key": "manual:forro-plastico-morado-para-cuaderno-universitario",
+      "category": "organizacion",
+      "name": "Forro plástico morado para cuaderno universitario",
+      "type": "Forro",
+      "attributes": {
+        "formato": "universitario",
+        "material": "Plástico",
+        "color": "Morado"
+      },
+      "aliases": [],
+      "sources": [
+        "pw-cvd"
+      ],
+      "finding_ids": [
+        "pw-13"
+      ]
+    },
+    {
+      "key": "manual:forro-plastico-gris-para-cuaderno-universitario",
+      "category": "organizacion",
+      "name": "Forro plástico gris para cuaderno universitario",
+      "type": "Forro",
+      "attributes": {
+        "formato": "universitario",
+        "material": "Plástico",
+        "color": "Gris"
+      },
+      "aliases": [],
+      "sources": [
+        "pw-cvd"
+      ],
+      "finding_ids": [
+        "pw-13"
+      ]
+    },
+    {
+      "key": "manual:carpeta-azul-tamano-oficio",
+      "category": "organizacion",
+      "name": "Carpeta azul tamaño oficio",
+      "type": "Carpeta",
+      "attributes": {
+        "formato": "oficio",
+        "color": "Azul"
+      },
+      "aliases": [],
+      "sources": [
+        "pw-cvd"
+      ],
+      "finding_ids": [
+        "pw-13"
+      ]
+    },
+    {
+      "key": "manual:carpeta-verde-tamano-oficio",
+      "category": "organizacion",
+      "name": "Carpeta verde tamaño oficio",
+      "type": "Carpeta",
+      "attributes": {
+        "formato": "oficio",
+        "color": "Verde"
+      },
+      "aliases": [],
+      "sources": [
+        "pw-cvd"
+      ],
+      "finding_ids": [
+        "pw-13"
+      ]
+    },
+    {
+      "key": "manual:carpeta-negra-tamano-oficio",
+      "category": "organizacion",
+      "name": "Carpeta negra tamaño oficio",
+      "type": "Carpeta",
+      "attributes": {
+        "formato": "oficio",
+        "color": "Negro"
+      },
+      "aliases": [],
+      "sources": [
+        "pw-cvd"
+      ],
+      "finding_ids": [
+        "pw-13"
+      ]
+    },
+    {
+      "key": "manual:carpeta-blanca-tamano-oficio",
+      "category": "organizacion",
+      "name": "Carpeta blanca tamaño oficio",
+      "type": "Carpeta",
+      "attributes": {
+        "formato": "oficio",
+        "color": "Blanco"
+      },
+      "aliases": [],
+      "sources": [
+        "pw-cvd"
+      ],
+      "finding_ids": [
+        "pw-13"
+      ]
+    },
+    {
+      "key": "manual:carpeta-amarilla-tamano-oficio",
+      "category": "organizacion",
+      "name": "Carpeta amarilla tamaño oficio",
+      "type": "Carpeta",
+      "attributes": {
+        "formato": "oficio",
+        "color": "Amarillo"
+      },
+      "aliases": [],
+      "sources": [
+        "pw-cvd"
+      ],
+      "finding_ids": [
+        "pw-13"
+      ]
+    },
+    {
+      "key": "manual:carpeta-celeste-tamano-oficio",
+      "category": "organizacion",
+      "name": "Carpeta celeste tamaño oficio",
+      "type": "Carpeta",
+      "attributes": {
+        "formato": "oficio",
+        "color": "Celeste"
+      },
+      "aliases": [],
+      "sources": [
+        "pw-cvd"
+      ],
+      "finding_ids": [
+        "pw-13"
+      ]
+    },
+    {
+      "key": "manual:carpeta-negra-tamano-oficio-con-20-fundas",
+      "category": "organizacion",
+      "name": "Carpeta negra tamaño oficio con 20 fundas",
+      "type": "Carpeta",
+      "attributes": {
+        "formato": "oficio",
+        "color": "Negro",
+        "numero_fundas": 20
+      },
+      "aliases": [],
+      "sources": [
+        "pw-cvd",
+        "pw-torre-sleeves"
+      ],
+      "finding_ids": [
+        "pw-13",
+        "pw-14"
+      ]
+    },
+    {
+      "key": "manual:tempera-roja-250-ml",
+      "category": "arte-y-dibujo",
+      "name": "Témpera roja, 250 ml",
+      "type": "Témperas",
+      "attributes": {
+        "volumen_ml": 250,
+        "color": "Rojo"
+      },
+      "aliases": [],
+      "sources": [
+        "ac_crep"
+      ],
+      "finding_ids": [
+        "AC01",
+        "AC02"
+      ]
+    },
+    {
+      "key": "manual:tempera-azul-250-ml",
+      "category": "arte-y-dibujo",
+      "name": "Témpera azul, 250 ml",
+      "type": "Témperas",
+      "attributes": {
+        "volumen_ml": 250,
+        "color": "Azul"
+      },
+      "aliases": [],
+      "sources": [
+        "ac_crep"
+      ],
+      "finding_ids": [
+        "AC01",
+        "AC02"
+      ]
+    },
+    {
+      "key": "manual:tempera-verde-250-ml",
+      "category": "arte-y-dibujo",
+      "name": "Témpera verde, 250 ml",
+      "type": "Témperas",
+      "attributes": {
+        "volumen_ml": 250,
+        "color": "Verde"
+      },
+      "aliases": [],
+      "sources": [
+        "ac_crep"
+      ],
+      "finding_ids": [
+        "AC01",
+        "AC02"
+      ]
+    },
+    {
+      "key": "manual:tempera-amarilla-250-ml",
+      "category": "arte-y-dibujo",
+      "name": "Témpera amarilla, 250 ml",
+      "type": "Témperas",
+      "attributes": {
+        "volumen_ml": 250,
+        "color": "Amarillo"
+      },
+      "aliases": [],
+      "sources": [
+        "ac_crep"
+      ],
+      "finding_ids": [
+        "AC01",
+        "AC02"
+      ]
+    },
+    {
+      "key": "manual:tempera-blanca-250-ml",
+      "category": "arte-y-dibujo",
+      "name": "Témpera blanca, 250 ml",
+      "type": "Témperas",
+      "attributes": {
+        "volumen_ml": 250,
+        "color": "Blanco"
+      },
+      "aliases": [],
+      "sources": [
+        "ac_crep"
+      ],
+      "finding_ids": [
+        "AC01",
+        "AC02"
+      ]
+    },
+    {
+      "key": "manual:tempera-negra-250-ml",
+      "category": "arte-y-dibujo",
+      "name": "Témpera negra, 250 ml",
+      "type": "Témperas",
+      "attributes": {
+        "volumen_ml": 250,
+        "color": "Negro"
+      },
+      "aliases": [],
+      "sources": [
+        "ac_crep"
+      ],
+      "finding_ids": [
+        "AC01",
+        "AC02"
+      ]
+    },
+    {
+      "key": "manual:tempera-blanca-500-ml",
+      "category": "arte-y-dibujo",
+      "name": "Témpera blanca, 500 ml",
+      "type": "Témperas",
+      "attributes": {
+        "volumen_ml": 500,
+        "color": "Blanco"
+      },
+      "aliases": [],
+      "sources": [
+        "add_artel_tempera500"
+      ],
+      "finding_ids": [
+        "AC01",
+        "AC02"
+      ]
+    },
+    {
+      "key": "manual:tempera-metalica-negra-100-ml",
+      "category": "arte-y-dibujo",
+      "name": "Témpera metálica negra, 100 ml",
+      "type": "Témperas",
+      "attributes": {
+        "volumen_ml": 100,
+        "color": "Negro",
+        "acabado": "Metálico"
+      },
+      "aliases": [],
+      "sources": [
+        "add_artel_tempera100"
+      ],
+      "finding_ids": [
+        "AC01",
+        "AC02"
+      ]
+    },
+    {
+      "key": "manual:croquera-22-32-cm-100-hojas-de-70-g-m2",
+      "category": "arte-y-dibujo",
+      "name": "Croquera 22 × 32 cm, 100 hojas de 70 g/m²",
+      "type": "Croquera",
+      "attributes": {
+        "numero_hojas": 100,
+        "dimension_menor_cm": 22,
+        "dimension_mayor_cm": 32,
+        "gramaje_g_m2": 70
+      },
+      "aliases": [],
+      "sources": [
+        "ac_proarte"
+      ],
+      "finding_ids": [
+        "AC03"
+      ]
+    },
+    {
+      "key": "manual:croquera-21-32-cm-80-hojas",
+      "category": "arte-y-dibujo",
+      "name": "Croquera 21 × 32 cm, 80 hojas",
+      "type": "Croquera",
+      "attributes": {
+        "numero_hojas": 80,
+        "dimension_menor_cm": 21,
+        "dimension_mayor_cm": 32
+      },
+      "aliases": [],
+      "sources": [
+        "ac_chile"
+      ],
+      "finding_ids": [
+        "AC03"
+      ]
+    },
+    {
+      "key": "manual:block-de-dibujo-26-5-37-2-cm",
+      "category": "arte-y-dibujo",
+      "name": "Block de dibujo 26,5 × 37,2 cm",
+      "type": "Block",
+      "attributes": {
+        "dimension_menor_cm": 26.5,
+        "dimension_mayor_cm": 37.2
+      },
+      "aliases": [],
+      "sources": [
+        "ac_chile"
+      ],
+      "finding_ids": [
+        "AC04"
+      ]
+    },
+    {
+      "key": "manual:pincel-n-8",
+      "category": "arte-y-dibujo",
+      "name": "Pincel N° 8",
+      "type": "Pincel",
+      "attributes": {
+        "numero_pincel": 8
+      },
+      "aliases": [],
+      "sources": [
+        "ac_crep"
+      ],
+      "finding_ids": [
+        "AC05"
+      ]
+    },
+    {
+      "key": "manual:pincel-plano-n-10",
+      "category": "arte-y-dibujo",
+      "name": "Pincel plano N° 10",
+      "type": "Pincel",
+      "attributes": {
+        "numero_pincel": 10,
+        "forma_pincel": "Plano"
+      },
+      "aliases": [],
+      "sources": [
+        "ac_chile"
+      ],
+      "finding_ids": [
+        "AC05"
+      ]
+    },
+    {
+      "key": "manual:pasta-para-modelar-de-secado-al-aire-250-g",
+      "category": "arte-y-dibujo",
+      "name": "Pasta para modelar de secado al aire, 250 g",
+      "type": "Masa para modelar",
+      "attributes": {
+        "peso_g": 250
+      },
+      "aliases": [],
+      "sources": [
+        "ac_fila_das"
+      ],
+      "finding_ids": [
+        "AC06"
+      ]
+    },
+    {
+      "key": "manual:pasta-para-modelar-de-secado-al-aire-500-g",
+      "category": "arte-y-dibujo",
+      "name": "Pasta para modelar de secado al aire, 500 g",
+      "type": "Masa para modelar",
+      "attributes": {
+        "peso_g": 500
+      },
+      "aliases": [],
+      "sources": [
+        "ac_fila_das"
+      ],
+      "finding_ids": [
+        "AC06"
+      ]
+    },
+    {
+      "key": "manual:pasta-para-modelar-de-secado-al-aire-1000-g",
+      "category": "arte-y-dibujo",
+      "name": "Pasta para modelar de secado al aire, 1000 g",
+      "type": "Masa para modelar",
+      "attributes": {
+        "peso_g": 1000
+      },
+      "aliases": [],
+      "sources": [
+        "ac_fila_das"
+      ],
+      "finding_ids": [
+        "AC06"
+      ]
+    },
+    {
+      "key": "manual:ovillo-de-lana-50-m",
+      "category": "manualidades",
+      "name": "Ovillo de lana, 50 m",
+      "type": "Lana",
+      "attributes": {
+        "largo_m": 50
+      },
+      "aliases": [],
+      "sources": [
+        "ac_crep"
+      ],
+      "finding_ids": [
+        "AC10"
+      ]
+    },
+    {
+      "key": "manual:bolsa-de-palitos-de-helado-de-colores-50-unidades",
+      "category": "manualidades",
+      "name": "Bolsa de palitos de helado de colores, 50 unidades",
+      "type": "Palitos",
+      "attributes": {
+        "unidades_por_envase": 50,
+        "color": "Surtido"
+      },
+      "aliases": [],
+      "sources": [
+        "ac_palitos"
+      ],
+      "finding_ids": [
+        "AC11"
+      ]
+    },
+    {
+      "key": "manual:pompones-escarchados",
+      "category": "manualidades",
+      "name": "Pompones escarchados",
+      "type": "Pompones",
+      "attributes": {
+        "acabado": "Escarchado"
+      },
+      "aliases": [
+        "pompones glitter",
+        "pompones brillantes"
+      ],
+      "sources": [
+        "ac_crep"
+      ],
+      "finding_ids": [
+        "AC12"
+      ]
+    },
+    {
+      "key": "pegamento-barra:20-g",
+      "category": "pegado-y-corte",
+      "name": "Pegamento en barra, 20 g",
+      "type": "Pegamento",
+      "attributes": {
+        "presentacion": "Barra",
+        "peso_g": 20
+      },
+      "aliases": [],
+      "sources": [
+        "ac_sanisidro",
+        "ac_staedtler_glue"
+      ],
+      "finding_ids": [
+        "AC07"
+      ]
+    },
+    {
+      "key": "manual:cola-fria-escolar-lavable-225-g",
+      "category": "pegado-y-corte",
+      "name": "Cola fría escolar lavable, 225 g",
+      "type": "Pegamento",
+      "attributes": {
+        "presentacion": "Líquida",
+        "peso_g": 225,
+        "tipo_adhesivo": "Cola fría",
+        "lavable": true
+      },
+      "aliases": [],
+      "sources": [
+        "ac_torre_glue",
+        "ac_sanisidro"
+      ],
+      "finding_ids": [
+        "AC07",
+        "AC13",
+        "AC14"
+      ]
+    },
+    {
+      "key": "manual:cola-fria-escolar-250-g",
+      "category": "pegado-y-corte",
+      "name": "Cola fría escolar, 250 g",
+      "type": "Pegamento",
+      "attributes": {
+        "presentacion": "Líquida",
+        "peso_g": 250,
+        "tipo_adhesivo": "Cola fría"
+      },
+      "aliases": [],
+      "sources": [
+        "ac_crep"
+      ],
+      "finding_ids": [
+        "AC07",
+        "AC14"
+      ]
+    },
+    {
+      "key": "manual:tijera-escolar-para-zurdos-13-cm",
+      "category": "pegado-y-corte",
+      "name": "Tijera escolar para zurdos, 13 cm",
+      "type": "Tijeras",
+      "attributes": {
+        "largo_cm": 13,
+        "lateralidad": "Zurda",
+        "tipo_punta": "Redonda"
+      },
+      "aliases": [],
+      "sources": [
+        "ac_scissor"
+      ],
+      "finding_ids": [
+        "AC08"
+      ]
+    },
+    {
+      "key": "manual:cinta-de-enmascarar-de-12-mm",
+      "category": "pegado-y-corte",
+      "name": "Cinta de enmascarar de 12 mm",
+      "type": "Cinta adhesiva",
+      "attributes": {
+        "material": "Papel",
+        "ancho_mm": 12
+      },
+      "aliases": [
+        "masking tape 12mm"
+      ],
+      "sources": [
+        "ac_chile"
+      ],
+      "finding_ids": [
+        "AC09"
+      ]
+    },
+    {
+      "key": "manual:cinta-de-enmascarar-de-36-mm-40-m",
+      "category": "pegado-y-corte",
+      "name": "Cinta de enmascarar de 36 mm × 40 m",
+      "type": "Cinta adhesiva",
+      "attributes": {
+        "material": "Papel",
+        "ancho_mm": 36,
+        "largo_m": 40
+      },
+      "aliases": [
+        "masking tape 36mm 40m"
+      ],
+      "sources": [
+        "ac_tape_masking"
+      ],
+      "finding_ids": [
+        "AC09",
+        "AC10"
+      ]
+    },
+    {
+      "key": "manual:cinta-adhesiva-transparente-de-18-mm-30-m",
+      "category": "pegado-y-corte",
+      "name": "Cinta adhesiva transparente de 18 mm × 30 m",
+      "type": "Cinta adhesiva",
+      "attributes": {
+        "color": "Transparente",
+        "ancho_mm": 18,
+        "largo_m": 30
+      },
+      "aliases": [],
+      "sources": [
+        "ac_tape_crystal"
+      ],
+      "finding_ids": [
+        "AC09",
+        "AC10"
+      ]
+    },
+    {
+      "key": "manual:transportador-plastico-de-180",
+      "category": "geometria",
+      "name": "Transportador plástico de 180°",
+      "type": "Transportador",
+      "attributes": {
+        "alcance_transportador_grados": 180,
+        "material": "Plástico"
+      },
+      "aliases": [],
+      "sources": [
+        "of_cpfd6"
+      ],
+      "finding_ids": [
+        "OF01",
+        "OF03"
+      ]
+    },
+    {
+      "key": "manual:escuadra-plastica-de-45",
+      "category": "geometria",
+      "name": "Escuadra plástica de 45°",
+      "type": "Escuadra",
+      "attributes": {
+        "angulo_escuadra_grados": 45,
+        "material": "Plástico"
+      },
+      "aliases": [],
+      "sources": [
+        "of_cpfd6"
+      ],
+      "finding_ids": [
+        "OF02",
+        "OF03"
+      ]
+    },
+    {
+      "key": "manual:recarga-de-jabon-liquido-1000-ml",
+      "category": "aseo",
+      "name": "Recarga de jabón líquido, 1000 ml",
+      "type": "Jabón",
+      "attributes": {
+        "volumen_ml": 1000,
+        "presentacion": "Recarga"
+      },
+      "aliases": [
+        "jabon liquido 1 litro",
+        "jabon liquido 1l"
+      ],
+      "sources": [
+        "of_pirque"
+      ],
+      "finding_ids": [
+        "OF04"
+      ]
+    },
+    {
+      "key": "manual:jabon-liquido-con-dosificador-500-ml",
+      "category": "aseo",
+      "name": "Jabón líquido con dosificador, 500 ml",
+      "type": "Jabón",
+      "attributes": {
+        "volumen_ml": 500
+      },
+      "aliases": [],
+      "sources": [
+        "of_caleman25"
+      ],
+      "finding_ids": [
+        "OF04"
+      ]
+    },
+    {
+      "key": "manual:alcohol-gel-250-ml",
+      "category": "aseo",
+      "name": "Alcohol gel, 250 ml",
+      "type": "Alcohol gel",
+      "attributes": {
+        "volumen_ml": 250
+      },
+      "aliases": [],
+      "sources": [
+        "of_caleman25"
+      ],
+      "finding_ids": [
+        "OF04"
+      ]
+    },
+    {
+      "key": "manual:caja-de-panuelos-desechables-90-unidades",
+      "category": "aseo",
+      "name": "Caja de pañuelos desechables, 90 unidades",
+      "type": "Pañuelos",
+      "attributes": {
+        "unidades_por_envase": 90
+      },
+      "aliases": [],
+      "sources": [
+        "of_kinderland"
+      ],
+      "finding_ids": [
+        "OF05"
+      ]
+    },
+    {
+      "key": "manual:paquete-de-toallas-humedas-80-unidades",
+      "category": "aseo",
+      "name": "Paquete de toallas húmedas, 80 unidades",
+      "type": "Toallas húmedas",
+      "attributes": {
+        "unidades_por_envase": 80
+      },
+      "aliases": [],
+      "sources": [
+        "of_kinderland"
+      ],
+      "finding_ids": [
+        "OF05"
+      ]
+    },
+    {
+      "key": "manual:toalla-de-mano-30-40-cm",
+      "category": "aseo",
+      "name": "Toalla de mano 30 × 40 cm",
+      "type": "Toalla",
+      "attributes": {
+        "dimension_menor_cm": 30,
+        "dimension_mayor_cm": 40
+      },
+      "aliases": [],
+      "sources": [
+        "of_santaclara"
+      ],
+      "finding_ids": [
+        "OF06"
+      ]
+    },
+    {
+      "key": "manual:flauta-dulce-soprano-de-digitacion-alemana",
+      "category": "musica",
+      "name": "Flauta dulce soprano de digitación alemana",
+      "type": "Flauta",
+      "attributes": {
+        "digitacion_flauta": "Alemana"
+      },
+      "aliases": [],
+      "sources": [
+        "of_brs6",
+        "of_yamaha"
+      ],
+      "finding_ids": [
+        "OF07"
+      ]
+    },
+    {
+      "key": "manual:flauta-dulce-de-digitacion-barroca",
+      "category": "musica",
+      "name": "Flauta dulce de digitación barroca",
+      "type": "Flauta",
+      "attributes": {
+        "digitacion_flauta": "Barroca"
+      },
+      "aliases": [],
+      "sources": [
+        "of_yamaha"
+      ],
+      "finding_ids": [
+        "OF07"
+      ]
+    },
+    {
+      "key": "manual:melodica-de-32-notas",
+      "category": "musica",
+      "name": "Melódica de 32 notas",
+      "type": "Melódica",
+      "attributes": {
+        "numero_notas": 32
+      },
+      "aliases": [
+        "melodica 32 teclas"
+      ],
+      "sources": [
+        "of_lasalle4"
+      ],
+      "finding_ids": [
+        "OF08"
+      ]
+    },
+    {
+      "key": "manual:metalofono-cromatico-de-22-notas-sin-barras-de-colores",
+      "category": "musica",
+      "name": "Metalófono cromático de 22 notas sin barras de colores",
+      "type": "Metalófono",
+      "attributes": {
+        "numero_notas": 22
+      },
+      "aliases": [
+        "metalofono 22 notas"
+      ],
+      "sources": [
+        "of_cpv2"
+      ],
+      "finding_ids": [
+        "OF09"
+      ]
+    },
+    {
+      "key": "manual:memoria-usb-de-16-gb",
+      "category": "tecnologia",
+      "name": "Memoria USB de 16 GB",
+      "type": "Memoria USB",
+      "attributes": {
+        "capacidad_gb": 16
+      },
+      "aliases": [
+        "pendrive 16gb"
+      ],
+      "sources": [
+        "of_csac3",
+        "add_kingston_usb16"
+      ],
+      "finding_ids": [
+        "OF10"
+      ]
+    },
+    {
+      "key": "manual:diccionario-de-significados-en-espanol",
+      "category": "lectura-y-consulta",
+      "name": "Diccionario de significados en español",
+      "type": "Diccionario",
+      "attributes": {
+        "idioma": "Español",
+        "contenido_diccionario": "Significados"
+      },
+      "aliases": [],
+      "sources": [
+        "of_stmonica4"
+      ],
+      "finding_ids": [
+        "OF11"
+      ]
+    },
+    {
+      "key": "manual:diccionario-de-sinonimos-y-antonimos-en-espanol",
+      "category": "lectura-y-consulta",
+      "name": "Diccionario de sinónimos y antónimos en español",
+      "type": "Diccionario",
+      "attributes": {
+        "idioma": "Español",
+        "contenido_diccionario": "Sinónimos y antónimos"
+      },
+      "aliases": [],
+      "sources": [
+        "of_stmonica4"
+      ],
+      "finding_ids": [
+        "OF11"
+      ]
+    },
+    {
+      "key": "manual:pizarra-blanca-cuadriculada-20-30-cm",
+      "category": "material-didactico",
+      "name": "Pizarra blanca cuadriculada 20 × 30 cm",
+      "type": "Pizarra",
+      "attributes": {
+        "tipo_pauta": "Cuadriculada",
+        "dimension_menor_cm": 20,
+        "dimension_mayor_cm": 30
+      },
+      "aliases": [],
+      "sources": [
+        "of_pumahuek"
+      ],
+      "finding_ids": [
+        "OF12"
+      ]
+    }
+  ],
+  "existing_item_updates": [
+    {
+      "key": "manual:lapiz-grafito-jumbo-triangular",
+      "category": "escritura",
+      "name": "Lápiz grafito jumbo triangular",
+      "type": "Grafito",
+      "expected_attributes": {
+        "tamano": "Jumbo"
+      },
+      "attributes": {
+        "forma_cuerpo": "Triangular"
+      },
+      "mode": "add_missing",
+      "sources": [
+        "ac_santo"
+      ],
+      "finding_ids": [
+        "pw-05"
+      ]
+    },
+    {
+      "key": "manual:sacapuntas-doble-con-deposito",
+      "category": "escritura",
+      "name": "Sacapuntas doble con depósito",
+      "type": "Sacapuntas",
+      "expected_attributes": {
+        "tamano": "Doble",
+        "con_deposito": true
+      },
+      "attributes": {
+        "numero_orificios": 2
+      },
+      "mode": "add_missing",
+      "sources": [
+        "pw-staedtler-holes",
+        "pw-staedtler-catalogue"
+      ],
+      "finding_ids": [
+        "pw-18"
+      ]
+    },
+    {
+      "key": "manual:tijera-punta-redonda",
+      "category": "pegado-y-corte",
+      "name": "Tijera escolar de punta redonda",
+      "type": "Tijeras",
+      "expected_attributes": {
+        "tipo_punta": "redonda"
+      },
+      "attributes": {
+        "tipo_punta": "Redonda"
+      },
+      "mode": "normalize",
+      "sources": [
+        "ac_scissor"
+      ],
+      "finding_ids": []
+    },
+    {
+      "key": "manual:cola-fria-escolar",
+      "category": "pegado-y-corte",
+      "name": "Cola fría escolar",
+      "type": "Pegamento",
+      "expected_attributes": {
+        "presentacion": "Líquida"
+      },
+      "attributes": {
+        "tipo_adhesivo": "Cola fría"
+      },
+      "mode": "add_missing",
+      "sources": [
+        "ac_chile"
+      ],
+      "finding_ids": [
+        "AC14"
+      ]
+    },
+    {
+      "key": "manual:cola-fria-escolar-250-ml",
+      "category": "pegado-y-corte",
+      "name": "Cola fría escolar, 250 ml",
+      "type": "Pegamento",
+      "expected_attributes": {
+        "volumen_ml": 250,
+        "presentacion": "Líquida"
+      },
+      "attributes": {
+        "tipo_adhesivo": "Cola fría"
+      },
+      "mode": "add_missing",
+      "sources": [
+        "ac_santo"
+      ],
+      "finding_ids": [
+        "AC14"
+      ]
+    },
+    {
+      "key": "manual:silicona-liquida",
+      "category": "pegado-y-corte",
+      "name": "Silicona líquida",
+      "type": "Pegamento",
+      "expected_attributes": {
+        "presentacion": "Líquida"
+      },
+      "attributes": {
+        "tipo_adhesivo": "Silicona"
+      },
+      "mode": "add_missing",
+      "sources": [
+        "ac_particularuno"
+      ],
+      "finding_ids": [
+        "AC14"
+      ]
+    },
+    {
+      "key": "manual:barra-de-silicona",
+      "category": "pegado-y-corte",
+      "name": "Barra de silicona",
+      "type": "Pegamento",
+      "expected_attributes": {
+        "presentacion": "Barra"
+      },
+      "attributes": {
+        "tipo_adhesivo": "Silicona"
+      },
+      "mode": "add_missing",
+      "sources": [
+        "ac_crep"
+      ],
+      "finding_ids": [
+        "AC14"
+      ]
+    }
+  ],
+  "finding_coverage": [
+    {
+      "finding_id": "pw-01",
+      "status": "implemented",
+      "binding_keys": [
+        {
+          "category": "cuadernos",
+          "key": "con_margen"
+        }
+      ],
+      "item_keys": [
+        "manual:cuaderno-universitario-cuadriculado-con-margen-100-hojas",
+        "manual:cuaderno-universitario-de-composicion-con-margen-100-hojas"
+      ],
+      "existing_update_keys": [],
+      "notes": []
+    },
+    {
+      "finding_id": "pw-02",
+      "status": "implemented",
+      "binding_keys": [
+        {
+          "category": "cuadernos",
+          "key": "con_espiral"
+        }
+      ],
+      "item_keys": [
+        "manual:cuaderno-college-de-caligrafia-horizontal-sin-espiral-100-hojas",
+        "manual:cuaderno-cuadriculado-7-mm-con-espiral-150-hojas"
+      ],
+      "existing_update_keys": [],
+      "notes": [
+        "Monteverde supplies horizontal calligraphy, 100 sheets without spiral; it does not unambiguously specify squared ruling for its other subjects, so no squared/no-spiral row is inferred."
+      ]
+    },
+    {
+      "finding_id": "pw-03",
+      "status": "implemented",
+      "binding_keys": [
+        {
+          "category": "cuadernos",
+          "key": "numero_hojas"
+        }
+      ],
+      "item_keys": [
+        "manual:cuaderno-cuadriculado-7-mm-con-espiral-150-hojas"
+      ],
+      "existing_update_keys": [],
+      "notes": []
+    },
+    {
+      "finding_id": "pw-04",
+      "status": "implemented",
+      "binding_keys": [
+        {
+          "category": "escritura",
+          "key": "dureza_grafito"
+        }
+      ],
+      "item_keys": [
+        "lapiz-grafito:hb:no-especificada",
+        "lapiz-grafito:2b:no-especificada"
+      ],
+      "existing_update_keys": [],
+      "notes": []
+    },
+    {
+      "finding_id": "pw-05",
+      "status": "implemented",
+      "binding_keys": [
+        {
+          "category": "escritura",
+          "key": "forma_cuerpo"
+        }
+      ],
+      "item_keys": [
+        "manual:lapiz-grafito-hb-hexagonal"
+      ],
+      "existing_update_keys": [
+        "manual:lapiz-grafito-jumbo-triangular"
+      ],
+      "notes": []
+    },
+    {
+      "finding_id": "pw-06",
+      "status": "implemented",
+      "binding_keys": [
+        {
+          "category": "escritura",
+          "key": "tipo_punta"
+        }
+      ],
+      "item_keys": [
+        "manual:marcador-permanente-negro-de-punta-redonda",
+        "manual:marcador-permanente-negro-de-punta-biselada",
+        "manual:plumon-de-pizarra-negro-de-punta-redonda"
+      ],
+      "existing_update_keys": [],
+      "notes": []
+    },
+    {
+      "finding_id": "pw-07",
+      "status": "implemented",
+      "binding_keys": [
+        {
+          "category": "escritura",
+          "key": "presentacion"
+        }
+      ],
+      "item_keys": [
+        "manual:corrector-liquido"
+      ],
+      "existing_update_keys": [],
+      "notes": []
+    },
+    {
+      "finding_id": "pw-08",
+      "status": "implemented",
+      "binding_keys": [
+        {
+          "category": "escritura",
+          "key": "color"
+        }
+      ],
+      "item_keys": [
+        "manual:destacador-verde",
+        "manual:destacador-amarillo"
+      ],
+      "existing_update_keys": [],
+      "notes": []
+    },
+    {
+      "finding_id": "pw-09",
+      "status": "implemented",
+      "binding_keys": [
+        {
+          "category": "papeles",
+          "key": "gramaje_g_m2"
+        }
+      ],
+      "item_keys": [
+        "manual:papel-de-75-g-m2",
+        "manual:papel-de-90-g-m2"
+      ],
+      "existing_update_keys": [],
+      "notes": []
+    },
+    {
+      "finding_id": "pw-10",
+      "status": "implemented",
+      "binding_keys": [
+        {
+          "category": "papeles",
+          "key": "numero_hojas"
+        }
+      ],
+      "item_keys": [
+        "manual:resma-de-papel-tamano-carta-500-hojas",
+        "manual:paquete-de-cartulina-26-5-37-5-cm-18-hojas-y-14-colores"
+      ],
+      "existing_update_keys": [],
+      "notes": []
+    },
+    {
+      "finding_id": "pw-11",
+      "status": "implemented",
+      "binding_keys": [
+        {
+          "category": "papeles",
+          "key": "dimension_menor_cm"
+        }
+      ],
+      "item_keys": [
+        "manual:paquete-de-cartulina-26-5-37-5-cm-18-hojas-y-14-colores"
+      ],
+      "existing_update_keys": [],
+      "notes": []
+    },
+    {
+      "finding_id": "pw-12",
+      "status": "implemented",
+      "binding_keys": [
+        {
+          "category": "papeles",
+          "key": "acabado"
+        }
+      ],
+      "item_keys": [
+        "manual:cartulina-metalica",
+        "manual:cartulina-fluorescente"
+      ],
+      "existing_update_keys": [],
+      "notes": []
+    },
+    {
+      "finding_id": "pw-13",
+      "status": "implemented",
+      "binding_keys": [
+        {
+          "category": "organizacion",
+          "key": "color"
+        }
+      ],
+      "item_keys": [
+        "manual:forro-plastico-azul-para-cuaderno-universitario",
+        "manual:forro-plastico-verde-claro-para-cuaderno-universitario",
+        "manual:forro-plastico-negro-para-cuaderno-universitario",
+        "manual:forro-plastico-blanco-para-cuaderno-universitario",
+        "manual:forro-plastico-amarillo-para-cuaderno-universitario",
+        "manual:forro-plastico-celeste-para-cuaderno-universitario",
+        "manual:forro-plastico-morado-para-cuaderno-universitario",
+        "manual:forro-plastico-gris-para-cuaderno-universitario",
+        "manual:carpeta-azul-tamano-oficio",
+        "manual:carpeta-verde-tamano-oficio",
+        "manual:carpeta-negra-tamano-oficio",
+        "manual:carpeta-blanca-tamano-oficio",
+        "manual:carpeta-amarilla-tamano-oficio",
+        "manual:carpeta-celeste-tamano-oficio",
+        "manual:carpeta-negra-tamano-oficio-con-20-fundas"
+      ],
+      "existing_update_keys": [],
+      "notes": []
+    },
+    {
+      "finding_id": "pw-14",
+      "status": "implemented",
+      "binding_keys": [
+        {
+          "category": "organizacion",
+          "key": "numero_fundas"
+        }
+      ],
+      "item_keys": [
+        "manual:carpeta-negra-tamano-oficio-con-20-fundas"
+      ],
+      "existing_update_keys": [],
+      "notes": []
+    },
+    {
+      "finding_id": "pw-15",
+      "status": "implemented",
+      "binding_keys": [
+        {
+          "category": "papeles",
+          "key": "numero_colores"
+        }
+      ],
+      "item_keys": [
+        "manual:paquete-de-cartulina-26-5-37-5-cm-18-hojas-y-14-colores",
+        "manual:paquete-de-goma-eva-10-colores"
+      ],
+      "existing_update_keys": [],
+      "notes": []
+    },
+    {
+      "finding_id": "pw-16",
+      "status": "implemented",
+      "binding_keys": [
+        {
+          "category": "escritura",
+          "key": "incluye_goma"
+        }
+      ],
+      "item_keys": [
+        "lapiz-grafito:hb:con-goma",
+        "lapiz-grafito:hb:sin-goma"
+      ],
+      "existing_update_keys": [],
+      "notes": []
+    },
+    {
+      "finding_id": "pw-17",
+      "status": "implemented",
+      "binding_keys": [
+        {
+          "category": "escritura",
+          "key": "grosor_punta"
+        }
+      ],
+      "item_keys": [
+        "manual:marcador-permanente-negro-de-punta-fina",
+        "manual:marcador-permanente-de-punta-gruesa"
+      ],
+      "existing_update_keys": [],
+      "notes": []
+    },
+    {
+      "finding_id": "pw-18",
+      "status": "implemented",
+      "binding_keys": [
+        {
+          "category": "escritura",
+          "key": "numero_orificios"
+        }
+      ],
+      "item_keys": [],
+      "existing_update_keys": [
+        "manual:sacapuntas-doble-con-deposito"
+      ],
+      "notes": []
+    },
+    {
+      "finding_id": "AC01",
+      "status": "implemented",
+      "binding_keys": [
+        {
+          "category": "arte-y-dibujo",
+          "key": "volumen_ml"
+        }
+      ],
+      "item_keys": [
+        "manual:tempera-roja-250-ml",
+        "manual:tempera-azul-250-ml",
+        "manual:tempera-verde-250-ml",
+        "manual:tempera-amarilla-250-ml",
+        "manual:tempera-blanca-250-ml",
+        "manual:tempera-negra-250-ml",
+        "manual:tempera-blanca-500-ml",
+        "manual:tempera-metalica-negra-100-ml"
+      ],
+      "existing_update_keys": [],
+      "notes": []
+    },
+    {
+      "finding_id": "AC02",
+      "status": "implemented",
+      "binding_keys": [
+        {
+          "category": "arte-y-dibujo",
+          "key": "color"
+        }
+      ],
+      "item_keys": [
+        "manual:tempera-roja-250-ml",
+        "manual:tempera-azul-250-ml",
+        "manual:tempera-verde-250-ml",
+        "manual:tempera-amarilla-250-ml",
+        "manual:tempera-blanca-250-ml",
+        "manual:tempera-negra-250-ml",
+        "manual:tempera-blanca-500-ml",
+        "manual:tempera-metalica-negra-100-ml"
+      ],
+      "existing_update_keys": [],
+      "notes": []
+    },
+    {
+      "finding_id": "AC03",
+      "status": "implemented",
+      "binding_keys": [
+        {
+          "category": "arte-y-dibujo",
+          "key": "gramaje_g_m2"
+        }
+      ],
+      "item_keys": [
+        "manual:croquera-22-32-cm-100-hojas-de-70-g-m2",
+        "manual:croquera-21-32-cm-80-hojas"
+      ],
+      "existing_update_keys": [],
+      "notes": []
+    },
+    {
+      "finding_id": "AC04",
+      "status": "implemented",
+      "binding_keys": [
+        {
+          "category": "arte-y-dibujo",
+          "key": "dimension_menor_cm"
+        }
+      ],
+      "item_keys": [
+        "manual:block-de-dibujo-26-5-37-2-cm"
+      ],
+      "existing_update_keys": [],
+      "notes": []
+    },
+    {
+      "finding_id": "AC05",
+      "status": "implemented",
+      "binding_keys": [
+        {
+          "category": "arte-y-dibujo",
+          "key": "numero_pincel"
+        }
+      ],
+      "item_keys": [
+        "manual:pincel-n-8",
+        "manual:pincel-plano-n-10"
+      ],
+      "existing_update_keys": [],
+      "notes": []
+    },
+    {
+      "finding_id": "AC06",
+      "status": "implemented",
+      "binding_keys": [
+        {
+          "category": "arte-y-dibujo",
+          "key": "peso_g"
+        }
+      ],
+      "item_keys": [
+        "manual:pasta-para-modelar-de-secado-al-aire-250-g",
+        "manual:pasta-para-modelar-de-secado-al-aire-500-g",
+        "manual:pasta-para-modelar-de-secado-al-aire-1000-g"
+      ],
+      "existing_update_keys": [],
+      "notes": [
+        "Only directly verified air-drying modeling paste variants are seeded; do not conflate with firing clay or cold porcelain. Existing Arcilla gains the optional weight field but no guessed weight."
+      ]
+    },
+    {
+      "finding_id": "AC07",
+      "status": "implemented",
+      "binding_keys": [
+        {
+          "category": "pegado-y-corte",
+          "key": "peso_g"
+        }
+      ],
+      "item_keys": [
+        "pegamento-barra:20-g",
+        "manual:cola-fria-escolar-lavable-225-g",
+        "manual:cola-fria-escolar-250-g"
+      ],
+      "existing_update_keys": [],
+      "notes": []
+    },
+    {
+      "finding_id": "AC08",
+      "status": "implemented",
+      "binding_keys": [
+        {
+          "category": "pegado-y-corte",
+          "key": "largo_cm"
+        }
+      ],
+      "item_keys": [
+        "manual:tijera-escolar-para-zurdos-13-cm"
+      ],
+      "existing_update_keys": [],
+      "notes": []
+    },
+    {
+      "finding_id": "AC09",
+      "status": "implemented",
+      "binding_keys": [
+        {
+          "category": "pegado-y-corte",
+          "key": "ancho_mm"
+        }
+      ],
+      "item_keys": [
+        "manual:cinta-de-enmascarar-de-12-mm",
+        "manual:cinta-de-enmascarar-de-36-mm-40-m",
+        "manual:cinta-adhesiva-transparente-de-18-mm-30-m"
+      ],
+      "existing_update_keys": [],
+      "notes": []
+    },
+    {
+      "finding_id": "AC10",
+      "status": "implemented",
+      "binding_keys": [
+        {
+          "category": "pegado-y-corte",
+          "key": "largo_m"
+        },
+        {
+          "category": "manualidades",
+          "key": "largo_m"
+        }
+      ],
+      "item_keys": [
+        "manual:ovillo-de-lana-50-m",
+        "manual:cinta-de-enmascarar-de-36-mm-40-m",
+        "manual:cinta-adhesiva-transparente-de-18-mm-30-m"
+      ],
+      "existing_update_keys": [],
+      "notes": []
+    },
+    {
+      "finding_id": "AC11",
+      "status": "implemented",
+      "binding_keys": [
+        {
+          "category": "manualidades",
+          "key": "unidades_por_envase"
+        }
+      ],
+      "item_keys": [
+        "manual:bolsa-de-palitos-de-helado-de-colores-50-unidades"
+      ],
+      "existing_update_keys": [],
+      "notes": []
+    },
+    {
+      "finding_id": "AC12",
+      "status": "implemented",
+      "binding_keys": [
+        {
+          "category": "manualidades",
+          "key": "acabado"
+        }
+      ],
+      "item_keys": [
+        "manual:pompones-escarchados"
+      ],
+      "existing_update_keys": [],
+      "notes": []
+    },
+    {
+      "finding_id": "AC13",
+      "status": "implemented",
+      "binding_keys": [
+        {
+          "category": "pegado-y-corte",
+          "key": "lavable"
+        }
+      ],
+      "item_keys": [
+        "manual:cola-fria-escolar-lavable-225-g"
+      ],
+      "existing_update_keys": [],
+      "notes": []
+    },
+    {
+      "finding_id": "AC14",
+      "status": "implemented",
+      "binding_keys": [
+        {
+          "category": "pegado-y-corte",
+          "key": "tipo_adhesivo"
+        }
+      ],
+      "item_keys": [
+        "manual:cola-fria-escolar-lavable-225-g",
+        "manual:cola-fria-escolar-250-g"
+      ],
+      "existing_update_keys": [
+        "manual:cola-fria-escolar",
+        "manual:cola-fria-escolar-250-ml",
+        "manual:silicona-liquida",
+        "manual:barra-de-silicona"
+      ],
+      "notes": []
+    },
+    {
+      "finding_id": "OF01",
+      "status": "implemented",
+      "binding_keys": [
+        {
+          "category": "geometria",
+          "key": "alcance_transportador_grados"
+        }
+      ],
+      "item_keys": [
+        "manual:transportador-plastico-de-180"
+      ],
+      "existing_update_keys": [],
+      "notes": []
+    },
+    {
+      "finding_id": "OF02",
+      "status": "implemented",
+      "binding_keys": [
+        {
+          "category": "geometria",
+          "key": "angulo_escuadra_grados"
+        }
+      ],
+      "item_keys": [
+        "manual:escuadra-plastica-de-45"
+      ],
+      "existing_update_keys": [],
+      "notes": []
+    },
+    {
+      "finding_id": "OF03",
+      "status": "implemented",
+      "binding_keys": [
+        {
+          "category": "geometria",
+          "key": "material"
+        }
+      ],
+      "item_keys": [
+        "manual:transportador-plastico-de-180",
+        "manual:escuadra-plastica-de-45"
+      ],
+      "existing_update_keys": [],
+      "notes": []
+    },
+    {
+      "finding_id": "OF04",
+      "status": "implemented",
+      "binding_keys": [
+        {
+          "category": "aseo",
+          "key": "volumen_ml"
+        }
+      ],
+      "item_keys": [
+        "manual:recarga-de-jabon-liquido-1000-ml",
+        "manual:jabon-liquido-con-dosificador-500-ml",
+        "manual:alcohol-gel-250-ml"
+      ],
+      "existing_update_keys": [],
+      "notes": []
+    },
+    {
+      "finding_id": "OF05",
+      "status": "implemented",
+      "binding_keys": [
+        {
+          "category": "aseo",
+          "key": "unidades_por_envase"
+        }
+      ],
+      "item_keys": [
+        "manual:caja-de-panuelos-desechables-90-unidades",
+        "manual:paquete-de-toallas-humedas-80-unidades"
+      ],
+      "existing_update_keys": [],
+      "notes": []
+    },
+    {
+      "finding_id": "OF06",
+      "status": "implemented",
+      "binding_keys": [
+        {
+          "category": "aseo",
+          "key": "dimension_menor_cm"
+        }
+      ],
+      "item_keys": [
+        "manual:toalla-de-mano-30-40-cm"
+      ],
+      "existing_update_keys": [],
+      "notes": []
+    },
+    {
+      "finding_id": "OF07",
+      "status": "implemented",
+      "binding_keys": [
+        {
+          "category": "musica",
+          "key": "digitacion_flauta"
+        }
+      ],
+      "item_keys": [
+        "manual:flauta-dulce-soprano-de-digitacion-alemana",
+        "manual:flauta-dulce-de-digitacion-barroca"
+      ],
+      "existing_update_keys": [],
+      "notes": []
+    },
+    {
+      "finding_id": "OF08",
+      "status": "implemented",
+      "binding_keys": [
+        {
+          "category": "musica",
+          "key": "numero_notas"
+        }
+      ],
+      "item_keys": [
+        "manual:melodica-de-32-notas"
+      ],
+      "existing_update_keys": [],
+      "notes": [
+        "32-note variant uses exact La Salle evidence. Pumahue minimum32-key wording remains a separate flexible requirement."
+      ]
+    },
+    {
+      "finding_id": "OF09",
+      "status": "implemented",
+      "binding_keys": [
+        {
+          "category": "musica",
+          "key": "numero_notas"
+        }
+      ],
+      "item_keys": [
+        "manual:metalofono-cromatico-de-22-notas-sin-barras-de-colores"
+      ],
+      "existing_update_keys": [],
+      "notes": []
+    },
+    {
+      "finding_id": "OF10",
+      "status": "implemented",
+      "binding_keys": [
+        {
+          "category": "tecnologia",
+          "key": "capacidad_gb"
+        }
+      ],
+      "item_keys": [
+        "manual:memoria-usb-de-16-gb"
+      ],
+      "existing_update_keys": [],
+      "notes": [
+        "The catalog supplies an exact 16 GB option independently confirmed by a manufacturer. School minimum 16 GB semantics remain in requirement text/notes; no exact-only interpretation of that school instruction is introduced."
+      ]
+    },
+    {
+      "finding_id": "OF11",
+      "status": "implemented",
+      "binding_keys": [
+        {
+          "category": "lectura-y-consulta",
+          "key": "contenido_diccionario"
+        }
+      ],
+      "item_keys": [
+        "manual:diccionario-de-significados-en-espanol",
+        "manual:diccionario-de-sinonimos-y-antonimos-en-espanol"
+      ],
+      "existing_update_keys": [],
+      "notes": []
+    },
+    {
+      "finding_id": "OF12",
+      "status": "implemented",
+      "binding_keys": [
+        {
+          "category": "material-didactico",
+          "key": "tipo_pauta"
+        }
+      ],
+      "item_keys": [
+        "manual:pizarra-blanca-cuadriculada-20-30-cm"
+      ],
+      "existing_update_keys": [],
+      "notes": [
+        "Shared tipo_pauta display-label change from Pauta musical to Tipo de pauta requires guarded migration handling."
+      ]
+    }
+  ],
+  "semantic_limits": [
+    "Minimum capacity/count requirements must retain minimum wording; exact catalog values are not acceptance operators.",
+    "Absent boolean attributes remain unspecified; no generic false defaults are backfilled.",
+    "Package counts apply inside one named bag, box, ream or pack; list quantity counts such requirements.",
+    "Source values were deliberately projected to meaningful generic requirements without inferring omitted details.",
+    "Historic2025 hygiene evidence establishes generic formats, not a2026 universal school instruction."
+  ],
+  "guarded_definition_labels": [
+    {
+      "key": "tipo_pauta",
+      "expected_name": "Pauta musical",
+      "name": "Tipo de pauta"
+    }
+  ]
+}

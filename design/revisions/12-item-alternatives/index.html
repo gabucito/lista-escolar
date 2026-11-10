@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Útiles con alternativas · Lista Escolar</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; background: #f8f7f1; color: #24374a; font: 16px/1.6 system-ui, sans-serif; }
+    main { max-width: 1440px; margin: auto; padding: 28px; }
+    h1, h2 { line-height: 1.2; }
+    h1 { font-size: clamp(1.8rem, 3vw, 2.5rem); }
+    h2 { font-size: 1.45rem; margin: 0 0 12px; }
+    p { max-width: 960px; }
+    a { color: #285e47; }
+    a:focus-visible { outline: 3px solid #a4511e; outline-offset: 4px; }
+    nav { display: flex; flex-wrap: wrap; gap: 8px; margin: 24px 0; }
+    nav a, .download { display: inline-flex; align-items: center; min-height: 44px; padding: 8px 14px; border: 1px solid #b9cbbd; border-radius: 6px; background: white; text-decoration: none; }
+    nav a:hover, .download:hover { background: #e8eedc; }
+    .intro { max-width: 1000px; }
+    .principle { border-left: 4px solid #356552; padding: 14px 18px; background: #e8eedc; }
+    section { margin: 38px 0; scroll-margin-top: 20px; }
+    .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; align-items: start; }
+    .phones { max-width: 760px; }
+    .phones figure { width: 100%; max-width: 350px; justify-self: center; }
+    .parent { max-width: 740px; }
+    .pdf { max-width: 690px; }
+    figure { margin: 0; padding: 12px; background: white; border: 1px solid #d6dfce; border-radius: 10px; }
+    figcaption { margin-bottom: 12px; font-weight: 650; }
+    figcaption span { display: block; color: #526153; font-size: 0.83rem; font-weight: 400; }
+    figure a { display: block; }
+    img { display: block; width: 100%; height: auto; border: 1px solid #e3e7dd; }
+    .note { font-size: 0.9rem; color: #526153; }
+    footer { border-top: 1px solid #ccd7c8; padding-top: 18px; margin-top: 38px; font-size: 0.87rem; }
+    @media (max-width: 740px) { main { padding: 16px; } .grid { grid-template-columns: 1fr; } .phones { max-width: 390px; margin: auto; } }
+  </style>
+</head>
+<body>
+<main>
+  <a href="../11-implemented-responsive-comparison/">← Catálogo y navegación responsive</a>
+  <div class="intro">
+    <h1>Un útil, varias opciones válidas</h1>
+    <p>Una fila puede pedir <strong>Cuaderno universitario</strong> y aceptar cuadriculado o rayado. La familia completa la cantidad indicada con cualquiera de las opciones y marca un solo útil como conseguido.</p>
+    <p class="principle"><strong>La cantidad corresponde a la fila completa.</strong> Las opciones se guardan dentro de esa necesidad. Usa filas separadas cuando necesites cada artículo por separado.</p>
+    <p>Capturas reales de la aplicación local con cuentas y datos sintéticos en PostgreSQL desechable. Abre una imagen para verla a tamaño completo.</p>
+  </div>
+  <nav aria-label="Secciones de la galería">
+    <a href="#desktop">Revisar opciones</a>
+    <a href="#mobile">Elegir desde el móvil</a>
+    <a href="#flexible">Opciones generales</a>
+    <a href="#pdf">PDF para familias</a>
+  </nav>
+  <section id="desktop">
+    <h2>Revisar y publicar una sola necesidad</h2>
+    <p>El editor reúne las opciones elegidas, permite ajustar el nombre común y conserva una cantidad, una unidad y una nota para el grupo. La lista publicada muestra claramente qué alternativas acepta.</p>
+    <div class="grid">
+      <figure><figcaption>Revisión en escritorio <span>Nombre común, cantidad y opciones aceptadas · 1366 px</span></figcaption><a href="1366-review-overview.png"><img loading="lazy" src="1366-review-overview.png" width="1366" height="768" alt="Diálogo de revisión de un cuaderno universitario con dos opciones y una cantidad total"></a></figure>
+      <figure><figcaption>Así lo ve la familia <span>Una casilla y una cantidad total para todas las opciones</span></figcaption><a href="1366-parent-requirement.png"><img loading="lazy" src="1366-parent-requirement.png" width="909" height="243" alt="Fila publicada con cuaderno universitario, opciones cuadriculada o rayada, y una sola casilla"></a></figure>
+    </div>
+  </section>
+  <section id="mobile">
+    <h2>Elegir y revisar en una pantalla de 320 px</h2>
+    <p>Las opciones seleccionadas se conservan al buscar o cambiar filtros. Antes de guardarlas, el editor puede revisar el conjunto y la cantidad total.</p>
+    <div class="grid phones">
+      <figure><figcaption>1. Seleccionar opciones <span>Catálogo y selección en móvil estrecho</span></figcaption><a href="320-selected-options.png"><img loading="lazy" src="320-selected-options.png" width="320" height="800" alt="Catálogo en pantalla de 320 píxeles con varios cuadernos seleccionados como alternativas"></a></figure>
+      <figure><figcaption>2. Revisar el grupo <span>Datos comunes y opciones elegidas</span></figcaption><a href="320-review-overview.png"><img loading="lazy" src="320-review-overview.png" width="320" height="800" alt="Revisión móvil del grupo de alternativas antes de guardarlo como un solo útil"></a></figure>
+    </div>
+  </section>
+  <section id="flexible">
+    <h2>Dejar características a elección de la familia</h2>
+    <p>También se pueden escribir opciones generales. Por ejemplo, aceptar un cuaderno universitario cuadriculado o rayado y dejar libre el número de hojas. Solo se muestran las características incluidas por quien crea la lista.</p>
+    <div class="grid phones">
+      <figure><figcaption>Opciones escritas por el editor <span>Características abiertas y nota común · 390 px</span></figcaption><a href="390-free-options-review.png"><img loading="lazy" src="390-free-options-review.png" width="390" height="844" alt="Editor con dos opciones generales de cuaderno y una nota que deja libre el número de hojas"></a></figure>
+      <figure><figcaption>Una indicación flexible <span>Vista de la familia en móvil</span></figcaption><a href="390-free-parent-requirement.png"><img loading="lazy" src="390-free-parent-requirement.png" width="328" height="256" alt="Cuaderno universitario con opciones cuadriculada o rayada y nota que deja el número de hojas a elección de la familia"></a></figure>
+    </div>
+  </section>
+  <section id="pdf">
+    <h2>La misma elección en el PDF</h2>
+    <p>El documento conserva el nombre común, todas las opciones y la nota. Cada necesidad tiene una casilla y su cantidad total, también cuando se imprime.</p>
+    <p><a class="download" href="alternatives-simple.pdf" download>Descargar ejemplo en PDF</a></p>
+    <figure class="pdf"><figcaption>Ejemplo de una página <span>Diseño de dos columnas · A4</span></figcaption><a href="alternatives-simple-page-1.png"><img loading="lazy" src="alternatives-simple-page-1.png" width="745" height="1053" alt="PDF A4 con una necesidad de cuaderno universitario que admite dos opciones y deja las hojas a elección"></a></figure>
+    <p class="note">Los otros dos diseños, Barra lateral y Fichas, mantienen las mismas opciones y cantidades. La validación también cubre grupos largos que ocupan varias páginas.</p>
+  </section>
+  <footer>Revisión local del 10 de noviembre de 2026. <a href="README.md">Alcance de las capturas</a> · <a href="manifest.json">Procedencia y huellas de los archivos</a> · <a href="http://127.0.0.1:4200/">Abrir la aplicación local</a>.</footer>
+</main>
+</body>
+</html>

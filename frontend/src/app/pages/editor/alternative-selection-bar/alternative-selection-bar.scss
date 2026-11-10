@@ -1,0 +1,54 @@
+:host {
+  display: grid;
+  gap: 8px;
+  font-size: 13px;
+  min-width: 0;
+}
+.selection-heading {
+  display: flex;
+  gap: 6px 12px;
+  flex-wrap: wrap;
+  color: #244f40;
+}
+p {
+  margin: 0;
+  line-height: 1.4;
+}
+summary {
+  cursor: pointer;
+  color: #244f40;
+  text-decoration: underline;
+  padding-block: 7px;
+}
+ul {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  max-height: 135px;
+  overflow-y: auto;
+}
+li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 1px solid #d8ded5;
+}
+li span {
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+li button {
+  min-height: 44px;
+  flex: none;
+}
+.selection-actions {
+  display: flex;
+  gap: 8px;
+}
+.selection-actions button {
+  flex: 1;
+  min-width: 0;
+  white-space: normal;
+  padding-inline: 10px;
+}

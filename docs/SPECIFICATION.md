@@ -124,6 +124,35 @@ The list stores the information necessary to render a published version even if 
 
 Each item occurrence has a stable identity within its list, independent of its name, position, category, or catalog reference. Two rows using the same catalog supply are distinct occurrences. Editing or moving a row preserves its identity; adding a row or removing and re-adding one creates a new identity. Checklist migration uses these identities and published content, as defined in section 9.
 
+#### Acceptable alternatives within one requirement
+
+An editor can group several acceptable supplies into **one requirement**, for
+example **2 cuadernos universitarios: cuadriculados o rayados**. The quantity and
+unit apply to the entire row. A parent may use any listed option, or a mixture
+when more than one unit is requested, to satisfy that quantity; the app does not
+require recording the particular option selected. If each supply is required,
+the editor lists them in separate rows.
+
+The editor can select 2–12 catalog supplies while browsing or add free options,
+review their snapshots, give the requirement a general name, and adjust its
+quantity, unit and note. A free option needs only a descriptive name and does not
+require a catalog reference or attribute values: **“Cuaderno universitario
+rayado”** can leave the sheet count unspecified. Catalog selections keep their
+actual specifications; the editor must use a free option when those additional
+restrictions are intentionally unnecessary.
+The editor can also add alternatives to an existing occurrence, revise a group's
+choices, or return it to one specific supply without changing the containing
+occurrence's identity. A canceled choice edit leaves the saved row unchanged.
+Shared attributes contain only characteristics identical across every option;
+option-specific names and attributes remain visible with each choice. Choices
+are saved together, with no partially selected one-option group autosaved.
+
+Published lists, copies, templates and PDFs retain the full accepted-option
+snapshots even if catalog entries change later. A group has one quantity and
+one checklist checkbox, clearly labeled **“Cualquiera de estas opciones”**.
+Alternatives are list requirements and are not inserted into the shared catalog
+as a single new generic supply. Existing ordinary items remain unchanged.
+
 ### 4.3 Reusing lists and templates
 
 - A user can duplicate one of their previous lists, such as the previous year's list, and edit the copy.
@@ -315,6 +344,8 @@ Progress is stored per user, list-item occurrence, and published version. Stable
 | Change | Checklist behavior |
 | --- | --- |
 | Same item requirements; only order or category changes | Carry the checkmark and any unresolved review flag forward. |
+| Only the order or catalog references of acceptable alternatives change | Carry the checkmark and unresolved review flag forward. |
+| Accepted alternatives are added/removed, or any option's name or meaningful attributes change | Reset the containing requirement's checkmark and flag review. |
 | Supply name, meaningful attributes, packaging, quantity, unit, or item note changes | Reset the checkmark and flag the item for review, even if the quantity decreases. |
 | Added item, including removal followed by re-addition | Start unchecked and flag as new. |
 | Removed item | Exclude it from the current progress count; retain its state only with earlier versions. |
@@ -333,6 +364,7 @@ Users can preview and download a PDF for an accessible list. Each PDF should inc
 - School name, known comuna and region, class, and school year.
 - The optional school logo when supplied.
 - Supplies grouped in their selected categories, with item names, quantities and units, optional item notes, and a printable checkbox for each item.
+- For a requirement with alternatives, print all accepted option names and attributes under **“Cualquiera de estas opciones”**, with one total quantity and one checkbox for the requirement. Do not multiply the quantity or checkbox per option; continue long option descriptions across pages without hiding choices.
 - General list instructions.
 - The published version and publication date.
 - A link to the online list so a reader can check for a newer version.
@@ -436,6 +468,7 @@ The implementation will need persistent representations for at least:
 - The imported store-product snapshot, variants and other source references, suggested matches, confirmed matches, and review decisions.
 - Lists, original creator attribution, current ownership, collaborators, access grants and requests, visibility, lifecycle/moderation state, revisioned drafts, published content snapshots, version history, and optional versioned logos.
 - Stable list-item occurrence identities and published names, attributes, quantities, units, notes, categories, and order. Catalog identifiers alone are not item identities or complete published content.
+- Optional accepted-alternative snapshots within each occurrence, with one shared quantity/unit and no mandatory parent choice record. Empty alternatives preserve the ordinary-item shape; option order is presentation, while names/attributes/membership are requirement changes.
 - Grade-level templates, independent list copies, expiring spreadsheet-import review data, and deduplicated import/publication request results.
 - Version-specific upvotes and comments; reports, scoped case evidence, decisions, and a minimal access/action audit.
 - Following subscriptions, durable publication events and recipient jobs, delivery outcomes, and user-specific checklist state and review flags per published version.

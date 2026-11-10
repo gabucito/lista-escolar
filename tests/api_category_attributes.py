@@ -32,10 +32,10 @@ def run_category_attributes(ctx):
         assert grid['applies_to_types'] == ['Cuadriculado']
         assert {'Cuadriculado', 'Rayado', 'Composición', 'Caligrafía', 'Croquis', 'Liso'}.issubset(notebooks['attributes'][0]['options'])
         filtered = browse('cuadernos', {'tipo_cuaderno': 'Cuadriculado', 'formato': 'universitario'})
-        assert filtered['total'] == 5
+        assert filtered['total'] == 6
         assert filtered['facets'][0]['key'] == 'tipo_cuaderno'
         type_counts = {v['value']: v['count'] for v in definition(filtered, 'tipo_cuaderno')['values']}
-        assert type_counts['Caligrafía'] == 0 and type_counts['Rayado'] == 2 and type_counts['Cuadriculado'] == 5
+        assert type_counts['Caligrafía'] == 0 and type_counts['Rayado'] == 2 and type_counts['Cuadriculado'] == 6
         ruled = browse('cuadernos', {'tipo_cuaderno': 'Rayado', 'formato': 'universitario'})
         assert ruled['total'] == 2 and not any(f['key'] in ('cuadricula_mm', 'orientacion') for f in ruled['facets'])
         ruler = browse('geometria', {'tipo_geometria': 'Regla'})

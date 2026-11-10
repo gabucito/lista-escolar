@@ -16,7 +16,7 @@ use crate::{
     catalog::{NewSupply, insert_supply},
     error::{ApiError, ApiResult},
     lists::{access, access_tx, content_value, parse_content, remember_request, request_result},
-    models::{Content, Item, validate_content},
+    models::{Content, Item, canonical_content, validate_content},
     state::AppState,
 };
 
@@ -399,6 +399,11 @@ async fn confirm(
         let mut item = row.item;
         item.id = Uuid::new_v4();
         if row.share_with_catalog {
+            if !item.alternatives.is_empty() {
+                return Err(import_error(
+                    "Las alternativas pertenecen a una lista; no se pueden compartir como un solo artículo del catálogo.",
+                ));
+            }
             if !item.catalog_id.is_empty() {
                 return Err(import_error(
                     "Un artículo ya vinculado al catálogo no necesita compartirse de nuevo.",
@@ -421,6 +426,7 @@ async fn confirm(
         }
         content.items.push(item);
     }
+    let content = canonical_content(content)?;
     validate_content(&content, false)?;
     let revision:i64=sqlx::query_scalar("UPDATE app.lists SET draft=$2,draft_revision=draft_revision+1,updated_at=now() WHERE id=$1 RETURNING draft_revision").bind(id).bind(content_value(&content)?).fetch_one(&mut *tx).await?;
     let response = json!({"revision":revision});

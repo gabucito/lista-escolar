@@ -16,13 +16,14 @@ use crate::{
     catalog::{self, Search, checked_text},
     community::{audit, erase_comment},
     error::{ApiError, ApiResult},
-    models::{Content, quantity_milli, validate_content},
+    models::{Content, canonical_content, quantity_milli, validate_content},
 };
 
 pub fn routes() -> Router<AppState> {
     Router::new()
         .route("/admin/dashboard", get(dashboard))
         .route("/admin/catalog", get(catalog_items).post(create_item))
+        .route("/admin/catalog/browse", get(catalog_page))
         .route("/admin/attributes", get(attribute_definitions))
         .route(
             "/admin/categories/{id}/attributes",
@@ -79,6 +80,66 @@ async fn catalog_items(
     Ok(Json(
         catalog::catalog_rows(&state.pool, &search, true).await?,
     ))
+}
+
+#[derive(Default, Deserialize)]
+#[serde(default)]
+struct CatalogPage {
+    q: String,
+    category: String,
+    status: String,
+    offset: i64,
+    limit: Option<i64>,
+}
+
+async fn catalog_page(
+    State(state): State<AppState>,
+    _admin: Admin,
+    Query(query): Query<CatalogPage>,
+) -> ApiResult<Json<Value>> {
+    let terms = crate::catalog_browse::search_terms(&query.q)?;
+    let limit = query.limit.unwrap_or(50);
+    let category = query.category.trim();
+    let status = query.status.trim();
+    if !(1..=100).contains(&limit)
+        || !(0..=1_000_000).contains(&query.offset)
+        || category.chars().count() > 100
+        || !matches!(status, "" | "pending" | "approved" | "rejected")
+    {
+        return Err(ApiError::bad_request(
+            "Selecciona un estado y una página válidos: de 1 a 100 útiles.",
+        ));
+    }
+    // Reuse public search semantics, including attributes, aliases and accent
+    // folding. Apply status before counting/paging and surface pending review
+    // first; the legacy array endpoint remains available to existing callers.
+    let sql = format!(
+        r#"{}, admin_filtered AS MATERIALIZED (
+          SELECT * FROM base WHERE ($8='' OR review_status=$8)
+        ), admin_page AS (
+          SELECT * FROM admin_filtered
+          ORDER BY CASE review_status WHEN 'pending' THEN 0 WHEN 'approved' THEN 1 ELSE 2 END,name,id
+          LIMIT $6 OFFSET $7
+        )
+        SELECT jsonb_build_object(
+          'items',COALESCE((SELECT jsonb_agg(to_jsonb(p)-'attribute_values'-'search_text'
+            ORDER BY CASE p.review_status WHEN 'pending' THEN 0 WHEN 'approved' THEN 1 ELSE 2 END,p.name,p.id)
+            FROM admin_page p),'[]'::jsonb),
+          'total',(SELECT count(*) FROM admin_filtered),'offset',$7::bigint,'limit',$6::bigint)"#,
+        crate::catalog_browse::BASE
+    );
+    let result = sqlx::query_scalar::<_, Value>(&sql)
+        .bind(terms)
+        .bind(category)
+        .bind("")
+        .bind(json!({}))
+        .bind(true)
+        .bind(limit)
+        .bind(query.offset)
+        .bind(status)
+        .fetch_one(&state.pool)
+        .await?;
+    Ok(Json(result))
 }
 
 async fn attribute_definitions(
@@ -630,17 +691,18 @@ async fn save_template(
 ) -> ApiResult<Json<Value>> {
     let name = checked_text(&input.name, 200, "Nombre")?;
     let grade = checked_text(&input.grade, 100, "Nivel")?;
-    validate_content(&input.content, false)?;
-    if input.content.items.is_empty() || !input.content.logo_id.is_empty() {
+    let content = canonical_content(input.content)?;
+    validate_content(&content, false)?;
+    if content.items.is_empty() || !content.logo_id.is_empty() {
         return Err(ApiError::bad_request(
             "La plantilla requiere artículos y no puede incluir un logo privado",
         ));
     }
-    for item in &input.content.items {
+    for item in &content.items {
         checked_text(&item.name, 300, "Artículo")?;
         quantity_milli(&item.quantity, &item.unit)?;
     }
-    let content = serde_json::to_value(&input.content).map_err(ApiError::internal)?;
+    let content = serde_json::to_value(&content).map_err(ApiError::internal)?;
     let mut tx = state.pool.begin().await?;
     let id = if let Some(id) = input.id {
         let affected = sqlx::query(

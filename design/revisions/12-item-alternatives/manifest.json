@@ -1,0 +1,126 @@
+{
+  "created_at": "2026-11-10T14:14:40.044246+00:00",
+  "status": "validated-implemented-browser-captures",
+  "source": "Local Angular/Rust application with synthetic QA accounts and isolated PostgreSQL",
+  "semantics": {
+    "alternatives": "Any listed option satisfies one requirement",
+    "quantity": "Applies to the whole requirement",
+    "checklist": "One checkbox per requirement",
+    "optional_detail": "Free options can omit unspecified characteristics"
+  },
+  "assets": [
+    {
+      "file": "1366-review-overview.png",
+      "source": ".local/qa/item-alternatives/1366-review-overview.png",
+      "title": "Revisar el grupo en escritorio",
+      "kind": "browser-screenshot",
+      "bytes": 171610,
+      "sha256": "15b45e0aea72cd78c1b204f5018b66f93a4c5bb868c71a6c4382904699c6e10d",
+      "width": 1366,
+      "height": 768
+    },
+    {
+      "file": "1366-parent-requirement.png",
+      "source": ".local/qa/item-alternatives/1366-parent-requirement.png",
+      "title": "Una necesidad publicada con sus alternativas",
+      "kind": "browser-element-screenshot",
+      "bytes": 41733,
+      "sha256": "7018f72478a2d286c2c62f725ab29b8b4705ab018d2e5dbca93618a53a29becb",
+      "width": 909,
+      "height": 243
+    },
+    {
+      "file": "320-selected-options.png",
+      "source": ".local/qa/item-alternatives/320-selected-options.png",
+      "title": "Seleccionar alternativas en móvil de 320 px",
+      "kind": "browser-screenshot",
+      "bytes": 50991,
+      "sha256": "91f5f7acd5f8c026a4314218b413760ecbc310661df5403c43dd9283690cbcbb",
+      "width": 320,
+      "height": 800
+    },
+    {
+      "file": "320-review-overview.png",
+      "source": ".local/qa/item-alternatives/320-review-overview.png",
+      "title": "Revisar el grupo en móvil de 320 px",
+      "kind": "browser-screenshot",
+      "bytes": 61067,
+      "sha256": "50fec420d615b8612c758ec03dbe279bcd312d76f20e487f0f2a70d5d0c4a504",
+      "width": 320,
+      "height": 800
+    },
+    {
+      "file": "390-free-options-review.png",
+      "source": ".local/qa/item-alternatives/390-free-options-review.png",
+      "title": "Escribir opciones generales y una nota",
+      "kind": "browser-screenshot",
+      "bytes": 54131,
+      "sha256": "66cd398ee805b1ba5d37cd10fdd9447a80b9f8f1aa96b5e20960260a0d0c00c5",
+      "width": 390,
+      "height": 844
+    },
+    {
+      "file": "390-free-parent-requirement.png",
+      "source": ".local/qa/item-alternatives/390-free-parent-requirement.png",
+      "title": "La familia consulta opciones generales",
+      "kind": "browser-element-screenshot",
+      "bytes": 21636,
+      "sha256": "76bc38870cc3ef528215c1718eb595f5de116cb365327c19b41a9d908765b7a9",
+      "width": 328,
+      "height": 256
+    },
+    {
+      "file": "alternatives-simple-page-1.png",
+      "source": ".local/qa/item-alternatives/alternatives-simple-page-1.png",
+      "title": "Primera página del PDF de ejemplo",
+      "kind": "pdf-page-render",
+      "bytes": 64164,
+      "sha256": "f4f6e85e9353d3636dbcc4454a472f72b0dec93b6ba0812e5dd33501447c62f7",
+      "width": 745,
+      "height": 1053
+    },
+    {
+      "file": "alternatives-simple.pdf",
+      "source": ".local/qa/item-alternatives/alternatives-simple.pdf",
+      "title": "PDF de una necesidad con opciones generales",
+      "kind": "generated-pdf",
+      "bytes": 27488,
+      "sha256": "17b76d45e71fa20e8d99c0f6999d2880fb88030013190a85d0e827a3e211a4da"
+    }
+  ],
+  "validation": {
+    "feature_browser_scenarios_passed": 8,
+    "axe_captures": 15,
+    "axe_violations": 0,
+    "generated_pdf_documents": 4,
+    "generated_pdf_pages": 11,
+    "pdf_text_bounds_violations": 0,
+    "pdf_reports": [
+      {
+        "source": ".local/qa/item-alternatives/alternatives-Barra-lateral-validation.json",
+        "pages": 3,
+        "printable_checkboxes": 2,
+        "text_bounds_violations": 0
+      },
+      {
+        "source": ".local/qa/item-alternatives/alternatives-Dos-columnas-validation.json",
+        "pages": 4,
+        "printable_checkboxes": 2,
+        "text_bounds_violations": 0
+      },
+      {
+        "source": ".local/qa/item-alternatives/alternatives-Fichas-validation.json",
+        "pages": 3,
+        "printable_checkboxes": 2,
+        "text_bounds_violations": 0
+      },
+      {
+        "source": ".local/qa/item-alternatives/alternatives-simple-validation.json",
+        "pages": 1,
+        "printable_checkboxes": 1,
+        "text_bounds_violations": 0
+      }
+    ]
+  },
+  "project_validation_document": "../../../docs/VALIDATION.md"
+}

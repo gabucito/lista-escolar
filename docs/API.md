@@ -19,6 +19,51 @@ email are deferred. No real passwords or connection strings belong in this file.
 All content strings except required names may be empty. Quantities are decimal
 strings. Item IDs are stable UUIDs, and copied/imported items receive new IDs.
 
+An item can optionally include `alternatives`, containing **all** acceptable
+choices for that one requirement:
+
+```json
+{"id":"uuid", "catalog_id":"", "name":"Cuaderno universitario",
+ "quantity":"2", "unit":"unidad", "category":"Cuadernos", "note":"",
+ "attributes":{"formato":{"name":"Formato","value":"universitario"}},
+ "alternatives":[
+   {"catalog_id":"", "name":"Cuaderno universitario cuadriculado",
+    "attributes":{"formato":{"name":"Formato","value":"universitario"},"tipo_cuaderno":{"name":"Tipo","value":"Cuadriculado"}}},
+   {"catalog_id":"", "name":"Cuaderno universitario rayado",
+    "attributes":{"formato":{"name":"Formato","value":"universitario"},"tipo_cuaderno":{"name":"Tipo","value":"Rayado"}}}
+ ]}
+```
+
+The parent may satisfy the quantity with any combination of the listed options;
+it is not a quantity per option and there is only one checklist occurrence. No
+chosen-option state is required. Separate item rows remain separate requirements.
+An absent or empty `alternatives` array means an ordinary item and is omitted on
+serialization, preserving old payloads and no-op publication. A nonempty array
+must contain 2–12 distinct options, each with only `catalog_id`, `name`, and
+`attributes`; references default to an empty string and attributes to `{}`.
+Names are required and bounded to 300 characters; each attribute object is at
+most 16 KiB. References, when supplied, must be UUIDs and are canonicalized.
+An option does not need a catalog match: a free option such as
+`{"catalog_id":"","name":"Cuaderno universitario rayado","attributes":{}}`
+deliberately leaves page count and other unmentioned details unspecified. It is
+a list-specific snapshot, not a request to create a shared catalog entry.
+Duplicate trimmed names with identical attributes are rejected regardless of
+their catalog references. Unknown option fields, including nested alternatives,
+quantities or IDs, are rejected during JSON decoding (422). Other invalid choice
+groups return 400 and do not partially save the draft.
+
+A grouped item's own `catalog_id` must be empty. Its `attributes` describe only
+shared characteristics and must be an identical subset of every option's
+attribute object. Names and attributes are self-contained snapshots, so catalog
+changes do not rewrite existing choices. Copies/templates preserve choices and
+give the containing item a new ID. Reordering choices or changing only their
+catalog references preserves checklist progress; changing any option's name,
+attributes or membership resets that occurrence and flags review, including
+intervening changes in skipped published versions. The same choice contract is
+accepted by draft, template and import-confirmation endpoints. An import row
+with alternatives cannot set `share_with_catalog:true` because the requirement
+is list-specific rather than a single shared catalog supply.
+
 `ListSummary`: `{id, school, class_name, school_year, comuna, region, visibility,
 archived, hidden, current_version, votes, published_at, owner_name, role, following}`.
 Role is `owner`, `editor`, `viewer`, or empty (public visitor).
@@ -99,6 +144,7 @@ accept either primitive values by key or these objects containing `value`.
 - `DELETE /transfers/{id}` → `{ok:true}` (offering owner).
 - `GET /admin/dashboard` → counts object.
 - `GET /admin/catalog?q=` → catalog items including rejected, typed attributes and `aliases:string[]` (up to 200 results; search independently when selecting a target).
+- `GET /admin/catalog/browse?q=&category=&status=&offset=0&limit=50` → `{items,total,offset,limit}`. Administrator-only paging includes rejected items and puts pending reviews first. Category is a slug; status is empty (all), `pending`, `approved`, or `rejected`. Search uses the same accent-insensitive names, aliases and attribute terms as public browsing. Limit is 1–100 and offset 0–1000000. The admin UI uses this route for search, status/category filters and paging; the old array route remains compatible.
 - `GET /admin/attributes` → existing attribute dictionary `[{key,name,data_type,unit}]`, with `data_type` text, number or boolean.
 - `POST /admin/catalog` `{name,category_id,attributes?,aliases?,approve:true}` → `{id,review_status:"approved"}`; separate administrator session, explicit approval, atomic category-aware typed validation and audit. Legacy subcategory input remains compatible but is not needed.
 - `PATCH /admin/catalog/{id}` `{action:"update"|"approve"|"reject"|"merge",target_id?,name?,category_id?,subcategory_id?,attributes?,aliases?}` → `{ok:true}`. Update preserves review status. Omitted ordinary fields remain unchanged; when category or type changes, an omitted legacy subcategory may be derived from the resulting type. An unchanged category/type preserves the old legacy link, including null. Explicit `subcategory_id:null` clears only that link, preserving the type attribute. Supplied attributes and aliases replace the respective sets (`{}`/`[]` clear them); an explicitly supplied legacy subcategory can backfill its type into the replacement attributes. New or changed values follow category options and applicability, while identical historical values on the same category are preserved; attribute types follow the dictionary, numeric values must be positive and at most 1000000. Replacement payloads accept at most 30 attributes and 30 trimmed aliases of 1–300 characters; aliases are normalized to lowercase and deduplicated. Merges can combine larger existing alias sets. All changes are atomic and preserve published list snapshots. Merge uses `target_id`, adds source names as alternatives and requires classification/attribute/alias corrections to be saved separately.

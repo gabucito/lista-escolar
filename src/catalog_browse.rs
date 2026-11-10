@@ -23,7 +23,7 @@ pub struct Browse {
 
 /// The same folding is applied to searchable text in PostgreSQL below. Search
 /// terms remain literal substrings: '%' and '_' are not SQL wildcard operators.
-fn search_terms(query: &str) -> ApiResult<Vec<String>> {
+pub(crate) fn search_terms(query: &str) -> ApiResult<Vec<String>> {
     if query.chars().count() > 500 {
         return Err(ApiError::bad_request(
             "La búsqueda admite hasta 500 caracteres.",
@@ -47,7 +47,7 @@ fn search_terms(query: &str) -> ApiResult<Vec<String>> {
 
 // Both routes use this search document. Only approved, nondeleted source links
 // participate; unreviewed source products must not affect public discovery.
-const BASE: &str = r#"
+pub(crate) const BASE: &str = r#"
 WITH documents AS MATERIALIZED (
   SELECT i.id,i.name,i.review_status,c.id category_id,c.name category,c.slug category_slug,
     s.id subcategory_id,s.name subcategory,s.slug subcategory_slug,

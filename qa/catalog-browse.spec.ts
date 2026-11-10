@@ -126,7 +126,7 @@ async function expectTouchTarget(control: Locator) {
 }
 async function inspectComparisonRows(page: Page, width: number) {
   const rows = page.locator('.catalog-result');
-  await expect(rows).toHaveCount(5);
+  await expect(rows).toHaveCount(6);
   const bounds = await page.locator('.catalog-scroll').boundingBox();
   const rowBoxes = await rows.evaluateAll(elements => elements.map(element => {
     const rect = element.getBoundingClientRect();

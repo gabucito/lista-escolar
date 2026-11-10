@@ -72,6 +72,35 @@ audit confirms 176 items, 14 categories and 381 attribute values, with the origi
 [research summary and source evidence](../docs/CATALOG_RESEARCH_2026-11-10.md).
 The historical counts above describe earlier inspections and remain unchanged.
 
+Migration `007_color_count_variants.sql` fills seven verified color-count gaps:
+ordinary pencils with 6/24 colors, liquid/solid tempera with 6 colors, and
+markers/watercolors/pastels with 24 colors. It reuses existing definitions and
+bindings without changing category metadata or previously curated items.
+**Applied to local `escolar` on 2026-11-10 at 11:53−03:** 183 items, 14 categories
+and 397 typed values. All previous catalog rows and protected application/source
+fingerprints remain unchanged. A readable custom-format backup was created
+before application; restore was not tested. See the
+[color-count review, primary sources and validation](../docs/CATALOG_COLOR_COVERAGE_2026-11-10.md).
+
+Migration `008_attribute_coverage.sql` implements the 44 researched attribute
+findings: 81 new supplies, 16 new definitions and 69 explicit binding
+additions/extensions. It enriches only seven unchanged original seed items and
+generalizes the unchanged default “Pauta musical” label to “Tipo de pauta”.
+Curated records, removed categories, type identities, existing binding choices
+and unrestricted applicability are preserved; incompatible contracts abort the
+transaction. Existing broad requirements remain unspecified.
+
+**Applied to local `escolar` on 2026-11-10 at 12:50:55−03:** 264 items,
+14 categories, 65 definitions and 653 typed values. Original item rows, aliases
+and category rows are unchanged; exact attribute/metadata changes match the
+manifest. Fingerprints of all 33 protected application/source/legacy tables are
+unchanged, including lists, published versions and templates. The custom-format
+backup `.local/backups/escolar-before-attribute-additions-20261110T155055.075332Z.dump`
+is mode 600 and its archive listing is readable; a restore was not tested.
+The restarted local API and Angular proxy pass read-only checks of all 81 new
+items and 69 declared bindings. See the
+[implementation report and evidence](../docs/CATALOG_ATTRIBUTE_IMPLEMENTATION_2026-11-10.md).
+
 ## Local connection
 
 The project owner supplied a local database named `escolar`. Connection details

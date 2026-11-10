@@ -149,7 +149,7 @@ def run_catalog_browse(ctx):
             ctx.sql(f"DELETE FROM catalog.items WHERE canonical_key LIKE 'qa-browse-{tag}-%'")
 
     def migration_ledger_and_replay():
-        assert ctx.sql('SELECT count(*) FROM app.schema_migrations WHERE version IN (3,4,5)') == '3'
+        assert ctx.sql('SELECT count(*) FROM app.schema_migrations WHERE version IN (3,4,5,6,7,8)') == '6'
         ledger = ctx.sql('SELECT jsonb_agg(to_jsonb(m) ORDER BY version)::text FROM app.schema_migrations m')
         fingerprint_sql = """SELECT md5(
             COALESCE((SELECT string_agg(to_jsonb(i)::text,'|' ORDER BY id) FROM catalog.items i),'') ||
@@ -163,11 +163,32 @@ def run_catalog_browse(ctx):
         assert ctx.sql(fingerprint_sql) == before
         assert ctx.sql('SELECT jsonb_agg(to_jsonb(m) ORDER BY version)::text FROM app.schema_migrations m') == ledger
 
+    def color_count_variants():
+        data = json.loads((Path(__file__).resolve().parents[1] / 'docs/catalog-color-coverage-2026-11-10.json').read_text())
+        for item in data['items']:
+            attributes = {'tipo_arte': item['type'], **item['attributes']}
+            result = browse(attributes, category='arte-y-dibujo', q='')
+            exact = next(i for i in result['items'] if i['name'] == item['name'])
+            assert {key: value['value'] for key, value in exact['attributes'].items()} == attributes
+            for query in [item['name'], *item['aliases']]:
+                found = browse(category='arte-y-dibujo', q=query)
+                assert exact['id'] in {i['id'] for i in found['items']}, query
+        pencils = browse({'tipo_arte': 'Lápices de colores'}, category='arte-y-dibujo', q='')
+        assert values(pencils, 'numero_colores') == [(6, 1), (12, 2), (24, 1)]
+        for count in (6, 24):
+            result = browse({'tipo_arte': 'Lápices de colores', 'numero_colores': count}, category='arte-y-dibujo', q='')
+            assert result['total'] == 1
+            assert result['items'][0]['name'] == f'Lápices de colores, {count} colores'
+            assert values(result, 'numero_colores') == [(6, 1), (12, 2), (24, 1)]
+            assert facet(result, 'numero_colores')['data_type'] == 'number'
+            assert facet(result, 'numero_colores')['unit'] == 'colores'
+
     for name, operation in [
         ('attribute text search, accents, literal terms and reviewed source links', searching),
         ('typed attribute filters and contextual facet counts', filtering_and_facets),
         ('catalog browse rejects malformed, mistyped and unbounded filters', invalid_filters),
         ('catalog pagination and attribute discovery beyond 200 results', pages_beyond_legacy_cap),
-        ('notebook migration ledger and repeated CLI migration preserve catalog', migration_ledger_and_replay),
+        ('researched color variants support search and typed contextual filters', color_count_variants),
+        ('catalog migration ledger and repeated CLI migration preserve catalog', migration_ledger_and_replay),
     ]:
         ctx.check(name, operation)

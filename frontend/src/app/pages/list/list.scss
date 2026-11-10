@@ -187,6 +187,49 @@
   flex-shrink: 0;
   overflow-wrap: anywhere;
 }
+.accepted-options {
+  margin: 0.5rem 0 0.3rem;
+  border-left: 3px solid var(--line);
+  padding-left: 0.7rem;
+}
+.accepted-options-title {
+  margin: 0 0 0.4rem;
+  color: var(--green);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+.accepted-options-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.accepted-options-list li {
+  min-width: 0;
+  margin: 0;
+}
+.accepted-option-name {
+  display: block;
+  font-size: 0.8rem;
+  line-height: 1.45;
+  font-weight: 600;
+}
+.accepted-option-or {
+  display: block;
+  margin: 0.25rem 0;
+  color: var(--muted);
+  font-size: 0.75rem;
+}
+.accepted-options-help {
+  margin: 0.5rem 0 0;
+  color: var(--muted);
+  font-size: 0.72rem;
+  line-height: 1.5;
+}
+.quantity-total {
+  display: block;
+  font-size: 0.7rem;
+  font-weight: 400;
+}
 .review-note {
   font-size: 0.77rem;
   line-height: 1.5;

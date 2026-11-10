@@ -127,7 +127,7 @@ def notebook_suggestion(name: str) -> dict[str, str | int | None] | None:
 def color_pencil_suggestion(name: str) -> dict | None:
     """Recognize only ordinary color-pencil products with an explicit count."""
     text = normalize(name).strip()
-    match = re.match(r"^LAPIZ(?:ES)?\s+(?:DE\s+)?COLO(?:R|RES)\s+(\d{1,3})\s*COL(?:ORES)?\b", text)
+    match = re.match(r"^LAPI(?:Z(?:ES)?|CES)\s+(?:DE\s+)?COLO(?:R|RES)\s+(\d{1,3})\s*COL(?:ORES)?\b", text)
     if not match or re.search(
         r"\+|\b(?:SET|KIT|PACK|GRAFITO|GOMA|SACAPUNTAS?|PIEL|NEON|FLUOR|METAL\w*|"
         r"PASTEL|ACUAREL\w*|ACQUARELL\w*|AQUAREL\w*|JUMBO|CORTO\w*|TRIANG\w*|BICOLOR|"

@@ -1,0 +1,113 @@
+<form (submit)="$event.preventDefault(); submit()">
+  <div class="options-form-body">
+    <p class="explanation">
+      La familia puede elegir cualquiera de estas opciones. La cantidad es el total del requisito,
+      no una cantidad por opción.
+    </p>
+    <label
+      >Nombre del requisito<input
+        [formField]="fields.name"
+        placeholder="Ej.: Cuaderno universitario"
+    /></label>
+    <div class="amount-fields">
+      <label
+        >Cantidad total<input
+          [formField]="fields.quantity"
+          inputmode="decimal"
+          [attr.aria-invalid]="issue() ? 'true' : null"
+      /></label>
+      <label
+        >Unidad<select [formField]="fields.unit">
+          @for (unit of units; track unit) {
+            <option [value]="unit">{{ unit }}</option>
+          }
+        </select></label
+      >
+    </div>
+    @if (issue()) {
+      <p class="field-error" role="alert">{{ issue() }}</p>
+    }
+    <section aria-labelledby="accepted-options-title">
+      <h3 id="accepted-options-title">Opciones aceptadas · {{ options().length }}</h3>
+      @if (options().length < 2) {
+        <p class="notice info">
+          Añade al menos dos opciones para ofrecer alternativas. Con una sola opción, se guardará
+          como un útil específico.
+        </p>
+      }
+      <ol class="review-options">
+        @for (option of options(); track $index; let i = $index) {
+          <li>
+            <div>
+              <strong>{{ option.name }}</strong>
+              @if (summary(option.attributes); as text) {
+                <small>{{ text }}</small>
+              }
+            </div>
+            <button
+              type="button"
+              class="text-button"
+              [disabled]="blocked()"
+              [attr.aria-label]="'Quitar opción ' + option.name"
+              (click)="remove(i)"
+            >
+              Quitar
+            </button>
+          </li>
+        }
+      </ol>
+      @if (options().length < maximum) {
+        <div class="free-option">
+          <label
+            >Opción libre<input
+              [formField]="freeFields.name"
+              placeholder="Ej.: Cuaderno universitario rayado"
+              aria-describedby="free-option-help"
+              (keydown.enter)="$event.preventDefault(); addFreeOption()"
+          /></label>
+          <small id="free-option-help"
+            >Escribe solo lo que necesitas exigir. Puedes omitir el número de hojas, la marca u
+            otras características.</small
+          >
+          @if (freeOption().name.trim()) {
+            <small>Agrega la opción escrita antes de guardar el requisito.</small>
+          }
+          @if (optionError()) {
+            <p class="field-error" role="alert">{{ optionError() }}</p>
+          }
+          <button
+            type="button"
+            class="btn secondary"
+            [disabled]="blocked() || !freeOption().name.trim()"
+            (click)="addFreeOption()"
+          >
+            Agregar opción libre
+          </button>
+        </div>
+      }
+      <button
+        type="button"
+        class="btn secondary"
+        [disabled]="blocked()"
+        (click)="back.emit(review())"
+      >
+        Volver al catálogo
+      </button>
+    </section>
+    <label
+      >Nota opcional<textarea
+        [formField]="fields.note"
+        rows="2"
+        placeholder="Indicaciones para la familia"
+      ></textarea>
+    </label>
+  </div>
+  <footer>
+    <button type="button" class="btn secondary" [disabled]="blocked()" (click)="cancelled.emit()">
+      Cancelar alternativas
+    </button>
+    <button type="submit" class="btn" [disabled]="blocked() || !valid()">
+      {{ options().length === 1 ? 'Usar solo esta opción' : 'Guardar opciones' }}
+    </button>
+  </footer>
+</form>

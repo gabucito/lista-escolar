@@ -4,7 +4,11 @@ The review found **eight reproducible application defects and one reachable depe
 
 Scope: local Rust API, Angular frontend, PostgreSQL schema/data, imports, catalog and administration, authentication, ownership and deletion, published lists, community actions, checklist state and dependency advisories. Email/Gmail delivery and deployment remain deferred. Severity reflects the current local application: **P1** merits the first fix; **P2** should be corrected during core development.
 
-The API/browser reproductions used synthetic accounts and lists in a disposable QA database. Database audits were read-only; the separately requested, backed-up catalog expansion was subsequently applied to `escolar` through migration 006. Application data and credentials are not reproduced here. Validation and post-migration checks are complete; the findings below remain open.
+The API/browser reproductions used synthetic accounts and lists in a disposable QA database. Database audits were read-only; the separately requested, backed-up catalog expansion was subsequently applied to `escolar` through migration 006. Application data and credentials are not reproduced here. Validation and post-migration checks were complete at the original review, when all findings below remained open.
+
+**Subsequent implementation:** finding 7 was resolved during the
+[attribute expansion](CATALOG_ATTRIBUTE_IMPLEMENTATION_2026-11-10.md).
+The other eight findings remain open; the original evidence below is retained.
 
 ## Findings
 
@@ -81,6 +85,13 @@ List loading has a sequence guard, but mutation callbacks do not. An action star
 **Evidence:** `.local/qa/audit/frontend-races.json`, `vote_wrong_version` and `comments_wrong_version`, with corresponding screenshots.
 
 ### 7. P2 — Catalog moderation silently hides pending items after the 200-row cap
+
+**Resolved on 2026-11-10:** the administration UI now uses the authenticated
+`/admin/catalog/browse` endpoint, which applies status/category/search filters
+before pagination and returns totals. Pending items are ordered first. Isolated
+API and desktop/mobile browser regressions cover more than 200 items, later
+pages, moderation and filtered-page recovery. The legacy array route remains
+available for compatibility. The following describes the original defect.
 
 **Locations:** [`src/admin.rs:79–80`](../src/admin.rs#L79), [`src/catalog_browse.rs:91`](../src/catalog_browse.rs#L91), [`src/catalog_browse.rs:114–115`](../src/catalog_browse.rs#L114); client filtering in [`frontend/src/app/pages/admin/admin.ts:179–182`](../frontend/src/app/pages/admin/admin.ts#L179) and request construction at lines 335–343.
 

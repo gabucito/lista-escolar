@@ -1,0 +1,4084 @@
+{
+  "researched_on": "2026-11-10",
+  "status": "research_only_not_applied",
+  "scope": "Current generic catalog attribute coverage, evaluated against primary school lists and manufacturer specifications; not exhaustive commercial product or stock coverage.",
+  "summary": {
+    "items_reviewed": 183,
+    "categories_reviewed": 14,
+    "populated_types_reviewed": 102,
+    "primary_sources": 43,
+    "findings": 44,
+    "findings_by_kind": {
+      "new_attribute": 18,
+      "missing_variant": 7,
+      "missing_binding": 19
+    },
+    "unique_proposed_new_definitions": 16,
+    "priorities": {
+      "P1": 32,
+      "P2": 12
+    }
+  },
+  "baseline": {
+    "captured_at": "2026-11-10T11:57:07.039985-03:00",
+    "counts": {
+      "items": 183,
+      "categories": 14,
+      "attribute_values": 397
+    },
+    "definitions": 49,
+    "type_definitions": 14,
+    "detail_definitions": 35,
+    "types_with_items": 102,
+    "items_with_only_type": 60,
+    "type_only_item_names": [
+      "Borrador de pizarra",
+      "Corrector",
+      "Destacador",
+      "Goma de borrar",
+      "Lápiz grafito",
+      "Sacapuntas",
+      "Acuarelas",
+      "Arcilla para modelar",
+      "Block de dibujo",
+      "Croquera",
+      "Masa para modelar",
+      "Mezclador de pintura",
+      "Pincel",
+      "Plasticina",
+      "Plumones",
+      "Témperas",
+      "Vaso limpia pinceles",
+      "Aguja escolar de punta redonda",
+      "Almohadilla con punzón escolar",
+      "Escarcha de colores",
+      "Hilo elástico",
+      "Lana para manualidades",
+      "Lentejuelas de colores",
+      "Limpiapipas",
+      "Palitos de helado",
+      "Plato de cartón para manualidades",
+      "Pompones de colores",
+      "Stickers de colores",
+      "Compás",
+      "Escuadra",
+      "Transportador",
+      "Billetes y monedas didácticos chilenos",
+      "Bloques de base diez",
+      "Set de cuerpos geométricos",
+      "Cartulina española",
+      "Papel crepé",
+      "Papel entretenido",
+      "Papel kraft",
+      "Papel volantín",
+      "Pegamento en barra",
+      "Castañuelas",
+      "Claves musicales",
+      "Flauta dulce soprano",
+      "Guitarra acústica",
+      "Maracas",
+      "Melódica",
+      "Pandero",
+      "Ukelele",
+      "Carpeta",
+      "Estuche",
+      "Calculadora",
+      "Tabla periódica escolar",
+      "Alcohol gel",
+      "Botella para agua",
+      "Jabón líquido",
+      "Papel higiénico",
+      "Pañuelos desechables",
+      "Peineta",
+      "Toalla de mano",
+      "Toallas húmedas"
+    ],
+    "unused_definitions": [
+      "incluye_goma",
+      "tipo_categoria_9"
+    ],
+    "category_coverage": [
+      {
+        "category": "cuadernos",
+        "name": "Cuadernos",
+        "items": 31,
+        "types_with_items": 8,
+        "bound_detail_attributes": 5,
+        "populated_detail_attributes": 5,
+        "items_with_only_type": 0,
+        "types": [
+          {
+            "name": "Caligrafía",
+            "items": 4,
+            "populated_detail_attributes": [
+              "formato",
+              "numero_hojas",
+              "orientacion"
+            ]
+          },
+          {
+            "name": "Composición",
+            "items": 3,
+            "populated_detail_attributes": [
+              "formato",
+              "numero_hojas"
+            ]
+          },
+          {
+            "name": "Croquis",
+            "items": 4,
+            "populated_detail_attributes": [
+              "formato",
+              "numero_hojas"
+            ]
+          },
+          {
+            "name": "Cuadriculado",
+            "items": 12,
+            "populated_detail_attributes": [
+              "cuadricula_mm",
+              "formato",
+              "numero_hojas"
+            ]
+          },
+          {
+            "name": "Liso",
+            "items": 2,
+            "populated_detail_attributes": [
+              "formato",
+              "numero_hojas"
+            ]
+          },
+          {
+            "name": "Media composición",
+            "items": 1,
+            "populated_detail_attributes": [
+              "formato"
+            ]
+          },
+          {
+            "name": "Música",
+            "items": 1,
+            "populated_detail_attributes": [
+              "tipo_pauta"
+            ]
+          },
+          {
+            "name": "Rayado",
+            "items": 4,
+            "populated_detail_attributes": [
+              "formato",
+              "numero_hojas"
+            ]
+          }
+        ]
+      },
+      {
+        "category": "escritura",
+        "name": "Escritura",
+        "items": 20,
+        "types_with_items": 9,
+        "bound_detail_attributes": 6,
+        "populated_detail_attributes": 5,
+        "items_with_only_type": 6,
+        "types": [
+          {
+            "name": "Bicolor",
+            "items": 1,
+            "populated_detail_attributes": [
+              "color"
+            ]
+          },
+          {
+            "name": "Bolígrafo",
+            "items": 3,
+            "populated_detail_attributes": [
+              "color"
+            ]
+          },
+          {
+            "name": "Borrador de pizarra",
+            "items": 1,
+            "populated_detail_attributes": []
+          },
+          {
+            "name": "Corrector",
+            "items": 1,
+            "populated_detail_attributes": []
+          },
+          {
+            "name": "Destacador",
+            "items": 1,
+            "populated_detail_attributes": []
+          },
+          {
+            "name": "Goma",
+            "items": 1,
+            "populated_detail_attributes": []
+          },
+          {
+            "name": "Grafito",
+            "items": 3,
+            "populated_detail_attributes": [
+              "dureza_grafito",
+              "tamano"
+            ]
+          },
+          {
+            "name": "Marcador",
+            "items": 6,
+            "populated_detail_attributes": [
+              "color",
+              "uso_marcador"
+            ]
+          },
+          {
+            "name": "Sacapuntas",
+            "items": 3,
+            "populated_detail_attributes": [
+              "con_deposito",
+              "tamano"
+            ]
+          }
+        ]
+      },
+      {
+        "category": "arte-y-dibujo",
+        "name": "Arte y dibujo",
+        "items": 40,
+        "types_with_items": 17,
+        "bound_detail_attributes": 13,
+        "populated_detail_attributes": 12,
+        "items_with_only_type": 11,
+        "types": [
+          {
+            "name": "Accesorio de pintura",
+            "items": 1,
+            "populated_detail_attributes": []
+          },
+          {
+            "name": "Acuarelas",
+            "items": 3,
+            "populated_detail_attributes": [
+              "numero_colores"
+            ]
+          },
+          {
+            "name": "Arcilla",
+            "items": 1,
+            "populated_detail_attributes": []
+          },
+          {
+            "name": "Block",
+            "items": 3,
+            "populated_detail_attributes": [
+              "fraccion_block",
+              "numero_block",
+              "tipo_block"
+            ]
+          },
+          {
+            "name": "Croquera",
+            "items": 2,
+            "populated_detail_attributes": [
+              "formato"
+            ]
+          },
+          {
+            "name": "Delantal de arte",
+            "items": 1,
+            "populated_detail_attributes": [
+              "material"
+            ]
+          },
+          {
+            "name": "Lienzo",
+            "items": 1,
+            "populated_detail_attributes": [
+              "dimension_mayor_cm",
+              "dimension_menor_cm"
+            ]
+          },
+          {
+            "name": "Lápices de cera",
+            "items": 1,
+            "populated_detail_attributes": [
+              "numero_colores"
+            ]
+          },
+          {
+            "name": "Lápices de colores",
+            "items": 4,
+            "populated_detail_attributes": [
+              "numero_colores",
+              "tamano"
+            ]
+          },
+          {
+            "name": "Lápices pastel",
+            "items": 2,
+            "populated_detail_attributes": [
+              "numero_colores"
+            ]
+          },
+          {
+            "name": "Masa para modelar",
+            "items": 1,
+            "populated_detail_attributes": []
+          },
+          {
+            "name": "Mezclador",
+            "items": 1,
+            "populated_detail_attributes": []
+          },
+          {
+            "name": "Pincel",
+            "items": 7,
+            "populated_detail_attributes": [
+              "forma_pincel",
+              "numero_pincel"
+            ]
+          },
+          {
+            "name": "Plasticina",
+            "items": 2,
+            "populated_detail_attributes": [
+              "numero_colores"
+            ]
+          },
+          {
+            "name": "Plumones",
+            "items": 4,
+            "populated_detail_attributes": [
+              "numero_colores",
+              "tamano"
+            ]
+          },
+          {
+            "name": "Protector de mesa",
+            "items": 1,
+            "populated_detail_attributes": [
+              "material"
+            ]
+          },
+          {
+            "name": "Témperas",
+            "items": 5,
+            "populated_detail_attributes": [
+              "numero_colores",
+              "presentacion"
+            ]
+          }
+        ]
+      },
+      {
+        "category": "manualidades",
+        "name": "Manualidades",
+        "items": 11,
+        "types_with_items": 11,
+        "bound_detail_attributes": 0,
+        "populated_detail_attributes": 0,
+        "items_with_only_type": 11,
+        "types": [
+          {
+            "name": "Aguja escolar",
+            "items": 1,
+            "populated_detail_attributes": []
+          },
+          {
+            "name": "Escarcha",
+            "items": 1,
+            "populated_detail_attributes": []
+          },
+          {
+            "name": "Hilo",
+            "items": 1,
+            "populated_detail_attributes": []
+          },
+          {
+            "name": "Lana",
+            "items": 1,
+            "populated_detail_attributes": []
+          },
+          {
+            "name": "Lentejuelas",
+            "items": 1,
+            "populated_detail_attributes": []
+          },
+          {
+            "name": "Limpiapipas",
+            "items": 1,
+            "populated_detail_attributes": []
+          },
+          {
+            "name": "Palitos",
+            "items": 1,
+            "populated_detail_attributes": []
+          },
+          {
+            "name": "Pompones",
+            "items": 1,
+            "populated_detail_attributes": []
+          },
+          {
+            "name": "Punzón",
+            "items": 1,
+            "populated_detail_attributes": []
+          },
+          {
+            "name": "Soporte",
+            "items": 1,
+            "populated_detail_attributes": []
+          },
+          {
+            "name": "Stickers",
+            "items": 1,
+            "populated_detail_attributes": []
+          }
+        ]
+      },
+      {
+        "category": "geometria",
+        "name": "Geometría",
+        "items": 7,
+        "types_with_items": 5,
+        "bound_detail_attributes": 1,
+        "populated_detail_attributes": 1,
+        "items_with_only_type": 3,
+        "types": [
+          {
+            "name": "Cinta métrica",
+            "items": 1,
+            "populated_detail_attributes": [
+              "largo_cm"
+            ]
+          },
+          {
+            "name": "Compás",
+            "items": 1,
+            "populated_detail_attributes": []
+          },
+          {
+            "name": "Escuadra",
+            "items": 1,
+            "populated_detail_attributes": []
+          },
+          {
+            "name": "Regla",
+            "items": 3,
+            "populated_detail_attributes": [
+              "largo_cm"
+            ]
+          },
+          {
+            "name": "Transportador",
+            "items": 1,
+            "populated_detail_attributes": []
+          }
+        ]
+      },
+      {
+        "category": "material-didactico",
+        "name": "Material didáctico",
+        "items": 5,
+        "types_with_items": 5,
+        "bound_detail_attributes": 3,
+        "populated_detail_attributes": 3,
+        "items_with_only_type": 3,
+        "types": [
+          {
+            "name": "Bloques base diez",
+            "items": 1,
+            "populated_detail_attributes": []
+          },
+          {
+            "name": "Cuerpos geométricos",
+            "items": 1,
+            "populated_detail_attributes": []
+          },
+          {
+            "name": "Dinero didáctico",
+            "items": 1,
+            "populated_detail_attributes": []
+          },
+          {
+            "name": "Pizarra",
+            "items": 1,
+            "populated_detail_attributes": [
+              "dimension_mayor_cm",
+              "dimension_menor_cm"
+            ]
+          },
+          {
+            "name": "Tangram",
+            "items": 1,
+            "populated_detail_attributes": [
+              "numero_piezas"
+            ]
+          }
+        ]
+      },
+      {
+        "category": "papeles",
+        "name": "Papeles y cartulinas",
+        "items": 18,
+        "types_with_items": 12,
+        "bound_detail_attributes": 6,
+        "populated_detail_attributes": 6,
+        "items_with_only_type": 5,
+        "types": [
+          {
+            "name": "Cartulina",
+            "items": 1,
+            "populated_detail_attributes": [
+              "color"
+            ]
+          },
+          {
+            "name": "Cartulina española",
+            "items": 1,
+            "populated_detail_attributes": []
+          },
+          {
+            "name": "Cartón",
+            "items": 1,
+            "populated_detail_attributes": [
+              "acabado"
+            ]
+          },
+          {
+            "name": "Goma EVA",
+            "items": 3,
+            "populated_detail_attributes": [
+              "acabado",
+              "autoadhesivo",
+              "color"
+            ]
+          },
+          {
+            "name": "Papel",
+            "items": 3,
+            "populated_detail_attributes": [
+              "color",
+              "formato"
+            ]
+          },
+          {
+            "name": "Papel autoadhesivo",
+            "items": 2,
+            "populated_detail_attributes": [
+              "acabado",
+              "autoadhesivo",
+              "color",
+              "formato"
+            ]
+          },
+          {
+            "name": "Papel crepé",
+            "items": 1,
+            "populated_detail_attributes": []
+          },
+          {
+            "name": "Papel entretenido",
+            "items": 1,
+            "populated_detail_attributes": []
+          },
+          {
+            "name": "Papel kraft",
+            "items": 1,
+            "populated_detail_attributes": []
+          },
+          {
+            "name": "Papel lustre",
+            "items": 2,
+            "populated_detail_attributes": [
+              "dimension_mayor_cm",
+              "dimension_menor_cm"
+            ]
+          },
+          {
+            "name": "Papel volantín",
+            "items": 1,
+            "populated_detail_attributes": []
+          },
+          {
+            "name": "Termolaminado",
+            "items": 1,
+            "populated_detail_attributes": [
+              "formato"
+            ]
+          }
+        ]
+      },
+      {
+        "category": "pegado-y-corte",
+        "name": "Pegado y corte",
+        "items": 13,
+        "types_with_items": 3,
+        "bound_detail_attributes": 7,
+        "populated_detail_attributes": 7,
+        "items_with_only_type": 1,
+        "types": [
+          {
+            "name": "Cinta adhesiva",
+            "items": 4,
+            "populated_detail_attributes": [
+              "color",
+              "material",
+              "presentacion"
+            ]
+          },
+          {
+            "name": "Pegamento",
+            "items": 7,
+            "populated_detail_attributes": [
+              "peso_g",
+              "presentacion",
+              "volumen_ml"
+            ]
+          },
+          {
+            "name": "Tijeras",
+            "items": 2,
+            "populated_detail_attributes": [
+              "lateralidad",
+              "tipo_punta"
+            ]
+          }
+        ]
+      },
+      {
+        "category": "musica",
+        "name": "Música",
+        "items": 9,
+        "types_with_items": 9,
+        "bound_detail_attributes": 1,
+        "populated_detail_attributes": 1,
+        "items_with_only_type": 8,
+        "types": [
+          {
+            "name": "Castañuelas",
+            "items": 1,
+            "populated_detail_attributes": []
+          },
+          {
+            "name": "Claves",
+            "items": 1,
+            "populated_detail_attributes": []
+          },
+          {
+            "name": "Flauta",
+            "items": 1,
+            "populated_detail_attributes": []
+          },
+          {
+            "name": "Guitarra",
+            "items": 1,
+            "populated_detail_attributes": []
+          },
+          {
+            "name": "Maracas",
+            "items": 1,
+            "populated_detail_attributes": []
+          },
+          {
+            "name": "Melódica",
+            "items": 1,
+            "populated_detail_attributes": []
+          },
+          {
+            "name": "Metalófono",
+            "items": 1,
+            "populated_detail_attributes": [
+              "numero_notas"
+            ]
+          },
+          {
+            "name": "Pandero",
+            "items": 1,
+            "populated_detail_attributes": []
+          },
+          {
+            "name": "Ukelele",
+            "items": 1,
+            "populated_detail_attributes": []
+          }
+        ]
+      },
+      {
+        "category": "organizacion",
+        "name": "Organización",
+        "items": 14,
+        "types_with_items": 10,
+        "bound_detail_attributes": 7,
+        "populated_detail_attributes": 7,
+        "items_with_only_type": 2,
+        "types": [
+          {
+            "name": "Archivador",
+            "items": 1,
+            "populated_detail_attributes": [
+              "formato",
+              "tamano"
+            ]
+          },
+          {
+            "name": "Bolsa",
+            "items": 1,
+            "populated_detail_attributes": [
+              "sistema_cierre"
+            ]
+          },
+          {
+            "name": "Caja organizadora",
+            "items": 2,
+            "populated_detail_attributes": [
+              "capacidad_l",
+              "material"
+            ]
+          },
+          {
+            "name": "Carpeta",
+            "items": 3,
+            "populated_detail_attributes": [
+              "formato",
+              "sistema_cierre"
+            ]
+          },
+          {
+            "name": "Estuche",
+            "items": 1,
+            "populated_detail_attributes": []
+          },
+          {
+            "name": "Forro",
+            "items": 2,
+            "populated_detail_attributes": [
+              "formato"
+            ]
+          },
+          {
+            "name": "Funda",
+            "items": 1,
+            "populated_detail_attributes": [
+              "formato",
+              "material"
+            ]
+          },
+          {
+            "name": "Notas adhesivas",
+            "items": 1,
+            "populated_detail_attributes": [
+              "autoadhesivo"
+            ]
+          },
+          {
+            "name": "Revistero",
+            "items": 1,
+            "populated_detail_attributes": [
+              "material"
+            ]
+          },
+          {
+            "name": "Separador",
+            "items": 1,
+            "populated_detail_attributes": [
+              "color"
+            ]
+          }
+        ]
+      },
+      {
+        "category": "tecnologia",
+        "name": "Tecnología",
+        "items": 3,
+        "types_with_items": 2,
+        "bound_detail_attributes": 2,
+        "populated_detail_attributes": 2,
+        "items_with_only_type": 1,
+        "types": [
+          {
+            "name": "Calculadora",
+            "items": 2,
+            "populated_detail_attributes": [
+              "tipo_calculadora"
+            ]
+          },
+          {
+            "name": "Memoria USB",
+            "items": 1,
+            "populated_detail_attributes": [
+              "capacidad_gb"
+            ]
+          }
+        ]
+      },
+      {
+        "category": "lectura-y-consulta",
+        "name": "Lectura y consulta",
+        "items": 4,
+        "types_with_items": 3,
+        "bound_detail_attributes": 1,
+        "populated_detail_attributes": 1,
+        "items_with_only_type": 1,
+        "types": [
+          {
+            "name": "Atlas",
+            "items": 1,
+            "populated_detail_attributes": [
+              "idioma"
+            ]
+          },
+          {
+            "name": "Diccionario",
+            "items": 2,
+            "populated_detail_attributes": [
+              "idioma"
+            ]
+          },
+          {
+            "name": "Tabla periódica",
+            "items": 1,
+            "populated_detail_attributes": []
+          }
+        ]
+      },
+      {
+        "category": "aseo",
+        "name": "Aseo",
+        "items": 8,
+        "types_with_items": 8,
+        "bound_detail_attributes": 0,
+        "populated_detail_attributes": 0,
+        "items_with_only_type": 8,
+        "types": [
+          {
+            "name": "Alcohol gel",
+            "items": 1,
+            "populated_detail_attributes": []
+          },
+          {
+            "name": "Botella",
+            "items": 1,
+            "populated_detail_attributes": []
+          },
+          {
+            "name": "Jabón",
+            "items": 1,
+            "populated_detail_attributes": []
+          },
+          {
+            "name": "Papel higiénico",
+            "items": 1,
+            "populated_detail_attributes": []
+          },
+          {
+            "name": "Pañuelos",
+            "items": 1,
+            "populated_detail_attributes": []
+          },
+          {
+            "name": "Peineta",
+            "items": 1,
+            "populated_detail_attributes": []
+          },
+          {
+            "name": "Toalla",
+            "items": 1,
+            "populated_detail_attributes": []
+          },
+          {
+            "name": "Toallas húmedas",
+            "items": 1,
+            "populated_detail_attributes": []
+          }
+        ]
+      },
+      {
+        "category": "otros",
+        "name": "Otros",
+        "items": 0,
+        "types_with_items": 0,
+        "bound_detail_attributes": 0,
+        "populated_detail_attributes": 0,
+        "items_with_only_type": 0,
+        "types": []
+      }
+    ],
+    "missing_attribute_bindings": [],
+    "attributes_outside_type_applicability": [],
+    "case_duplicate_values": [
+      {
+        "category": "pegado-y-corte",
+        "key": "tipo_punta",
+        "values": [
+          "Redonda",
+          "redonda"
+        ]
+      }
+    ]
+  },
+  "baseline_sha256": "81b21edc096c99bfc520bfe71a3abd04e600c0cb4d7c9ad1e0a8ccb6bff90526",
+  "sources": [
+    {
+      "id": "pw-tis",
+      "title": "The International School La Serena — quinto básico 2026",
+      "url": "https://www.tisls.cl/portal/wp-content/uploads/2025/12/Lista05-2026.pdf",
+      "locator": "PDF pages 1–2; Language Arts/Matemática, general supplies",
+      "evidence": "Requires margins on notebooks, HB pencils, a green-or-yellow highlighter and subject-specific folder colors.",
+      "verification": "opened"
+    },
+    {
+      "id": "pw-monteverde",
+      "title": "Colegio Monteverde Chiloé — segundo básico 2026",
+      "url": "https://www.monteverdechiloe.cl/documentos/lista-utiles-2-basico-2026.pdf",
+      "locator": "PDF page 1; Cuadernos and Estuche",
+      "evidence": "Specifies college notebooks with 100 sheets without spiral binding, and 2B graphite pencils. A later left-handed adaptation note should remain a list-level instruction.",
+      "verification": "opened"
+    },
+    {
+      "id": "pw-torre-notebook",
+      "title": "Torre — Cuaderno Triple Liso 7 mm 150 hojas",
+      "url": "https://www.torre.cl/catalogo/cuaderno-triple-liso-7mm-150hjs/",
+      "locator": "Product description; SKU 25303",
+      "evidence": "Manufacturer identifies 150 sheets, 7 mm squared ruling and single spiral binding. The word Liso in its title does not mean blank inner pages.",
+      "verification": "opened"
+    },
+    {
+      "id": "pw-chuqui",
+      "title": "Colegio Chuquicamata — séptimo básico 2026",
+      "url": "https://colegiochuquicamata.cl/2019/wp-content/uploads/2025/12/Lista_Materiales_7_BASICO_2026.pdf",
+      "locator": "PDF pages 2–3; general and visual-art supplies",
+      "evidence": "Names HB and 2B pencils, a fine-tip black permanent marker, and liquid correction fluid.",
+      "verification": "opened"
+    },
+    {
+      "id": "pw-torre-graphite",
+      "title": "Torre — lápices grafito official product family",
+      "url": "https://www.torre.cl/product-category/mundo-escolar/arte-y-dibujo/lapices/lapices-grafito/",
+      "locator": "Official manufacturer product titles",
+      "evidence": "Lists triangular and hexagonal graphite pencils; also lists triangular HB pencils explicitly with and without erasers.",
+      "verification": "indexed_official"
+    },
+    {
+      "id": "pw-artel-marker",
+      "title": "Artel — catálogo 2022, marcadores",
+      "url": "https://www.artel.cl/wp-content/uploads/2021/10/catalogo%20artel%202022.pdf",
+      "locator": "Printed page 62; section 2.1 Marcadores",
+      "evidence": "Lists permanent markers with round and chisel tips and whiteboard markers with round tips. Used only to corroborate tip distinctions, not current stock.",
+      "verification": "indexed_official_pdf"
+    },
+    {
+      "id": "pw-chamex",
+      "title": "Chamex — Sobre Chamex",
+      "url": "https://chamex.com.br/es/sobre-chamex",
+      "locator": "Nossos papéis; lines 86–102 in fetched page",
+      "evidence": "Manufacturer distinguishes paper grammages from 75 to 90 g/m², packs with 300 or 500 sheets, and separate wholesale boxes.",
+      "verification": "opened"
+    },
+    {
+      "id": "pw-mayor",
+      "title": "Colegio Mayor Peñalolén — Play Group 2026",
+      "url": "https://webpe.colegiomayor.cl/wp-content/uploads/2026/01/Lista-PLAY-GROUP-2026-1.pdf",
+      "locator": "PDF pages 1–2; Papeles and Lápices",
+      "evidence": "Requests a carta ream of 500 sheets, metallic cardstock, an EVA pack with 10 colors, and permanent markers with fine and broad tips.",
+      "verification": "opened"
+    },
+    {
+      "id": "pw-torre-cardstock",
+      "title": "Torre — Bolsón Cartulina 18 hojas Imagia",
+      "url": "https://www.torre.cl/catalogo/cartulina/",
+      "locator": "Product description; SKU 17894",
+      "evidence": "Product contents are 18 sheets in 14 colors, with sheet dimensions 26.5 × 37.5 cm. Separate site summary dimensions describe the package, not the sheets.",
+      "verification": "opened"
+    },
+    {
+      "id": "pw-ldv",
+      "title": "Colegio Leonardo Da Vinci de Las Condes — listas 2026",
+      "url": "https://www.corplascondes.cl/descargas/educacion/ldv/2026-alumnos-lista-utiles.pdf",
+      "locator": "PDF pages 1 and 3; Pre Kínder and Kínder",
+      "evidence": "Specifies fluorescent cardstock, colored folders with clips and a fine-tip permanent marker.",
+      "verification": "opened"
+    },
+    {
+      "id": "pw-cvd",
+      "title": "Colegio del Verbo Divino — séptimo básico 2026",
+      "url": "https://www.cvd.cl/documents/38730/3264604/7B%2BLista_Utiles_Apo_2026.pdf/9590c514-e1a5-81d0-40d2-afbf12b23d09?t=1767881431529",
+      "locator": "PDF pages 1–3; subject supply lists and Música",
+      "evidence": "Specifies subject-colored plastic notebook covers and folders, plus a black oficio folder containing 20 transparent sleeves.",
+      "verification": "opened"
+    },
+    {
+      "id": "pw-torre-sleeves",
+      "title": "Torre — Carpeta tradicional 20 fundas oficio negra",
+      "url": "https://www.torre.cl/catalogo/carpeta-con-fundas-tradicional-20-fundas-formato-oficio-negra/",
+      "locator": "Product description; SKU 35288",
+      "evidence": "An oficio polypropylene folder contains 20 transparent sleeves; the sleeve count is separate from the number of folders requested.",
+      "verification": "opened"
+    },
+    {
+      "id": "pw-staedtler-holes",
+      "title": "STAEDTLER 512 07 double-hole tub sharpener",
+      "url": "https://www.staedtler.com/us/en/products/pencils-and-accessories/sharpeners/staedtler-512-07-double-hole-tub-sharpener-51207sbka6/",
+      "locator": "Product information, article51207SBKA6",
+      "evidence": "Manufacturer explicitly states two holes for different pencils and a shavings container; hole count is distinct from physical sharpener size.",
+      "verification": "indexed_official; direct open returned HTTP429"
+    },
+    {
+      "id": "pw-staedtler-catalogue",
+      "title": "STAEDTLER general catalogue 2022",
+      "url": "https://www.staedtler.com/fileadmin/user_upload/Product/PDF/STAEDTLER-General-Catalogue-2022_GB.1645707372.pdf",
+      "locator": "Printed pages114–115, sharpeners513001 and51260F",
+      "evidence": "Official catalogue corroborates the double-hole category with an explicit two-hole description. Used for the attribute distinction, not current availability.",
+      "verification": "indexed_official_pdf"
+    },
+    {
+      "id": "ac_crep",
+      "title": "CREP: Educación Parvularia NT2 2026",
+      "url": "https://crep.cl/docs/listadeutiles/2026/Lista_de_utiles_NT2_2026.pdf",
+      "locator": "Page 1, academic materials",
+      "evidence": "Requests 250 ml tempera with suggested individual colors; 250 g white glue; brush sizes 8 and 10; glitter pompoms; a 50 m yarn ball.",
+      "verification": "directly fetched"
+    },
+    {
+      "id": "ac_chile",
+      "title": "Colegio Chile: eighth grade 2026",
+      "url": "https://www.colegiochile.cl/wp-content/uploads/2026/01/Utiles8Bas2026.pdf",
+      "locator": "Page 1 technology and page 2 art",
+      "evidence": "Specifies sketchbook 21×32 cm/80 sheets, block 26.5×37.2 cm, 12 mm masking tape, a 20×20 canvas and flat brushes 4/10. It also lists glue-stick and white-glue requirements separately.",
+      "verification": "directly fetched"
+    },
+    {
+      "id": "ac_proarte",
+      "title": "Proarte: Croquera 22×32 cms",
+      "url": "https://proarte.cl/producto/croquera/",
+      "locator": "Product description, SKU 12926-7",
+      "evidence": "Explicitly describes bond paper at 70 g/m², 22×32 cm, 100 sheets.",
+      "verification": "directly fetched"
+    },
+    {
+      "id": "ac_scissor",
+      "title": "Artel/Maped: Tijera Zurdo Essential 13 cm",
+      "url": "https://www.artel.cl/producto/blister-tijera-zurdo-essential-13cm/",
+      "locator": "Product description, SKU 50320417",
+      "evidence": "Specifies a 13 cm left-handed school scissor with rounded tip.",
+      "verification": "directly fetched"
+    },
+    {
+      "id": "ac_tape_masking",
+      "title": "Torre: Cinta Masking Color Crema 36 mm × 40 m",
+      "url": "https://www.torre.cl/catalogo/cinta-masking-color-crema-36-mm-x-40-mt/",
+      "locator": "Description, SKU 35032",
+      "evidence": "Separately identifies tape width 36 mm and roll length 40 m.",
+      "verification": "directly fetched"
+    },
+    {
+      "id": "ac_tape_crystal",
+      "title": "Torre: Cinta Tradicional Cristal 18 mm × 30 m",
+      "url": "https://www.torre.cl/catalogo/cinta-tradicional-cristal-set-8-unid-18-mm-x-30-mt/",
+      "locator": "Description, SKU 35045",
+      "evidence": "Identifies each roll as 18 mm wide and 30 m long; the sale pack contains eight rolls.",
+      "verification": "directly fetched"
+    },
+    {
+      "id": "ac_palitos",
+      "title": "Artel: Palitos de helado colores, bolsa 50 unidades",
+      "url": "https://www.artel.cl/producto/palitos-de-helado-colores-bolsa-50-unidades/",
+      "locator": "Product description, SKU 20110015",
+      "evidence": "The consumer bag contains 50 colored sticks; wholesale pack counts are separate.",
+      "verification": "directly fetched"
+    },
+    {
+      "id": "ac_pompones",
+      "title": "Torre: Pompones Brillantes",
+      "url": "https://www.torre.cl/catalogo/pompones-brillantes/",
+      "locator": "Product description, SKU 28138",
+      "evidence": "Describes assorted-size and assorted-color shiny pompoms; page dimensions are not individual pompom diameters.",
+      "verification": "official indexed product text"
+    },
+    {
+      "id": "ac_artel_catalog",
+      "title": "Artel: Catálogo 2025",
+      "url": "https://www.artel.cl/wp-content/uploads/2024/11/Catalogo_Artel_2025.pdf",
+      "locator": "Printed pages 60 and 176",
+      "evidence": "Lists tempera bottles of 100/250/500 ml, air-drying modeling paste of 500 g, modeling clay of 1 kg and cold porcelain of 250/500 g.",
+      "verification": "official indexed PDF text; direct URL currently redirects to homepage"
+    },
+    {
+      "id": "ac_sanisidro",
+      "title": "Colegio San Isidro: second grade 2026",
+      "url": "https://www.colegiosanisidro.cl/wp-content/uploads/2025/12/Lista-de-utiles-2%C2%B0Basico-2026.pdf",
+      "locator": "Art box and pencil-case requirements",
+      "evidence": "Specifies 20 g glue-stick and 225 g school white glue as different requirements.",
+      "verification": "official indexed PDF text; direct fetch cache miss"
+    },
+    {
+      "id": "ac_particularuno",
+      "title": "Colegio Bicentenario N°1 de Ñuñoa: eighth grade 2026",
+      "url": "https://particularuno.cl/wp-content/uploads/2022/02/8%C2%B0-BASICO-2026.pdf",
+      "locator": "Materials table",
+      "evidence": "Requests washable white glue, separate glue-stick and liquid silicone, and a twelve-color gel tempera set.",
+      "verification": "official indexed PDF text; direct fetch cache miss"
+    },
+    {
+      "id": "ac_santo",
+      "title": "Colegio Santo Domingo de Guzmán: school lists 2026",
+      "url": "https://santodomingovalparaiso.cl/wp-content/uploads/2025/12/LISTA-DE-UTILES-2026.pdf",
+      "locator": "Pages 7 and 11, art materials",
+      "evidence": "Explicitly requests white glue in 250 ml. This validates the existing volume-based entry; it must not be changed to grams.",
+      "verification": "directly fetched"
+    },
+    {
+      "id": "ac_torre_glue",
+      "title": "Torre: Cola Fría 225 Gr",
+      "url": "https://www.torre.cl/catalogo/cola-fria-225-gr/",
+      "locator": "Description, SKU26195, lines1097–1100",
+      "evidence": "Manufacturer identifies a 225 g school white glue and explicitly describes it as washable.",
+      "verification": "directly fetched"
+    },
+    {
+      "id": "ac_staedtler_glue",
+      "title": "STAEDTLER Noris960 glue stick20g",
+      "url": "https://www.staedtler.com/intl/en/products/products-for-colouring/crafting-accessories/glue-sticks/noris-960-glue-stick-96020pca12/",
+      "locator": "Product heading and information, article96020PCA12",
+      "evidence": "The individual glue stick contains 20 g; the display contains 12 such sticks.",
+      "verification": "official indexed product text; direct fetch returnedHTTP429"
+    },
+    {
+      "id": "ac_fila_das",
+      "title": "FILA: DAS modeling clay",
+      "url": "https://www.fila.it/int/en/product/das/",
+      "locator": "Product description, format, lines43–49",
+      "evidence": "Manufacturer lists air-drying modeling clay in 150 g,250 g,500 g and 1 kg blocks.",
+      "verification": "directly fetched"
+    },
+    {
+      "id": "of_cpfd6",
+      "title": "Lista de útiles 6° básico 2026 — cpfd.cl",
+      "url": "https://www.cpfd.cl/utiles2026/LISTA%20DE%20UTILES%206%20BASICO%202026.pdf",
+      "locator": "Page 1, Matemáticas",
+      "evidence": "Requests a plastic semicircular 180-degree protractor and a plastic 45-degree set square labeled 15 cm.",
+      "verification": "opened"
+    },
+    {
+      "id": "of_brs6",
+      "title": "Lista de útiles 6° básico 2026 — BRS",
+      "url": "https://brs.cl/wp-content/uploads/2025/11/6%C2%B0-Basico-2026-Lista-de-Utiles.docx.pdf",
+      "locator": "Page 1, Artes y Música; page 2, Matemática",
+      "evidence": "Specifies soprano recorder with German fingering. Separately requests a basic calculator.",
+      "verification": "opened"
+    },
+    {
+      "id": "of_yamaha",
+      "title": "Yamaha: Baroque style and German style recorders",
+      "url": "https://www.yamaha.com/en/musical_instrument_guide/recorder/selection/selection002.html",
+      "locator": "Differences between Baroque style and German style",
+      "evidence": "The manufacturer identifies German and Baroque as distinct fingering systems, so this is a functional choice rather than a brand distinction.",
+      "verification": "opened"
+    },
+    {
+      "id": "of_pirque",
+      "title": "Escuela de Lenguaje Pirque: Kínder materials 2026",
+      "url": "https://escueladelenguajepirque.cl/lista-de-materiales-kinder-2026/",
+      "locator": "Útiles de aseo",
+      "evidence": "Requests two liquid-soap refills, each containing one liter. This supports a 1000 ml per-container attribute, separate from quantity two.",
+      "verification": "opened"
+    },
+    {
+      "id": "of_caleman25",
+      "title": "Colegio Alemán: Kínder supplies 2025",
+      "url": "https://www.caleman.cl/listas/2025/Lista%20de%20utiles%20escolares%20-%20Kinder%202025.pdf",
+      "locator": "Page 2, Útiles de aseo",
+      "evidence": "Historical school list specifies 500 ml liquid soap with dispenser and 250 ml alcohol gel. Evidence is for generic formats, not a claim about 2026 requirements.",
+      "verification": "opened"
+    },
+    {
+      "id": "of_kinderland",
+      "title": "Kinderland: Medio Menor materials 2026",
+      "url": "https://kinderland.cl/wp-content/uploads/2025/10/LISTA-DE-MATERIALES-M.Menor-2026.pdf",
+      "locator": "Page 1, first materials rows",
+      "evidence": "Specifies six tissue boxes containing 90 tissues each and five wet-wipe packages containing 80 wipes each.",
+      "verification": "opened"
+    },
+    {
+      "id": "of_santaclara",
+      "title": "Liceo Santa Clara: 5°–8° básico supplies 2026",
+      "url": "https://lsantaclara.cl/web/content/6947?download=true&unique=7da92104e49ee32ed896e76a7c7ba90cd8a9bdcc",
+      "locator": "Page 2, Educación Física",
+      "evidence": "Specifies a 30 by 40 cm towel. The document also requests a protractor with two numbered scales on page 1.",
+      "verification": "opened"
+    },
+    {
+      "id": "of_lasalle4",
+      "title": "Instituto La Salle: fourth grade supplies 2026",
+      "url": "https://www.institutolasalle.cl/PDFs/2026/lista_de_utiles_4_2026.pdf",
+      "locator": "Page 2, Música",
+      "evidence": "Lists a 25-note chromatic metallophone and, later in the year, a choice between German-fingering recorder and 32-note melodica.",
+      "verification": "opened"
+    },
+    {
+      "id": "of_cpv2",
+      "title": "CPV Peñalolén: second grade supplies 2026",
+      "url": "https://cpvpenalolen.cl/wp-content/uploads/2025/12/2%C2%B0-basico-2026.docx.pdf",
+      "locator": "Page 1, Música",
+      "evidence": "Requests a 22-note chromatic metallophone without colored bars.",
+      "verification": "opened"
+    },
+    {
+      "id": "of_csac3",
+      "title": "CSAC: third grade supplies 2026",
+      "url": "https://csac.cl/wp-content/uploads/2025/12/3%C2%B0-Basico-LISTA-DE-UTILES-2026.pdf",
+      "locator": "Page 1, Tecnología",
+      "evidence": "Requires a USB drive with a minimum capacity of 16 GB; the minimum must not be rewritten as exactly 16 GB.",
+      "verification": "opened"
+    },
+    {
+      "id": "of_stmonica4",
+      "title": "St Monica: fourth grade supplies 2026",
+      "url": "https://stmonica.cl/wp-content/uploads/2026/01/Lista-de-utiles-cuartos-basicos-ok-1.docx-2.pdf",
+      "locator": "Page 1, Lenguaje y Comunicación",
+      "evidence": "Requests both a Spanish-language dictionary and a separate synonyms-and-antonyms dictionary.",
+      "verification": "opened"
+    },
+    {
+      "id": "of_pumahuek",
+      "title": "Colegio Pumahue Temuco: Kínder Bilingüe supplies 2026",
+      "url": "https://www.ddee.cl/upload_archivos/lista_utiles/upload/2026/TEM/Bilingue/K/archivo.pdf",
+      "locator": "Page 2, first materials row",
+      "evidence": "Requires a white board with a square grid, measuring 20 by 30 cm. Grid spacing is unspecified.",
+      "verification": "opened"
+    },
+    {
+      "id": "of_pumahue8",
+      "title": "Colegio Pumahue Peñalolén: eighth grade supplies 2026",
+      "url": "https://www.ddee.cl/upload_archivos/lista_utiles/upload/2026/PEN/Bilingue/8B/archivo.pdf",
+      "locator": "Page 3, Artes Musicales continuation",
+      "evidence": "Lists a melodica with at least 32 keys; a minimum is a different requirement from exact equality.",
+      "verification": "opened"
+    },
+    {
+      "id": "of_pumahue5",
+      "title": "Colegio Pumahue Temuco: fifth grade Bilingüe supplies 2026",
+      "url": "https://www.ddee.cl/upload_archivos/lista_utiles/upload/2026/TEM/Bilingue/5B/archivo.pdf",
+      "locator": "Inglés (official indexed PDF text; direct fetch cache miss)",
+      "evidence": "Requests an English-to-English pocket dictionary. This differs from the existing bilingual English-Spanish entry.",
+      "verification": "official indexed text; direct fetch returned cache miss on two attempts"
+    }
+  ],
+  "findings": [
+    {
+      "id": "pw-01",
+      "category": "cuadernos",
+      "type": "Cuadriculado, Composición",
+      "applicable_types": [
+        "Cuadriculado",
+        "Composición"
+      ],
+      "current_coverage": "Format, sheets and ruling exist, but no margin definition or binding exists.",
+      "gap_kind": "new_attribute",
+      "attribute": {
+        "key": "con_margen",
+        "name": "Con margen",
+        "data_type": "boolean",
+        "unit": null
+      },
+      "evidenced_values": [
+        true
+      ],
+      "source_ids": [
+        "pw-tis"
+      ],
+      "priority": "P1",
+      "proposal": "Add optional con_margen and explicit margin-required variants or custom requirements.",
+      "caveat": "Missing does not mean false; do not mark all existing notebooks as having margins.",
+      "confidence": "high",
+      "categories": [
+        "cuadernos"
+      ],
+      "implementation_status": "proposed_not_applied",
+      "applicability": [
+        {
+          "category": "cuadernos",
+          "types": [
+            "Cuadriculado",
+            "Composición"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pw-02",
+      "category": "cuadernos",
+      "type": "Cuadriculado, Caligrafía",
+      "applicable_types": [
+        "Cuadriculado",
+        "Caligrafía"
+      ],
+      "current_coverage": "No binding/spiral attribute exists; current college/university names leave it unspecified.",
+      "gap_kind": "new_attribute",
+      "attribute": {
+        "key": "con_espiral",
+        "name": "Con espiral",
+        "data_type": "boolean",
+        "unit": null
+      },
+      "evidenced_values": [
+        false,
+        true
+      ],
+      "source_ids": [
+        "pw-monteverde",
+        "pw-torre-notebook"
+      ],
+      "priority": "P1",
+      "proposal": "Add an optional spiral boolean; require a separate text detail only if simple/double/side placement is needed.",
+      "caveat": "A college format alone does not prove that binding is stitched or spiral-free. Preserve special classroom instructions.",
+      "confidence": "high",
+      "categories": [
+        "cuadernos"
+      ],
+      "implementation_status": "proposed_not_applied",
+      "applicability": [
+        {
+          "category": "cuadernos",
+          "types": [
+            "Cuadriculado",
+            "Caligrafía"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pw-03",
+      "category": "cuadernos",
+      "type": "Cuadriculado",
+      "applicable_types": [
+        "Cuadriculado"
+      ],
+      "current_coverage": "31 notebook items cover 40/60/80/100 sheets; none has 150. The field and binding already exist.",
+      "gap_kind": "missing_variant",
+      "attribute": {
+        "key": "numero_hojas",
+        "name": "Número de hojas",
+        "data_type": "number",
+        "unit": "hojas"
+      },
+      "evidenced_values": [
+        150
+      ],
+      "source_ids": [
+        "pw-torre-notebook"
+      ],
+      "priority": "P2",
+      "proposal": "Add a researched 150-sheet, 7 mm notebook option with explicit binding only when required.",
+      "caveat": "150 sheets are not 150 pages. Do not turn manufacturer title Liso into blank ruling or infer a subject count from Triple.",
+      "confidence": "high",
+      "categories": [
+        "cuadernos"
+      ],
+      "implementation_status": "proposed_not_applied",
+      "applicability": [
+        {
+          "category": "cuadernos",
+          "types": [
+            "Cuadriculado"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pw-04",
+      "category": "escritura",
+      "type": "Grafito",
+      "applicable_types": [
+        "Grafito"
+      ],
+      "current_coverage": "Only the 4B item has a typed hardness; a generic pencil and jumbo pencil remain unspecified.",
+      "gap_kind": "missing_variant",
+      "attribute": {
+        "key": "dureza_grafito",
+        "name": "Dureza del grafito",
+        "data_type": "text",
+        "unit": null
+      },
+      "evidenced_values": [
+        "HB",
+        "2B"
+      ],
+      "source_ids": [
+        "pw-tis",
+        "pw-chuqui"
+      ],
+      "priority": "P1",
+      "proposal": "Add ordinary HB and 2B generic variants using the existing hardness attribute.",
+      "caveat": "Do not backfill HB onto the existing unrestricted Lápiz grafito requirement.",
+      "confidence": "high",
+      "categories": [
+        "escritura"
+      ],
+      "implementation_status": "proposed_not_applied",
+      "applicability": [
+        {
+          "category": "escritura",
+          "types": [
+            "Grafito"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pw-05",
+      "category": "escritura",
+      "type": "Grafito",
+      "applicable_types": [
+        "Grafito"
+      ],
+      "current_coverage": "Lápiz grafito jumbo triangular already says triangular in its name, but only tamano=Jumbo is structured.",
+      "gap_kind": "new_attribute",
+      "attribute": {
+        "key": "forma_cuerpo",
+        "name": "Forma del cuerpo",
+        "data_type": "text",
+        "unit": null
+      },
+      "evidenced_values": [
+        "Triangular",
+        "Hexagonal"
+      ],
+      "source_ids": [
+        "pw-torre-graphite"
+      ],
+      "priority": "P1",
+      "proposal": "Add body shape independently from size; review an explicit triangular backfill for that named item and future variants.",
+      "caveat": "Jumbo, triangular and graphite hardness are separate properties; one must not imply the others.",
+      "confidence": "high",
+      "categories": [
+        "escritura"
+      ],
+      "implementation_status": "proposed_not_applied",
+      "applicability": [
+        {
+          "category": "escritura",
+          "types": [
+            "Grafito"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pw-06",
+      "category": "escritura",
+      "type": "Marcador",
+      "applicable_types": [
+        "Marcador"
+      ],
+      "current_coverage": "The global tipo_punta definition exists but Escritura does not bind it. Markers currently encode usage and color only.",
+      "gap_kind": "missing_binding",
+      "attribute": {
+        "key": "tipo_punta",
+        "name": "Tipo de punta",
+        "data_type": "text",
+        "unit": null
+      },
+      "evidenced_values": [
+        "Redonda",
+        "Biselada"
+      ],
+      "source_ids": [
+        "pw-artel-marker"
+      ],
+      "priority": "P1",
+      "proposal": "Reuse tipo_punta for marker shape only, with round/chisel variants where explicitly supported. Pair it with an independent thickness-class field when both are specified.",
+      "caveat": "Round/chisel shape does not determine whether the tip is fine or broad. No millimeter width is inferred from shape.",
+      "confidence": "high",
+      "categories": [
+        "escritura"
+      ],
+      "implementation_status": "proposed_not_applied",
+      "applicability": [
+        {
+          "category": "escritura",
+          "types": [
+            "Marcador"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pw-07",
+      "category": "escritura",
+      "type": "Corrector",
+      "applicable_types": [
+        "Corrector"
+      ],
+      "current_coverage": "Corrector has only its type; presentacion already exists globally but is not bound in Escritura.",
+      "gap_kind": "missing_binding",
+      "attribute": {
+        "key": "presentacion",
+        "name": "Presentación",
+        "data_type": "text",
+        "unit": null
+      },
+      "evidenced_values": [
+        "Líquida"
+      ],
+      "source_ids": [
+        "pw-chuqui"
+      ],
+      "priority": "P1",
+      "proposal": "Reuse presentacion for an explicit liquid corrector variant and leave the generic item unrestricted.",
+      "caveat": "Tape correction is a plausible further format but is not evidenced by the sources attached to this finding.",
+      "confidence": "high",
+      "categories": [
+        "escritura"
+      ],
+      "implementation_status": "proposed_not_applied",
+      "applicability": [
+        {
+          "category": "escritura",
+          "types": [
+            "Corrector"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pw-08",
+      "category": "escritura",
+      "type": "Destacador",
+      "applicable_types": [
+        "Destacador"
+      ],
+      "current_coverage": "Color is available to Bicolor, Bolígrafo and Marcador, but not Destacador; the only highlighter item has no color.",
+      "gap_kind": "missing_binding",
+      "attribute": {
+        "key": "color",
+        "name": "Color",
+        "data_type": "text",
+        "unit": null
+      },
+      "evidenced_values": [
+        "Verde",
+        "Amarillo"
+      ],
+      "source_ids": [
+        "pw-tis"
+      ],
+      "priority": "P1",
+      "proposal": "Extend conditional color applicability to Destacador and add green/yellow choices.",
+      "caveat": "The school allows green OR yellow: use one alternative requirement with a shared quantity, not two mandatory rows.",
+      "confidence": "high",
+      "categories": [
+        "escritura"
+      ],
+      "implementation_status": "proposed_not_applied",
+      "applicability": [
+        {
+          "category": "escritura",
+          "types": [
+            "Destacador"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pw-09",
+      "category": "papeles",
+      "type": "Papel",
+      "applicable_types": [
+        "Papel"
+      ],
+      "current_coverage": "No grammage field exists. peso_g is grams of product and must not be reused.",
+      "gap_kind": "new_attribute",
+      "attribute": {
+        "key": "gramaje_g_m2",
+        "name": "Gramaje",
+        "data_type": "number",
+        "unit": "g/m²"
+      },
+      "evidenced_values": [
+        75,
+        90
+      ],
+      "source_ids": [
+        "pw-chamex"
+      ],
+      "priority": "P2",
+      "proposal": "Introduce paper grammage with an explicit g/m² unit; expose it only for paper types with evidenced variants.",
+      "caveat": "The manufacturer supports the grammage endpoints; do not fabricate every intermediate value or parse ambiguous bare grams as grammage. Local availability is not established.",
+      "confidence": "high",
+      "categories": [
+        "papeles"
+      ],
+      "implementation_status": "proposed_not_applied",
+      "applicability": [
+        {
+          "category": "papeles",
+          "types": [
+            "Papel"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pw-10",
+      "category": "papeles",
+      "type": "Papel, Cartulina",
+      "applicable_types": [
+        "Papel",
+        "Cartulina"
+      ],
+      "current_coverage": "The sheet-count definition exists but Papeles has no binding or counted pack variants.",
+      "gap_kind": "missing_binding",
+      "attribute": {
+        "key": "numero_hojas",
+        "name": "Número de hojas",
+        "data_type": "number",
+        "unit": "hojas"
+      },
+      "evidenced_values": [
+        500,
+        18
+      ],
+      "source_ids": [
+        "pw-mayor",
+        "pw-torre-cardstock"
+      ],
+      "priority": "P1",
+      "proposal": "Bind sheet count to these paper types and create clearly named pack/ream requirements, e.g. one 500-sheet carta ream.",
+      "caveat": "List quantity counts requested packs; the attribute counts sheets inside each pack. Do not turn unrestricted paper into a 500-sheet requirement.",
+      "confidence": "high",
+      "categories": [
+        "papeles"
+      ],
+      "implementation_status": "proposed_not_applied",
+      "applicability": [
+        {
+          "category": "papeles",
+          "types": [
+            "Papel",
+            "Cartulina"
+          ]
+        }
+      ],
+      "value_evidence": [
+        {
+          "category": "papeles",
+          "type": "Papel",
+          "value": 500,
+          "paired_attributes": {
+            "formato": "carta"
+          },
+          "source_ids": [
+            "pw-mayor"
+          ],
+          "basis": "sheets_per_ream"
+        },
+        {
+          "category": "papeles",
+          "type": "Cartulina",
+          "value": 18,
+          "paired_attributes": {
+            "numero_colores": 14,
+            "dimension_menor_cm": 26.5,
+            "dimension_mayor_cm": 37.5
+          },
+          "source_ids": [
+            "pw-torre-cardstock"
+          ],
+          "basis": "sheets_per_pack"
+        }
+      ]
+    },
+    {
+      "id": "pw-11",
+      "category": "papeles",
+      "type": "Cartulina",
+      "applicable_types": [
+        "Cartulina"
+      ],
+      "current_coverage": "Both dimensional definitions exist, but in Papeles they currently apply only to Papel lustre.",
+      "gap_kind": "missing_binding",
+      "attribute": {
+        "key": "dimension_menor_cm",
+        "name": "Dimensión menor",
+        "data_type": "number",
+        "unit": "cm"
+      },
+      "evidenced_values": [
+        26.5
+      ],
+      "source_ids": [
+        "pw-torre-cardstock"
+      ],
+      "priority": "P1",
+      "proposal": "Extend both dimensions to Cartulina and use the explicit 26.5 × 37.5 cm sheet variant.",
+      "caveat": "Use physical sheet dimensions from the product contents, not shipping/package dimensions or assumed universal pliego dimensions.",
+      "confidence": "high",
+      "related_attributes": [
+        {
+          "key": "dimension_mayor_cm",
+          "name": "Dimensión mayor",
+          "data_type": "number",
+          "unit": "cm",
+          "evidenced_values": [
+            37.5
+          ]
+        }
+      ],
+      "categories": [
+        "papeles"
+      ],
+      "implementation_status": "proposed_not_applied",
+      "applicability": [
+        {
+          "category": "papeles",
+          "types": [
+            "Cartulina"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pw-12",
+      "category": "papeles",
+      "type": "Cartulina",
+      "applicable_types": [
+        "Cartulina"
+      ],
+      "current_coverage": "Acabado is bound only to Cartón, Goma EVA and Papel autoadhesivo; only unrestricted colored cardstock exists.",
+      "gap_kind": "missing_binding",
+      "attribute": {
+        "key": "acabado",
+        "name": "Acabado",
+        "data_type": "text",
+        "unit": null
+      },
+      "evidenced_values": [
+        "Metálico",
+        "Fluorescente"
+      ],
+      "source_ids": [
+        "pw-mayor",
+        "pw-ldv"
+      ],
+      "priority": "P1",
+      "proposal": "Extend acabado to Cartulina with explicit metallic and fluorescent variants.",
+      "caveat": "A finish is not a color or a brand; avoid replacing ordinary cardstock with a special-finish requirement.",
+      "confidence": "high",
+      "categories": [
+        "papeles"
+      ],
+      "implementation_status": "proposed_not_applied",
+      "applicability": [
+        {
+          "category": "papeles",
+          "types": [
+            "Cartulina"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pw-13",
+      "category": "organizacion",
+      "type": "Carpeta, Forro",
+      "applicable_types": [
+        "Carpeta",
+        "Forro"
+      ],
+      "current_coverage": "Organización color applies only to Separador. Folders/covers cannot express the subject-color requirements through attributes.",
+      "gap_kind": "missing_binding",
+      "attribute": {
+        "key": "color",
+        "name": "Color",
+        "data_type": "text",
+        "unit": null
+      },
+      "evidenced_values": [
+        "Azul",
+        "Verde",
+        "Negro",
+        "Blanco",
+        "Amarillo",
+        "Celeste",
+        "Morado",
+        "Gris"
+      ],
+      "source_ids": [
+        "pw-cvd"
+      ],
+      "priority": "P1",
+      "proposal": "Extend color applicability to Carpeta and Forro, then curate source-backed choices alongside existing format and closure.",
+      "caveat": "The cover color belongs to the cover requirement; do not silently equate it to notebook-paper color or force every notebook to have a cover.",
+      "confidence": "high",
+      "categories": [
+        "organizacion"
+      ],
+      "implementation_status": "proposed_not_applied",
+      "applicability": [
+        {
+          "category": "organizacion",
+          "types": [
+            "Carpeta",
+            "Forro"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pw-14",
+      "category": "organizacion",
+      "type": "Carpeta",
+      "applicable_types": [
+        "Carpeta"
+      ],
+      "current_coverage": "Folders have format and closure fields but no sleeve count or presentation-folder variant.",
+      "gap_kind": "new_attribute",
+      "attribute": {
+        "key": "numero_fundas",
+        "name": "Número de fundas",
+        "data_type": "number",
+        "unit": "fundas"
+      },
+      "evidenced_values": [
+        20
+      ],
+      "source_ids": [
+        "pw-cvd",
+        "pw-torre-sleeves"
+      ],
+      "priority": "P1",
+      "proposal": "Add optional sleeve count and a clearly named oficio folder with 20 sleeves.",
+      "caveat": "20 sleeves are not 20 folders, 20 loose sheets or a guaranteed number of display pages. Keep material and cover hardness optional unless specified.",
+      "confidence": "high",
+      "categories": [
+        "organizacion"
+      ],
+      "implementation_status": "proposed_not_applied",
+      "applicability": [
+        {
+          "category": "organizacion",
+          "types": [
+            "Carpeta"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pw-15",
+      "category": "papeles",
+      "type": "Cartulina, Goma EVA",
+      "applicable_types": [
+        "Cartulina",
+        "Goma EVA"
+      ],
+      "current_coverage": "numero_colores exists only as an Arte binding; paper/EVA sets can currently say Surtido but cannot specify a count.",
+      "gap_kind": "missing_binding",
+      "attribute": {
+        "key": "numero_colores",
+        "name": "Número de colores",
+        "data_type": "number",
+        "unit": "colores"
+      },
+      "evidenced_values": [
+        14,
+        10
+      ],
+      "source_ids": [
+        "pw-torre-cardstock",
+        "pw-mayor"
+      ],
+      "priority": "P2",
+      "proposal": "Reuse the color-count definition for explicitly counted paper/EVA packs.",
+      "caveat": "The Torre example has 18 sheets but 14 colors. Do not derive colors from sheets, pieces, or package quantity.",
+      "confidence": "high",
+      "value_scope": {
+        "Cartulina": [
+          14
+        ],
+        "Goma EVA": [
+          10
+        ]
+      },
+      "categories": [
+        "papeles"
+      ],
+      "implementation_status": "proposed_not_applied",
+      "applicability": [
+        {
+          "category": "papeles",
+          "types": [
+            "Cartulina",
+            "Goma EVA"
+          ]
+        }
+      ],
+      "value_evidence": [
+        {
+          "category": "papeles",
+          "type": "Cartulina",
+          "value": 14,
+          "paired_attributes": {
+            "numero_hojas": 18,
+            "dimension_menor_cm": 26.5,
+            "dimension_mayor_cm": 37.5
+          },
+          "source_ids": [
+            "pw-torre-cardstock"
+          ]
+        },
+        {
+          "category": "papeles",
+          "type": "Goma EVA",
+          "value": 10,
+          "source_ids": [
+            "pw-mayor"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pw-16",
+      "category": "escritura",
+      "type": "Grafito",
+      "applicable_types": [
+        "Grafito"
+      ],
+      "current_coverage": "The eraser boolean is defined and bound to Grafito, but no current catalog item has a value.",
+      "gap_kind": "missing_variant",
+      "attribute": {
+        "key": "incluye_goma",
+        "name": "Incluye goma",
+        "data_type": "boolean",
+        "unit": null
+      },
+      "evidenced_values": [
+        true,
+        false
+      ],
+      "source_ids": [
+        "pw-torre-graphite"
+      ],
+      "priority": "P2",
+      "proposal": "Add explicit with-eraser and without-eraser options where requested; both boolean states should be filterable.",
+      "caveat": "An absent value remains unspecified, not false; do not infer presence from the graphite grade.",
+      "confidence": "high",
+      "categories": [
+        "escritura"
+      ],
+      "implementation_status": "proposed_not_applied",
+      "applicability": [
+        {
+          "category": "escritura",
+          "types": [
+            "Grafito"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pw-17",
+      "category": "escritura",
+      "type": "Marcador",
+      "applicable_types": [
+        "Marcador"
+      ],
+      "current_coverage": "No marker thickness-class definition exists. A single tip-shape field cannot express fine and round simultaneously.",
+      "gap_kind": "new_attribute",
+      "attribute": {
+        "key": "grosor_punta",
+        "name": "Grosor de punta",
+        "data_type": "text",
+        "unit": null
+      },
+      "evidenced_values": [
+        "Fina",
+        "Gruesa"
+      ],
+      "source_ids": [
+        "pw-chuqui",
+        "pw-mayor"
+      ],
+      "priority": "P1",
+      "proposal": "Add a separate optional textual tip-thickness class, allowing combinations such as redonda plus fina without overwriting tip shape.",
+      "caveat": "School sources name fine/broad tips rather than exact line widths. Do not manufacture millimeter values or treat this label as a measured stroke width.",
+      "confidence": "high",
+      "categories": [
+        "escritura"
+      ],
+      "implementation_status": "proposed_not_applied",
+      "applicability": [
+        {
+          "category": "escritura",
+          "types": [
+            "Marcador"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pw-18",
+      "category": "escritura",
+      "type": "Sacapuntas",
+      "applicable_types": [
+        "Sacapuntas"
+      ],
+      "current_coverage": "Sacapuntas doble con depósito stores tamano=Doble and con_deposito=true. The shared size key mixes hole count with graphite size Jumbo.",
+      "gap_kind": "new_attribute",
+      "attribute": {
+        "key": "numero_orificios",
+        "name": "Número de orificios",
+        "data_type": "number",
+        "unit": "orificios"
+      },
+      "evidenced_values": [
+        2
+      ],
+      "source_ids": [
+        "pw-staedtler-holes",
+        "pw-staedtler-catalogue"
+      ],
+      "priority": "P2",
+      "proposal": "Add a numeric sharpener hole-count field; review replacing the named double sharpener’s Doble size classification with two holes while preserving identities and existing list snapshots.",
+      "caveat": "Hole count does not imply container presence or physical dimensions. Do not infer single-hole count for unspecified sharpeners or modify already curated values blindly.",
+      "confidence": "high",
+      "categories": [
+        "escritura"
+      ],
+      "implementation_status": "proposed_not_applied",
+      "applicability": [
+        {
+          "category": "escritura",
+          "types": [
+            "Sacapuntas"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AC01",
+      "category": "arte-y-dibujo",
+      "type": "Témperas",
+      "current_coverage": "Presentation and color count exist, but volumen_ml is not bound to this category.",
+      "gap_kind": "missing_binding",
+      "attribute": {
+        "key": "volumen_ml",
+        "name": "Contenido",
+        "data_type": "number",
+        "unit": "ml"
+      },
+      "evidenced_values": [
+        100,
+        250,
+        500
+      ],
+      "source_ids": [
+        "ac_crep",
+        "ac_artel_catalog"
+      ],
+      "priority": "P1",
+      "proposal": "Bind volume to Témperas and add explicitly sourced single-bottle requirements, beginning with 250 ml.",
+      "caveat": "For sets, per-pot volume and total set volume differ; do not place a per-pot amount in a field labeled total content. Only 250 ml has current school-list demand here.",
+      "categories": [
+        "arte-y-dibujo"
+      ],
+      "applicable_types": [
+        "Témperas"
+      ],
+      "implementation_status": "proposed_not_applied",
+      "applicability": [
+        {
+          "category": "arte-y-dibujo",
+          "types": [
+            "Témperas"
+          ]
+        }
+      ],
+      "value_evidence": [
+        {
+          "category": "arte-y-dibujo",
+          "type": "Témperas",
+          "value": 250,
+          "source_ids": [
+            "ac_crep"
+          ],
+          "basis": "volume_per_bottle"
+        },
+        {
+          "category": "arte-y-dibujo",
+          "type": "Témperas",
+          "values": [
+            100,
+            250,
+            500
+          ],
+          "source_ids": [
+            "ac_artel_catalog"
+          ],
+          "basis": "volume_per_bottle",
+          "evidence_limit": "indexed_only"
+        }
+      ]
+    },
+    {
+      "id": "AC02",
+      "category": "arte-y-dibujo",
+      "type": "Témperas",
+      "current_coverage": "color exists globally but has no Arte y dibujo binding; current paint items only describe assorted sets.",
+      "gap_kind": "missing_binding",
+      "attribute": {
+        "key": "color",
+        "name": "Color",
+        "data_type": "text",
+        "unit": null
+      },
+      "evidenced_values": [
+        "Rojo",
+        "Azul",
+        "Verde",
+        "Amarillo",
+        "Blanco",
+        "Negro"
+      ],
+      "source_ids": [
+        "ac_crep"
+      ],
+      "priority": "P1",
+      "proposal": "Allow individual paint colors as optional filters and requirements; retain assorted sets.",
+      "caveat": "The school calls these suggested alternatives. Do not turn its suggested palette into six mandatory separate purchases.",
+      "categories": [
+        "arte-y-dibujo"
+      ],
+      "applicable_types": [
+        "Témperas"
+      ],
+      "implementation_status": "proposed_not_applied",
+      "applicability": [
+        {
+          "category": "arte-y-dibujo",
+          "types": [
+            "Témperas"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AC03",
+      "category": "arte-y-dibujo",
+      "type": "Croquera; Block",
+      "current_coverage": "Sketchbook sheet count and dimensions exist, but no grammage definition exists.",
+      "gap_kind": "new_attribute",
+      "attribute": {
+        "key": "gramaje_g_m2",
+        "name": "Gramaje",
+        "data_type": "number",
+        "unit": "g/m²"
+      },
+      "evidenced_values": [
+        70
+      ],
+      "source_ids": [
+        "ac_proarte",
+        "ac_chile"
+      ],
+      "priority": "P1",
+      "proposal": "Create an optional paper grammage field and bind it to sketchbooks/drawing blocks, shared with paper categories.",
+      "caveat": "Proarte explicitly verifies 70 g/m². The school uses the shorthand 80 gr; preserve that wording for review until its exact g/m² meaning is corroborated, rather than treating it as total paper weight.",
+      "categories": [
+        "arte-y-dibujo"
+      ],
+      "applicable_types": [
+        "Croquera",
+        "Block"
+      ],
+      "implementation_status": "proposed_not_applied",
+      "applicability": [
+        {
+          "category": "arte-y-dibujo",
+          "types": [
+            "Croquera",
+            "Block"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AC04",
+      "category": "arte-y-dibujo",
+      "type": "Block",
+      "current_coverage": "Dimension fields are bound to Croquera/Lienzo but not Block; blocks only have generic type/number/fraction, with no populated sheet counts.",
+      "gap_kind": "missing_binding",
+      "attribute": {
+        "key": "dimension_menor_cm",
+        "name": "Dimensión menor",
+        "data_type": "number",
+        "unit": "cm"
+      },
+      "evidenced_values": [
+        26.5
+      ],
+      "source_ids": [
+        "ac_chile"
+      ],
+      "priority": "P1",
+      "proposal": "Extend both existing dimension fields to Block; add the evidenced pair 26.5×37.2 cm as an explicit variant.",
+      "caveat": "Do not assume every manufacturer uses identical dimensions for a named block fraction.",
+      "related_attributes": [
+        {
+          "key": "dimension_mayor_cm",
+          "name": "Dimensión mayor",
+          "data_type": "number",
+          "unit": "cm",
+          "evidenced_values": [
+            37.2
+          ]
+        }
+      ],
+      "categories": [
+        "arte-y-dibujo"
+      ],
+      "applicable_types": [
+        "Block"
+      ],
+      "implementation_status": "proposed_not_applied",
+      "applicability": [
+        {
+          "category": "arte-y-dibujo",
+          "types": [
+            "Block"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AC05",
+      "category": "arte-y-dibujo",
+      "type": "Pincel",
+      "current_coverage": "Existing number/shape fields have flat 4/6/14 and round 2/4/6 only.",
+      "gap_kind": "missing_variant",
+      "attribute": {
+        "key": "numero_pincel",
+        "name": "Número de pincel",
+        "data_type": "number",
+        "unit": null
+      },
+      "evidenced_values": [
+        8,
+        10
+      ],
+      "source_ids": [
+        "ac_crep",
+        "ac_chile"
+      ],
+      "priority": "P1",
+      "proposal": "Add sourced brush requirements for sizes 8 and 10; flat size 10 is explicitly requested.",
+      "caveat": "Brush number is a manufacturer size designation, not millimeters. A source giving number without shape must remain unspecified on shape.",
+      "categories": [
+        "arte-y-dibujo"
+      ],
+      "applicable_types": [
+        "Pincel"
+      ],
+      "implementation_status": "proposed_not_applied",
+      "applicability": [
+        {
+          "category": "arte-y-dibujo",
+          "types": [
+            "Pincel"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AC06",
+      "category": "arte-y-dibujo",
+      "type": "Masa para modelar; Arcilla",
+      "current_coverage": "Both entries are generic; peso_g exists globally but has no Arte y dibujo binding.",
+      "gap_kind": "missing_binding",
+      "attribute": {
+        "key": "peso_g",
+        "name": "Peso",
+        "data_type": "number",
+        "unit": "g"
+      },
+      "evidenced_values": [
+        250,
+        500,
+        1000
+      ],
+      "source_ids": [
+        "ac_fila_das",
+        "ac_artel_catalog",
+        "ac_crep"
+      ],
+      "priority": "P2",
+      "proposal": "Bind net content by mass to modeling materials; keep clay, air-dry paste and cold porcelain distinct when adding exact variants.",
+      "caveat": "FILA directly verifies 250/500/1000 g for air-drying modeling clay. The additional Artel material-specific mappings are indexed: paste 500 g, clay 1000 g, cold porcelain 250/500 g. Do not treat air-dry paste, traditional firing clay and cold porcelain as equivalent or generate unsupported cross-combinations.",
+      "categories": [
+        "arte-y-dibujo"
+      ],
+      "applicable_types": [
+        "Masa para modelar",
+        "Arcilla"
+      ],
+      "implementation_status": "proposed_not_applied",
+      "applicability": [
+        {
+          "category": "arte-y-dibujo",
+          "types": [
+            "Masa para modelar",
+            "Arcilla"
+          ]
+        }
+      ],
+      "value_evidence": [
+        {
+          "category": "arte-y-dibujo",
+          "material_family": "Pasta/arcilla de modelado que seca al aire",
+          "values": [
+            250,
+            500,
+            1000
+          ],
+          "source_ids": [
+            "ac_fila_das"
+          ],
+          "catalog_type_assignment": "review_required"
+        },
+        {
+          "category": "arte-y-dibujo",
+          "material_family": "Pasta de modelado que seca al aire",
+          "values": [
+            500
+          ],
+          "source_ids": [
+            "ac_artel_catalog"
+          ],
+          "catalog_type_assignment": "review_required",
+          "evidence_limit": "indexed_only"
+        },
+        {
+          "category": "arte-y-dibujo",
+          "material_family": "Arcilla para modelar",
+          "values": [
+            1000
+          ],
+          "source_ids": [
+            "ac_artel_catalog"
+          ],
+          "catalog_type_assignment": "review_required",
+          "evidence_limit": "indexed_only"
+        },
+        {
+          "category": "arte-y-dibujo",
+          "material_family": "Porcelana fría",
+          "values": [
+            250,
+            500
+          ],
+          "source_ids": [
+            "ac_artel_catalog"
+          ],
+          "catalog_type_assignment": "new_family_review_required",
+          "evidence_limit": "indexed_only"
+        }
+      ]
+    },
+    {
+      "id": "AC07",
+      "category": "pegado-y-corte",
+      "type": "Pegamento",
+      "current_coverage": "peso_g already applies to glue, but only glue-stick 21/40 g are populated. White glue has unspecified and 250 ml variants.",
+      "gap_kind": "missing_variant",
+      "attribute": {
+        "key": "peso_g",
+        "name": "Peso",
+        "data_type": "number",
+        "unit": "g"
+      },
+      "evidenced_values": [
+        20,
+        225,
+        250
+      ],
+      "source_ids": [
+        "ac_sanisidro",
+        "ac_crep",
+        "ac_santo",
+        "ac_torre_glue",
+        "ac_staedtler_glue"
+      ],
+      "priority": "P1",
+      "proposal": "Add glue-stick 20 g and white-glue 225 g/250 g requirements with exact mass units.",
+      "caveat": "250 ml is separately supported by Santo Domingo and is not an error. Never convert glue grams to milliliters without product density;20 g is not 21 g. Torre directly confirms 225 g; STAEDTLER independently confirms 20 g in official indexed product text, although its direct page was rate-limited.",
+      "categories": [
+        "pegado-y-corte"
+      ],
+      "applicable_types": [
+        "Pegamento"
+      ],
+      "implementation_status": "proposed_not_applied",
+      "applicability": [
+        {
+          "category": "pegado-y-corte",
+          "types": [
+            "Pegamento"
+          ]
+        }
+      ],
+      "value_evidence": [
+        {
+          "category": "pegado-y-corte",
+          "type": "Pegamento",
+          "item_family": "Pegamento en barra",
+          "value": 20,
+          "source_ids": [
+            "ac_sanisidro",
+            "ac_staedtler_glue"
+          ]
+        },
+        {
+          "category": "pegado-y-corte",
+          "type": "Pegamento",
+          "item_family": "Cola fría",
+          "value": 225,
+          "source_ids": [
+            "ac_sanisidro",
+            "ac_torre_glue"
+          ]
+        },
+        {
+          "category": "pegado-y-corte",
+          "type": "Pegamento",
+          "item_family": "Cola fría",
+          "value": 250,
+          "source_ids": [
+            "ac_crep"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AC08",
+      "category": "pegado-y-corte",
+      "type": "Tijeras",
+      "current_coverage": "Tip shape and left-handedness exist; largo_cm exists globally but is not bound to scissors.",
+      "gap_kind": "missing_binding",
+      "attribute": {
+        "key": "largo_cm",
+        "name": "Largo",
+        "data_type": "number",
+        "unit": "cm"
+      },
+      "evidenced_values": [
+        13
+      ],
+      "source_ids": [
+        "ac_scissor"
+      ],
+      "priority": "P2",
+      "proposal": "Bind length to scissors and permit an explicit 13 cm variant when requested.",
+      "caveat": "Preserve generic left-handed requirements without forcing 13 cm; this is manufacturer product evidence, not a universal school specification.",
+      "categories": [
+        "pegado-y-corte"
+      ],
+      "applicable_types": [
+        "Tijeras"
+      ],
+      "implementation_status": "proposed_not_applied",
+      "applicability": [
+        {
+          "category": "pegado-y-corte",
+          "types": [
+            "Tijeras"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AC09",
+      "category": "pegado-y-corte",
+      "type": "Cinta adhesiva",
+      "current_coverage": "Existing tape fields cover material/color/presentation; width is not defined.",
+      "gap_kind": "new_attribute",
+      "attribute": {
+        "key": "ancho_mm",
+        "name": "Ancho",
+        "data_type": "number",
+        "unit": "mm"
+      },
+      "evidenced_values": [
+        12,
+        18,
+        36
+      ],
+      "source_ids": [
+        "ac_chile",
+        "ac_tape_crystal",
+        "ac_tape_masking"
+      ],
+      "priority": "P1",
+      "proposal": "Create tape width in millimeters;12 mm masking tape has direct school-list demand.",
+      "caveat": "18 mm applies to the crystalline tape evidence;36 mm to masking. Width must not be confused with roll diameter or package dimensions.",
+      "categories": [
+        "pegado-y-corte"
+      ],
+      "applicable_types": [
+        "Cinta adhesiva"
+      ],
+      "implementation_status": "proposed_not_applied",
+      "applicability": [
+        {
+          "category": "pegado-y-corte",
+          "types": [
+            "Cinta adhesiva"
+          ]
+        }
+      ],
+      "value_evidence": [
+        {
+          "category": "pegado-y-corte",
+          "type": "Cinta adhesiva",
+          "item_family": "Cinta de enmascarar",
+          "value": 12,
+          "source_ids": [
+            "ac_chile"
+          ]
+        },
+        {
+          "category": "pegado-y-corte",
+          "type": "Cinta adhesiva",
+          "item_family": "Cinta cristal",
+          "value": 18,
+          "source_ids": [
+            "ac_tape_crystal"
+          ],
+          "paired_attributes": {
+            "largo_m": 30
+          }
+        },
+        {
+          "category": "pegado-y-corte",
+          "type": "Cinta adhesiva",
+          "item_family": "Cinta de enmascarar",
+          "value": 36,
+          "source_ids": [
+            "ac_tape_masking"
+          ],
+          "paired_attributes": {
+            "largo_m": 40
+          }
+        }
+      ]
+    },
+    {
+      "id": "AC10",
+      "category": "pegado-y-corte;manualidades",
+      "type": "Cinta adhesiva; Lana",
+      "current_coverage": "No length-in-meters field exists; craft category currently has only type.",
+      "gap_kind": "new_attribute",
+      "attribute": {
+        "key": "largo_m",
+        "name": "Largo",
+        "data_type": "number",
+        "unit": "m"
+      },
+      "evidenced_values": [
+        30,
+        40,
+        50
+      ],
+      "source_ids": [
+        "ac_tape_crystal",
+        "ac_tape_masking",
+        "ac_crep"
+      ],
+      "priority": "P1",
+      "proposal": "Create length in meters for tape rolls and yarn; use 30 m crystalline tape,40 m masking tape and 50 m yarn as sourced examples.",
+      "caveat": "These are lengths per roll/ball, not list quantities or lengths of an entire wholesale pack.",
+      "categories": [
+        "pegado-y-corte",
+        "manualidades"
+      ],
+      "applicable_types": [
+        "Cinta adhesiva",
+        "Lana"
+      ],
+      "implementation_status": "proposed_not_applied",
+      "applicability": [
+        {
+          "category": "pegado-y-corte",
+          "types": [
+            "Cinta adhesiva"
+          ]
+        },
+        {
+          "category": "manualidades",
+          "types": [
+            "Lana"
+          ]
+        }
+      ],
+      "value_evidence": [
+        {
+          "category": "pegado-y-corte",
+          "type": "Cinta adhesiva",
+          "item_family": "Cinta cristal",
+          "value": 30,
+          "source_ids": [
+            "ac_tape_crystal"
+          ],
+          "basis": "length_per_roll"
+        },
+        {
+          "category": "pegado-y-corte",
+          "type": "Cinta adhesiva",
+          "item_family": "Cinta de enmascarar",
+          "value": 40,
+          "source_ids": [
+            "ac_tape_masking"
+          ],
+          "basis": "length_per_roll"
+        },
+        {
+          "category": "manualidades",
+          "type": "Lana",
+          "value": 50,
+          "source_ids": [
+            "ac_crep"
+          ],
+          "basis": "length_per_ball"
+        }
+      ]
+    },
+    {
+      "id": "AC11",
+      "category": "manualidades",
+      "type": "Palitos",
+      "current_coverage": "Only generic Palitos de helado exists, with no craft attribute bindings beyond type. numero_piezas exists globally.",
+      "gap_kind": "new_attribute",
+      "attribute": {
+        "key": "unidades_por_envase",
+        "name": "Unidades por envase",
+        "data_type": "number",
+        "unit": "unidades"
+      },
+      "evidenced_values": [
+        50
+      ],
+      "source_ids": [
+        "ac_palitos"
+      ],
+      "priority": "P2",
+      "proposal": "Reuse the same proposed package-content field as hygiene consumables for a clearly named 50-stick bag. Preserve loose-stick requirements.",
+      "caveat": "Keep loose-stick requirements possible. One requirement quantity 50 means 50 bags if the selected item itself is a 50-piece bag; UI must distinguish pack content from requested units.",
+      "categories": [
+        "manualidades"
+      ],
+      "applicable_types": [
+        "Palitos"
+      ],
+      "implementation_status": "proposed_not_applied",
+      "design_review": "Reserve numero_piezas for constituent parts of functional sets such as Tangram; use unidades_por_envase for consumer-pack contents. This is a deliberate refinement of the initial binding-only suggestion.",
+      "applicability": [
+        {
+          "category": "manualidades",
+          "types": [
+            "Palitos"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AC12",
+      "category": "manualidades",
+      "type": "Pompones",
+      "current_coverage": "Only generic Pompones de colores exists; acabado is defined globally but is unbound to Manualidades.",
+      "gap_kind": "missing_binding",
+      "attribute": {
+        "key": "acabado",
+        "name": "Acabado",
+        "data_type": "text",
+        "unit": null
+      },
+      "evidenced_values": [
+        "Escarchado"
+      ],
+      "source_ids": [
+        "ac_crep",
+        "ac_pompones"
+      ],
+      "priority": "P1",
+      "proposal": "Reuse the existing finish attribute for glitter/shiny pompoms, with consistent Spanish value and search aliases for glitter.",
+      "caveat": "Do not infer individual diameter from a supplier package dimension; assorted colors and sizes can remain unspecified.",
+      "categories": [
+        "manualidades"
+      ],
+      "applicable_types": [
+        "Pompones"
+      ],
+      "implementation_status": "proposed_not_applied",
+      "applicability": [
+        {
+          "category": "manualidades",
+          "types": [
+            "Pompones"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AC13",
+      "category": "pegado-y-corte",
+      "type": "Pegamento",
+      "current_coverage": "No lavable definition exists. Generic glue names cannot distinguish explicitly washable requirements.",
+      "gap_kind": "new_attribute",
+      "attribute": {
+        "key": "lavable",
+        "name": "Lavable",
+        "data_type": "boolean",
+        "unit": null
+      },
+      "evidenced_values": [
+        true
+      ],
+      "source_ids": [
+        "ac_particularuno",
+        "ac_torre_glue"
+      ],
+      "priority": "P2",
+      "proposal": "Support an optional washable requirement for glue when an authoritative source explicitly requests it.",
+      "caveat": "Do not set false on existing unspecified items; washability conditions vary by substrate and no generic safety/non-toxic claim follows from this flag. Torre directly confirms washable 225 g school glue; the school evidence for requiring washability is indexed.",
+      "categories": [
+        "pegado-y-corte"
+      ],
+      "applicable_types": [
+        "Pegamento"
+      ],
+      "implementation_status": "proposed_not_applied",
+      "applicability": [
+        {
+          "category": "pegado-y-corte",
+          "types": [
+            "Pegamento"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AC14",
+      "category": "pegado-y-corte",
+      "type": "Pegamento",
+      "current_coverage": "Glue-stick, cold glue and silicone share the same type; presentation Bar/Liquid does not uniquely distinguish adhesive families.",
+      "gap_kind": "new_attribute",
+      "attribute": {
+        "key": "tipo_adhesivo",
+        "name": "Familia de adhesivo",
+        "data_type": "text",
+        "unit": null
+      },
+      "evidenced_values": [
+        "Cola fría",
+        "Silicona"
+      ],
+      "source_ids": [
+        "ac_chile",
+        "ac_particularuno"
+      ],
+      "priority": "P1",
+      "proposal": "Add optional adhesive-family values Cola fría and Silicona alongside presentation. Resolve other family labels before offering them as mutually exclusive choices.",
+      "caveat": "This is a navigation/model recommendation supported by distinct school requirements. It must not alter existing item identity or reinterpret unspecified generic glue.",
+      "categories": [
+        "pegado-y-corte"
+      ],
+      "applicable_types": [
+        "Pegamento"
+      ],
+      "implementation_status": "proposed_not_applied",
+      "design_review": "Pegamento escolar overlaps Cola fría and is not a disjoint family value. An unspecified adhesive or glue-stick requirement must not be recategorized by assumption.",
+      "applicability": [
+        {
+          "category": "pegado-y-corte",
+          "types": [
+            "Pegamento"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "OF01",
+      "category": "geometria",
+      "type": "Transportador",
+      "current_coverage": "One unspecified Transportador item; only the type is saved. No angular-range definition or binding exists.",
+      "gap_kind": "new_attribute",
+      "attribute": {
+        "key": "alcance_transportador_grados",
+        "name": "Alcance del transportador",
+        "data_type": "number",
+        "unit": "°"
+      },
+      "evidenced_values": [
+        180
+      ],
+      "source_ids": [
+        "of_cpfd6"
+      ],
+      "priority": "P1",
+      "proposal": "Add an optional angular-range attribute and a 180-degree variant. Keep the unspecified protractor selectable.",
+      "caveat": "Do not infer 360-degree support or diameter from the generic item. Range is not the angle of a set square.",
+      "confidence": "high",
+      "categories": [
+        "geometria"
+      ],
+      "applicable_types": [
+        "Transportador"
+      ],
+      "implementation_status": "proposed_not_applied",
+      "applicability": [
+        {
+          "category": "geometria",
+          "types": [
+            "Transportador"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "OF02",
+      "category": "geometria",
+      "type": "Escuadra",
+      "current_coverage": "One unspecified Escuadra item; no angle definition or binding.",
+      "gap_kind": "new_attribute",
+      "attribute": {
+        "key": "angulo_escuadra_grados",
+        "name": "Ángulo de la escuadra",
+        "data_type": "number",
+        "unit": "°"
+      },
+      "evidenced_values": [
+        45
+      ],
+      "source_ids": [
+        "of_cpfd6"
+      ],
+      "priority": "P1",
+      "proposal": "Add an optional set-square angle and a 45-degree variant; bind existing largo_cm when a declared commercial length is known.",
+      "caveat": "A right-angle set square has several angles: this field must mean its distinguishing acute angle. Do not infer which side the source means by 15 cm.",
+      "confidence": "high",
+      "related_attributes": [
+        {
+          "key": "largo_cm",
+          "name": "Largo",
+          "data_type": "number",
+          "unit": "cm"
+        }
+      ],
+      "categories": [
+        "geometria"
+      ],
+      "applicable_types": [
+        "Escuadra"
+      ],
+      "implementation_status": "proposed_not_applied",
+      "applicability": [
+        {
+          "category": "geometria",
+          "types": [
+            "Escuadra"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "OF03",
+      "category": "geometria",
+      "type": "Escuadra / Transportador",
+      "current_coverage": "Global material definition exists, but Geometría does not bind it; both existing items are unspecified.",
+      "gap_kind": "missing_binding",
+      "attribute": {
+        "key": "material",
+        "name": "Material",
+        "data_type": "text",
+        "unit": null
+      },
+      "evidenced_values": [
+        "Plástico"
+      ],
+      "source_ids": [
+        "of_cpfd6"
+      ],
+      "priority": "P2",
+      "proposal": "Bind material conditionally to Escuadra and Transportador and use it only on explicitly material-specific variants.",
+      "caveat": "This source does not establish that every school wants plastic or that every current generic item is plastic.",
+      "confidence": "high",
+      "categories": [
+        "geometria"
+      ],
+      "applicable_types": [
+        "Escuadra",
+        "Transportador"
+      ],
+      "implementation_status": "proposed_not_applied",
+      "applicability": [
+        {
+          "category": "geometria",
+          "types": [
+            "Escuadra",
+            "Transportador"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "OF04",
+      "category": "aseo",
+      "type": "Jabón / Alcohol gel",
+      "current_coverage": "Aseo has only the type binding. volumen_ml exists globally but neither Aseo binding nor content values exist.",
+      "gap_kind": "missing_binding",
+      "attribute": {
+        "key": "volumen_ml",
+        "name": "Contenido",
+        "data_type": "number",
+        "unit": "ml"
+      },
+      "evidenced_values": [
+        250,
+        500,
+        1000
+      ],
+      "source_ids": [
+        "of_pirque",
+        "of_caleman25"
+      ],
+      "priority": "P1",
+      "proposal": "Bind volumen_ml to Jabón and Alcohol gel. Current 2026 evidence supports liquid-soap refill 1000 ml; historical 2025 evidence supports soap 500 ml and gel 250 ml.",
+      "caveat": "Preserve bottle/package quantity separately. The 2025 source must remain labeled historical; do not infer concentration or efficacy. Soap presentation/refill/dispenser are separate optional properties.",
+      "confidence": "high",
+      "value_evidence": [
+        {
+          "type": "Jabón",
+          "value": 1000,
+          "source_ids": [
+            "of_pirque"
+          ]
+        },
+        {
+          "type": "Jabón",
+          "value": 500,
+          "source_ids": [
+            "of_caleman25"
+          ]
+        },
+        {
+          "type": "Alcohol gel",
+          "value": 250,
+          "source_ids": [
+            "of_caleman25"
+          ]
+        }
+      ],
+      "categories": [
+        "aseo"
+      ],
+      "applicable_types": [
+        "Jabón",
+        "Alcohol gel"
+      ],
+      "implementation_status": "proposed_not_applied",
+      "applicability": [
+        {
+          "category": "aseo",
+          "types": [
+            "Jabón",
+            "Alcohol gel"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "OF05",
+      "category": "aseo",
+      "type": "Pañuelos / Toallas húmedas",
+      "current_coverage": "Only generic tissue and wet-wipe items exist; no per-package content-count attribute is defined.",
+      "gap_kind": "new_attribute",
+      "attribute": {
+        "key": "unidades_por_envase",
+        "name": "Unidades por envase",
+        "data_type": "number",
+        "unit": "unidades"
+      },
+      "evidenced_values": [
+        80,
+        90
+      ],
+      "source_ids": [
+        "of_kinderland"
+      ],
+      "priority": "P1",
+      "proposal": "Represent wet-wipe pack 80 and tissue box 90 as per-package contents. Add presentation separately if helpful.",
+      "caveat": "Five packs of 80 is not 80 list items; six boxes of 90 is not 90 boxes. Do not reuse numero_hojas (paper sheets) or numero_piezas without a documented common pack-content meaning.",
+      "confidence": "high",
+      "value_evidence": [
+        {
+          "type": "Toallas húmedas",
+          "value": 80,
+          "source_ids": [
+            "of_kinderland"
+          ]
+        },
+        {
+          "type": "Pañuelos",
+          "value": 90,
+          "source_ids": [
+            "of_kinderland"
+          ]
+        }
+      ],
+      "categories": [
+        "aseo"
+      ],
+      "applicable_types": [
+        "Pañuelos",
+        "Toallas húmedas"
+      ],
+      "implementation_status": "proposed_not_applied",
+      "applicability": [
+        {
+          "category": "aseo",
+          "types": [
+            "Pañuelos",
+            "Toallas húmedas"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "OF06",
+      "category": "aseo",
+      "type": "Toalla",
+      "current_coverage": "Only Toalla de mano exists with type. Shared dimension_menor_cm/dimension_mayor_cm exist but have no Aseo binding.",
+      "gap_kind": "missing_binding",
+      "attribute": {
+        "key": "dimension_menor_cm",
+        "name": "Dimensión menor",
+        "data_type": "number",
+        "unit": "cm"
+      },
+      "evidenced_values": [
+        30
+      ],
+      "source_ids": [
+        "of_santaclara"
+      ],
+      "priority": "P2",
+      "proposal": "Bind both shared dimensional attributes to Toalla and add an explicit 30 × 40 cm option.",
+      "caveat": "A paired dimension is required to express this source; 30 alone is incomplete. Generic hand-towel remains valid when dimensions are not specified.",
+      "confidence": "high",
+      "related_attributes": [
+        {
+          "key": "dimension_mayor_cm",
+          "name": "Dimensión mayor",
+          "data_type": "number",
+          "unit": "cm"
+        }
+      ],
+      "paired_values": [
+        {
+          "dimension_menor_cm": 30,
+          "dimension_mayor_cm": 40
+        }
+      ],
+      "categories": [
+        "aseo"
+      ],
+      "applicable_types": [
+        "Toalla"
+      ],
+      "implementation_status": "proposed_not_applied",
+      "applicability": [
+        {
+          "category": "aseo",
+          "types": [
+            "Toalla"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "OF07",
+      "category": "musica",
+      "type": "Flauta",
+      "current_coverage": "Flauta dulce soprano stores only tipo_musica; fingering is neither a definition nor a value.",
+      "gap_kind": "new_attribute",
+      "attribute": {
+        "key": "digitacion_flauta",
+        "name": "Digitación de flauta",
+        "data_type": "text",
+        "unit": null
+      },
+      "evidenced_values": [
+        "Alemana",
+        "Barroca"
+      ],
+      "source_ids": [
+        "of_brs6",
+        "of_yamaha"
+      ],
+      "priority": "P1",
+      "proposal": "Add a conditional fingering attribute. German-fingering school variant has direct 2026 evidence; Baroque is a manufacturer-verified alternative only.",
+      "caveat": "Do not silently assign German fingering to the generic soprano flute. Fingering is not tuning or pitch; labels such as afinación alemana in some lists should normalize carefully.",
+      "confidence": "high",
+      "value_evidence": [
+        {
+          "value": "Alemana",
+          "source_ids": [
+            "of_brs6",
+            "of_yamaha"
+          ],
+          "school_requirement_verified": true
+        },
+        {
+          "value": "Barroca",
+          "source_ids": [
+            "of_yamaha"
+          ],
+          "school_requirement_verified": false
+        }
+      ],
+      "categories": [
+        "musica"
+      ],
+      "applicable_types": [
+        "Flauta"
+      ],
+      "implementation_status": "proposed_not_applied",
+      "applicability": [
+        {
+          "category": "musica",
+          "types": [
+            "Flauta"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "OF08",
+      "category": "musica",
+      "type": "Melódica",
+      "current_coverage": "numero_notas exists but is bound only to Metalófono. The Melódica item has only type.",
+      "gap_kind": "missing_binding",
+      "attribute": {
+        "key": "numero_notas",
+        "name": "Número de notas",
+        "data_type": "number",
+        "unit": "notas"
+      },
+      "evidenced_values": [
+        32
+      ],
+      "source_ids": [
+        "of_lasalle4",
+        "of_pumahue8"
+      ],
+      "priority": "P1",
+      "proposal": "Extend numero_notas to Melódica and add the school-evidenced 32-note option. If a separate key count is needed later, document the semantics instead of silently treating every instrument equally.",
+      "caveat": "Exact 32-note evidence is in La Salle; Pumahue requests at least 32 keys. Preserve minimum wording rather than reducing a flexible requirement to exact 32.",
+      "confidence": "high",
+      "categories": [
+        "musica"
+      ],
+      "applicable_types": [
+        "Melódica"
+      ],
+      "implementation_status": "proposed_not_applied",
+      "applicability": [
+        {
+          "category": "musica",
+          "types": [
+            "Melódica"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "OF09",
+      "category": "musica",
+      "type": "Metalófono",
+      "current_coverage": "The sole typed option is cromático 25 notas; numero_notas and its binding already work.",
+      "gap_kind": "missing_variant",
+      "attribute": {
+        "key": "numero_notas",
+        "name": "Número de notas",
+        "data_type": "number",
+        "unit": "notas"
+      },
+      "evidenced_values": [
+        22
+      ],
+      "source_ids": [
+        "of_cpv2"
+      ],
+      "priority": "P1",
+      "proposal": "Add 22-note catalog coverage and make chromatic vs other scale properties explicit when curated.",
+      "caveat": "CPV also requests uncolored bars: count alone does not completely represent that particular school requirement. Do not infer the bar colors of generic or 25-note items.",
+      "confidence": "high",
+      "categories": [
+        "musica"
+      ],
+      "applicable_types": [
+        "Metalófono"
+      ],
+      "implementation_status": "proposed_not_applied",
+      "applicability": [
+        {
+          "category": "musica",
+          "types": [
+            "Metalófono"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "OF10",
+      "category": "tecnologia",
+      "type": "Memoria USB",
+      "current_coverage": "capacidad_gb exists and is bound correctly; current catalog only includes 8 GB.",
+      "gap_kind": "missing_variant",
+      "attribute": {
+        "key": "capacidad_gb",
+        "name": "Capacidad de almacenamiento",
+        "data_type": "number",
+        "unit": "GB"
+      },
+      "evidenced_values": [
+        16
+      ],
+      "source_ids": [
+        "of_csac3"
+      ],
+      "priority": "P1",
+      "proposal": "Add 16 GB coverage and support writing a minimum-capacity requirement without adding irrelevant brand/speed restrictions.",
+      "caveat": "The source says minimum 16 GB; 32 GB and larger may satisfy it. Existing exact-value facets do not express this acceptance rule. Capacity here is storage capacity, not free space.",
+      "confidence": "high",
+      "categories": [
+        "tecnologia"
+      ],
+      "applicable_types": [
+        "Memoria USB"
+      ],
+      "implementation_status": "proposed_not_applied",
+      "applicability": [
+        {
+          "category": "tecnologia",
+          "types": [
+            "Memoria USB"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "OF11",
+      "category": "lectura-y-consulta",
+      "type": "Diccionario",
+      "current_coverage": "Existing dictionaries distinguish Español and Inglés-español through idioma, but no content/scope attribute exists; no synonyms-and-antonyms item exists.",
+      "gap_kind": "new_attribute",
+      "attribute": {
+        "key": "contenido_diccionario",
+        "name": "Contenido del diccionario",
+        "data_type": "text",
+        "unit": null
+      },
+      "evidenced_values": [
+        "Significados",
+        "Sinónimos y antónimos"
+      ],
+      "source_ids": [
+        "of_stmonica4"
+      ],
+      "priority": "P1",
+      "proposal": "Add optional dictionary-content scope and a Spanish synonyms-and-antonyms option; preserve the existing language field.",
+      "caveat": "Language alone cannot distinguish two Spanish dictionaries. Named suggested publishers are not generic attributes, and specific editions belong in notes when required.",
+      "confidence": "high",
+      "categories": [
+        "lectura-y-consulta"
+      ],
+      "applicable_types": [
+        "Diccionario"
+      ],
+      "implementation_status": "proposed_not_applied",
+      "applicability": [
+        {
+          "category": "lectura-y-consulta",
+          "types": [
+            "Diccionario"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "OF12",
+      "category": "material-didactico",
+      "type": "Pizarra",
+      "current_coverage": "The 20 × 30 cm white-board dimensions exist. Global tipo_pauta is text but currently labeled Pauta musical and bound only to Cuadernos/Música, with one Media pauta value.",
+      "gap_kind": "missing_binding",
+      "attribute": {
+        "key": "tipo_pauta",
+        "name": "Tipo de pauta",
+        "data_type": "text",
+        "unit": null
+      },
+      "evidenced_values": [
+        "Cuadriculada"
+      ],
+      "source_ids": [
+        "of_pumahuek"
+      ],
+      "priority": "P2",
+      "proposal": "Reuse tipo_pauta for the optional board ruling after deliberately generalizing its display name from Pauta musical to Tipo de pauta. Bind it to Pizarra with Cuadriculada; preserve the existing music binding and values.",
+      "caveat": "Reuse requires the label review: the current Pauta musical label is inappropriate for boards. The source gives no grid spacing, so do not invent cuadricula_mm or classify the existing generic board as blank. Keep category-specific choice sets.",
+      "confidence": "high",
+      "label_change_required": {
+        "from": "Pauta musical",
+        "to": "Tipo de pauta"
+      },
+      "categories": [
+        "material-didactico"
+      ],
+      "applicable_types": [
+        "Pizarra"
+      ],
+      "implementation_status": "proposed_not_applied",
+      "applicability": [
+        {
+          "category": "material-didactico",
+          "types": [
+            "Pizarra"
+          ]
+        }
+      ]
+    }
+  ],
+  "proposed_new_definitions": [
+    {
+      "key": "alcance_transportador_grados",
+      "name": "Alcance del transportador",
+      "data_type": "number",
+      "unit": "°",
+      "finding_ids": [
+        "OF01"
+      ],
+      "categories": [
+        "geometria"
+      ]
+    },
+    {
+      "key": "ancho_mm",
+      "name": "Ancho",
+      "data_type": "number",
+      "unit": "mm",
+      "finding_ids": [
+        "AC09"
+      ],
+      "categories": [
+        "pegado-y-corte"
+      ]
+    },
+    {
+      "key": "angulo_escuadra_grados",
+      "name": "Ángulo de la escuadra",
+      "data_type": "number",
+      "unit": "°",
+      "finding_ids": [
+        "OF02"
+      ],
+      "categories": [
+        "geometria"
+      ]
+    },
+    {
+      "key": "con_espiral",
+      "name": "Con espiral",
+      "data_type": "boolean",
+      "unit": null,
+      "finding_ids": [
+        "pw-02"
+      ],
+      "categories": [
+        "cuadernos"
+      ]
+    },
+    {
+      "key": "con_margen",
+      "name": "Con margen",
+      "data_type": "boolean",
+      "unit": null,
+      "finding_ids": [
+        "pw-01"
+      ],
+      "categories": [
+        "cuadernos"
+      ]
+    },
+    {
+      "key": "contenido_diccionario",
+      "name": "Contenido del diccionario",
+      "data_type": "text",
+      "unit": null,
+      "finding_ids": [
+        "OF11"
+      ],
+      "categories": [
+        "lectura-y-consulta"
+      ]
+    },
+    {
+      "key": "digitacion_flauta",
+      "name": "Digitación de flauta",
+      "data_type": "text",
+      "unit": null,
+      "finding_ids": [
+        "OF07"
+      ],
+      "categories": [
+        "musica"
+      ]
+    },
+    {
+      "key": "forma_cuerpo",
+      "name": "Forma del cuerpo",
+      "data_type": "text",
+      "unit": null,
+      "finding_ids": [
+        "pw-05"
+      ],
+      "categories": [
+        "escritura"
+      ]
+    },
+    {
+      "key": "gramaje_g_m2",
+      "name": "Gramaje",
+      "data_type": "number",
+      "unit": "g/m²",
+      "finding_ids": [
+        "pw-09",
+        "AC03"
+      ],
+      "categories": [
+        "arte-y-dibujo",
+        "papeles"
+      ]
+    },
+    {
+      "key": "grosor_punta",
+      "name": "Grosor de punta",
+      "data_type": "text",
+      "unit": null,
+      "finding_ids": [
+        "pw-17"
+      ],
+      "categories": [
+        "escritura"
+      ]
+    },
+    {
+      "key": "largo_m",
+      "name": "Largo",
+      "data_type": "number",
+      "unit": "m",
+      "finding_ids": [
+        "AC10"
+      ],
+      "categories": [
+        "manualidades",
+        "pegado-y-corte"
+      ]
+    },
+    {
+      "key": "lavable",
+      "name": "Lavable",
+      "data_type": "boolean",
+      "unit": null,
+      "finding_ids": [
+        "AC13"
+      ],
+      "categories": [
+        "pegado-y-corte"
+      ]
+    },
+    {
+      "key": "numero_fundas",
+      "name": "Número de fundas",
+      "data_type": "number",
+      "unit": "fundas",
+      "finding_ids": [
+        "pw-14"
+      ],
+      "categories": [
+        "organizacion"
+      ]
+    },
+    {
+      "key": "numero_orificios",
+      "name": "Número de orificios",
+      "data_type": "number",
+      "unit": "orificios",
+      "finding_ids": [
+        "pw-18"
+      ],
+      "categories": [
+        "escritura"
+      ]
+    },
+    {
+      "key": "tipo_adhesivo",
+      "name": "Familia de adhesivo",
+      "data_type": "text",
+      "unit": null,
+      "finding_ids": [
+        "AC14"
+      ],
+      "categories": [
+        "pegado-y-corte"
+      ]
+    },
+    {
+      "key": "unidades_por_envase",
+      "name": "Unidades por envase",
+      "data_type": "number",
+      "unit": "unidades",
+      "finding_ids": [
+        "AC11",
+        "OF05"
+      ],
+      "categories": [
+        "aseo",
+        "manualidades"
+      ]
+    }
+  ],
+  "category_research": [
+    {
+      "category": "cuadernos",
+      "items_reviewed": 31,
+      "types_reviewed": [
+        "Caligrafía",
+        "Composición",
+        "Croquis",
+        "Cuadriculado",
+        "Liso",
+        "Media composición",
+        "Música",
+        "Rayado"
+      ],
+      "status": "All current items and conditional bindings in this category reviewed; findings are selected evidence-backed gaps, not exhaustive commercial SKU coverage."
+    },
+    {
+      "category": "escritura",
+      "items_reviewed": 20,
+      "types_reviewed": [
+        "Bicolor",
+        "Bolígrafo",
+        "Borrador de pizarra",
+        "Corrector",
+        "Destacador",
+        "Goma",
+        "Grafito",
+        "Marcador",
+        "Sacapuntas"
+      ],
+      "status": "All current items and conditional bindings in this category reviewed; findings are selected evidence-backed gaps, not exhaustive commercial SKU coverage."
+    },
+    {
+      "category": "papeles",
+      "items_reviewed": 18,
+      "types_reviewed": [
+        "Cartulina",
+        "Cartulina española",
+        "Cartón",
+        "Goma EVA",
+        "Papel",
+        "Papel autoadhesivo",
+        "Papel crepé",
+        "Papel entretenido",
+        "Papel kraft",
+        "Papel lustre",
+        "Papel volantín",
+        "Termolaminado"
+      ],
+      "status": "All current items and conditional bindings in this category reviewed; findings are selected evidence-backed gaps, not exhaustive commercial SKU coverage."
+    },
+    {
+      "category": "organizacion",
+      "items_reviewed": 14,
+      "types_reviewed": [
+        "Archivador",
+        "Bolsa",
+        "Caja organizadora",
+        "Carpeta",
+        "Estuche",
+        "Forro",
+        "Funda",
+        "Notas adhesivas",
+        "Revistero",
+        "Separador"
+      ],
+      "status": "All current items and conditional bindings in this category reviewed; findings are selected evidence-backed gaps, not exhaustive commercial SKU coverage."
+    },
+    {
+      "category": "arte-y-dibujo",
+      "items_reviewed": 40,
+      "types_reviewed": [
+        "Accesorio de pintura",
+        "Acuarelas",
+        "Arcilla",
+        "Block",
+        "Croquera",
+        "Delantal de arte",
+        "Lienzo",
+        "Lápices de cera",
+        "Lápices de colores",
+        "Lápices pastel",
+        "Masa para modelar",
+        "Mezclador",
+        "Pincel",
+        "Plasticina",
+        "Plumones",
+        "Protector de mesa",
+        "Témperas"
+      ],
+      "already_covered": "Existing generic item entries remain valid; missing optional attributes are not automatically data errors.",
+      "supported_variant_gaps": [
+        {
+          "type": "Croquera",
+          "attribute_keys": [
+            "numero_hojas",
+            "dimension_menor_cm",
+            "dimension_mayor_cm"
+          ],
+          "gap_kind": "MISSING_EXPLICIT_VALUE_OR_VARIANT",
+          "variants": [
+            {
+              "numero_hojas": 80,
+              "dimension_menor_cm": 21,
+              "dimension_mayor_cm": 32,
+              "source_ids": [
+                "ac_chile"
+              ]
+            },
+            {
+              "numero_hojas": 100,
+              "dimension_menor_cm": 22,
+              "dimension_mayor_cm": 32,
+              "source_ids": [
+                "ac_proarte"
+              ]
+            }
+          ],
+          "note": "All three fields are already correctly bound, but neither current generic Croquera nor Croquera tamaño carta has these counts/dimensions. Add exact variants; retain unspecified entries."
+        }
+      ]
+    },
+    {
+      "category": "manualidades",
+      "items_reviewed": 11,
+      "types_reviewed": [
+        "Aguja escolar",
+        "Escarcha",
+        "Hilo",
+        "Lana",
+        "Lentejuelas",
+        "Limpiapipas",
+        "Palitos",
+        "Pompones",
+        "Punzón",
+        "Soporte",
+        "Stickers"
+      ],
+      "already_covered": "Existing generic item entries remain valid; missing optional attributes are not automatically data errors."
+    },
+    {
+      "category": "pegado-y-corte",
+      "items_reviewed": 13,
+      "types_reviewed": [
+        "Cinta adhesiva",
+        "Pegamento",
+        "Tijeras"
+      ],
+      "already_covered": "Existing generic item entries remain valid; missing optional attributes are not automatically data errors."
+    },
+    {
+      "name": "Geometría",
+      "items_reviewed": 7,
+      "item_names": [
+        "Cinta métrica de 100 cm",
+        "Compás",
+        "Escuadra",
+        "Regla, 15 cm",
+        "Regla, 20 cm",
+        "Regla, 30 cm",
+        "Transportador"
+      ],
+      "current_attribute_keys": [
+        "tipo_geometria",
+        "largo_cm"
+      ],
+      "finding_ids": [
+        "OF01",
+        "OF02",
+        "OF03"
+      ],
+      "baseline_valid": true,
+      "notes": "Rulers of 15, 20 and 30 cm and the 100 cm tape are already typed. An unspecified compass is valid.",
+      "category": "geometria",
+      "types_reviewed": [
+        "Cinta métrica",
+        "Compás",
+        "Escuadra",
+        "Regla",
+        "Transportador"
+      ]
+    },
+    {
+      "name": "Aseo",
+      "items_reviewed": 8,
+      "item_names": [
+        "Alcohol gel",
+        "Botella para agua",
+        "Jabón líquido",
+        "Papel higiénico",
+        "Pañuelos desechables",
+        "Peineta",
+        "Toalla de mano",
+        "Toallas húmedas"
+      ],
+      "current_attribute_keys": [
+        "tipo_aseo"
+      ],
+      "finding_ids": [
+        "OF04",
+        "OF05",
+        "OF06"
+      ],
+      "baseline_valid": true,
+      "notes": "All eight generic items are valid; none currently offers specific characteristics.",
+      "category": "aseo",
+      "types_reviewed": [
+        "Alcohol gel",
+        "Botella",
+        "Jabón",
+        "Papel higiénico",
+        "Pañuelos",
+        "Peineta",
+        "Toalla",
+        "Toallas húmedas"
+      ]
+    },
+    {
+      "name": "Material didáctico",
+      "items_reviewed": 5,
+      "item_names": [
+        "Billetes y monedas didácticos chilenos",
+        "Bloques de base diez",
+        "Pizarra blanca individual 20 × 30 cm",
+        "Set de cuerpos geométricos",
+        "Tangram de 7 piezas"
+      ],
+      "current_attribute_keys": [
+        "tipo_material_didactico",
+        "dimension_menor_cm",
+        "dimension_mayor_cm",
+        "numero_piezas"
+      ],
+      "finding_ids": [
+        "OF12"
+      ],
+      "baseline_valid": true,
+      "notes": "Tangram with seven pieces and white board 20 × 30 cm are already typed. No blanket piece counts are inferred for base-ten blocks or body sets.",
+      "category": "material-didactico",
+      "types_reviewed": [
+        "Bloques base diez",
+        "Cuerpos geométricos",
+        "Dinero didáctico",
+        "Pizarra",
+        "Tangram"
+      ]
+    },
+    {
+      "name": "Música",
+      "items_reviewed": 9,
+      "item_names": [
+        "Castañuelas",
+        "Claves musicales",
+        "Flauta dulce soprano",
+        "Guitarra acústica",
+        "Maracas",
+        "Melódica",
+        "Metalófono cromático de 25 notas",
+        "Pandero",
+        "Ukelele"
+      ],
+      "current_attribute_keys": [
+        "tipo_musica",
+        "numero_notas"
+      ],
+      "finding_ids": [
+        "OF07",
+        "OF08",
+        "OF09"
+      ],
+      "baseline_valid": true,
+      "notes": "The 25-note metallophone is already covered. Generic guitar, ukulele and percussion need not force age, size, material or brand.",
+      "category": "musica",
+      "types_reviewed": [
+        "Castañuelas",
+        "Claves",
+        "Flauta",
+        "Guitarra",
+        "Maracas",
+        "Melódica",
+        "Metalófono",
+        "Pandero",
+        "Ukelele"
+      ]
+    },
+    {
+      "name": "Tecnología",
+      "items_reviewed": 3,
+      "item_names": [
+        "Calculadora",
+        "Calculadora científica",
+        "Memoria USB de 8 GB"
+      ],
+      "current_attribute_keys": [
+        "tipo_tecnologia",
+        "capacidad_gb",
+        "tipo_calculadora"
+      ],
+      "finding_ids": [
+        "OF10"
+      ],
+      "baseline_valid": true,
+      "notes": "Scientific calculator and USB 8 GB are already typed; the generic calculator is not implicitly basic.",
+      "category": "tecnologia",
+      "types_reviewed": [
+        "Calculadora",
+        "Memoria USB"
+      ]
+    },
+    {
+      "name": "Lectura y consulta",
+      "items_reviewed": 4,
+      "item_names": [
+        "Atlas universal y de Chile",
+        "Diccionario de lengua española",
+        "Diccionario inglés-español",
+        "Tabla periódica escolar"
+      ],
+      "current_attribute_keys": [
+        "tipo_lectura_y_consulta",
+        "idioma"
+      ],
+      "finding_ids": [
+        "OF11"
+      ],
+      "baseline_valid": true,
+      "notes": "Spanish and bilingual dictionary languages are already covered. Avoid arbitrary ISBN or year requirements for a generic atlas or periodic table.",
+      "category": "lectura-y-consulta",
+      "types_reviewed": [
+        "Atlas",
+        "Diccionario",
+        "Tabla periódica"
+      ]
+    },
+    {
+      "name": "Otros",
+      "items_reviewed": 0,
+      "item_names": [],
+      "current_attribute_keys": [
+        "tipo_categoria_9"
+      ],
+      "finding_ids": [],
+      "baseline_valid": true,
+      "notes": "An empty category is not evidence of missing attributes; do not create unrelated types just to fill it.",
+      "category": "otros",
+      "types_reviewed": []
+    }
+  ],
+  "deferred": [
+    {
+      "topic": "Unspecified generic items",
+      "reason": "Carpeta, Grafito, Corrector and Destacador remain useful unrestricted requirements. Blank details are not data-integrity errors."
+    },
+    {
+      "topic": "Multiple subjects in notebooks",
+      "reason": "Triple is used commercially and in school lists, but subject/separator count should not be inferred without explicit product data. Sheet-count 150 is separately supported."
+    },
+    {
+      "topic": "Notebook covers, compulsory school colors, assignment names",
+      "reason": "Classroom-specific conventions must remain optional list choices. Some schools explicitly discourage plastic covers; there is no universal default."
+    },
+    {
+      "topic": "Portaminas, replacement leads and tiralíneas",
+      "reason": "Current Escritura types lack these families. Official school lists indicate they merit a later family expansion; diameter/line-width definitions need separate scope from pencil-body size. No unsupported 0.5/0.7 values added to this dataset."
+    },
+    {
+      "topic": "Paper dimensions and finish beyond selected types",
+      "reason": "Kraft, crepé, volantín and Spanish cardstock need product-specific measurements, not a single assumed pliego size. No cartesian expansion is justified."
+    },
+    {
+      "topic": "Health, safety, ecology and washable claims",
+      "reason": "Do not invent non-toxic, certified, recyclable or washable attributes from generic names. Such claims need product-level evidence and are not defaults for school requirements."
+    },
+    {
+      "topic": "Folder material, cover hardness, compartments, binder spine width",
+      "reason": "Useful future optional dimensions; present source examples alone do not justify mass backfilling old general folders or inventing every combination."
+    },
+    "Keep ordinary/Jumbo colored pencils and all6/12/24 color-count changes from007; no reason to replace the existing numeric color engine.",
+    "Brush material (camel hair/synthetic), paint gel presentation, acrylic paint as a separate type, washable markers, and solid-vs-oil pastel are useful secondary candidates, but need dedicated source mapping before populating.",
+    "Existing canvas30×40 is already typed; school20×20 can be an additive dimensional variant. Existing croquera format/sheets/dimensions support21×32/80 and22×32/100; adding those is a data-coverage task, separate from introducing grammage.",
+    "Punzón support dimensions20×25cm and long-sleeve art-smock construction are explicit in Santo Domingo, but lower-priority than core browse filters and should not become defaults.",
+    "Craft needles, elastic thread, yarn, sequins, glitter, sticks, pompoms, supports, stickers and modeling tools lack most detail bindings. Add fields only where a teacher meaningfully chooses them; avoid merchandising dimensions, packaging weight, brands and wholesale counts.",
+    "No inferred toxicity/allergy/age-safety certification should be introduced as a boolean based only on a generic item name or a retailer claim.",
+    "False and unspecified must remain distinct for any new boolean. Names, attributes and snapshots of existing user lists should remain preserved; corrections need explicit evidence and additive migration design.",
+    "The20g glue-stick manufacturer page remains rate-limited, though official indexed specifications corroborate the school list. No direct Artel modeling-mass product page was found in the bounded follow-up; directly fetched FILA DAS independently supports the optional mass attribute and250/500/1000g air-dry formats.",
+    {
+      "id": "OF-D01",
+      "category": "tecnologia",
+      "attribute": {
+        "key": "tipo_calculadora",
+        "name": "Tipo de calculadora",
+        "data_type": "text",
+        "unit": null
+      },
+      "gap_kind": "missing_explicit_variant",
+      "evidenced_values": [
+        "Básica"
+      ],
+      "source_ids": [
+        "of_brs6"
+      ],
+      "reason": "Verified additional value beyond the current Científica. Low-effort follow-up; do not retag the generic Calculadora as Básica."
+    },
+    {
+      "id": "OF-D02",
+      "category": "lectura-y-consulta",
+      "attribute": {
+        "key": "idioma",
+        "name": "Idioma",
+        "data_type": "text",
+        "unit": null
+      },
+      "gap_kind": "missing_explicit_variant",
+      "evidenced_values": [
+        "Inglés"
+      ],
+      "source_ids": [
+        "of_pumahue5"
+      ],
+      "reason": "An English-to-English dictionary is verified in official indexed text; direct PDF fetch failed. Pocket format would need the existing formato binding. Keep this qualified until fetching is reproduced."
+    },
+    {
+      "id": "OF-D03",
+      "category": "musica",
+      "attribute": {
+        "key": "registro_instrumento",
+        "name": "Registro del instrumento",
+        "data_type": "text",
+        "unit": null
+      },
+      "gap_kind": "new_attribute",
+      "evidenced_values": [
+        "Soprano"
+      ],
+      "source_ids": [
+        "of_brs6"
+      ],
+      "reason": "Soprano already appears in the flute name but not typed metadata. Useful later with multiple flute registers; a single-register facet has low value until other options are verified."
+    },
+    {
+      "id": "OF-D04",
+      "category": "aseo",
+      "attribute": {
+        "key": "con_dosificador",
+        "name": "Con dosificador",
+        "data_type": "boolean",
+        "unit": null
+      },
+      "gap_kind": "new_attribute",
+      "evidenced_values": [
+        true
+      ],
+      "source_ids": [
+        "of_caleman25"
+      ],
+      "reason": "A dispenser could be optional but is currently backed by the historical school source. Avoid forcing it onto refill soap."
+    },
+    {
+      "id": "OF-D05",
+      "category": "geometria",
+      "attribute": {
+        "key": "doble_escala",
+        "name": "Doble escala",
+        "data_type": "boolean",
+        "unit": null
+      },
+      "gap_kind": "new_attribute",
+      "evidenced_values": [
+        true
+      ],
+      "source_ids": [
+        "of_santaclara"
+      ],
+      "reason": "Verified school protractor request; priority below angular range and material. It should not be conflated with 180/360-degree coverage."
+    },
+    {
+      "id": "OF-D06",
+      "category": "material-didactico",
+      "source_ids": [],
+      "reason": "No evidence-backed standard piece count was found for generic base-ten blocks or geometric-body sets in the reviewed lists; preserve unspecified counts."
+    },
+    {
+      "id": "OF-D07",
+      "category": "tecnologia",
+      "source_ids": [],
+      "reason": "No verified Chilean requirement for USB connector/speed or calculator programmability was found in this bounded review. Do not invent mandatory features from brand models."
+    }
+  ],
+  "design_rules": [
+    "Keep generic unspecified attributes absent, never false or guessed.",
+    "Do not generate a Cartesian product of evidenced values or transfer one source product specification to a generic family.",
+    "Reuse existing definitions and preserve category-specific applicability.",
+    "Separate list quantity from per-package contents, color count from sheet count, mass from volume, and grammage from mass.",
+    "Do not tighten any-of or minimum requirements into multiple mandatory or exact-only requirements.",
+    "Current lists, published snapshots, identities, and progress must remain unchanged by future catalog curation."
+  ],
+  "local_findings": [
+    {
+      "id": "LOCAL01",
+      "kind": "value_normalization",
+      "attribute": "tipo_punta",
+      "values": [
+        "Redonda",
+        "redonda"
+      ],
+      "verified_behavior": "Live scissors browse returns two separate facet values; each exact filter returns only one item.",
+      "proposal": "Canonicalize future catalog values after reviewing equivalent spellings, preserve names/identities and existing list snapshots."
+    },
+    {
+      "id": "LOCAL02",
+      "kind": "requirement_semantics",
+      "verified_behavior": "Current browse uses exact JSON containment; capacidad_gb={gte:16} returns HTTP400.",
+      "proposal": "Retain minimum wording in name/note now; future structured requirements need explicit comparison semantics, separate from discovery filters."
+    },
+    {
+      "id": "LOCAL03",
+      "kind": "numeric_semantics",
+      "verified_behavior": "src/catalog.rs validate_attribute(number) accepts positive finite numbers up to 1000000; it has no per-definition integer/count rule. This is a code inspection, not a live write test.",
+      "proposal": "Add per-definition numeric constraints when introducing count fields, preserving fractional dimensions and valid legacy values."
+    }
+  ],
+  "ready_for_automatic_seeding": false,
+  "value_mapping_policy": "Explicit value_evidence and paired_values override summary arrays. Summary arrays never authorize Cartesian products. Where mapping or material/type assignment remains ambiguous, a future seed requires row-level review."
+}

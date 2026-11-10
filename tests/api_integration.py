@@ -509,6 +509,8 @@ def main():
                 pass
             return 0
         run_core(ctx)
+        from api_alternatives import run_alternatives
+        run_alternatives(ctx)
         if not args.core_only:
             from api_community import run_community
             run_community(ctx)
@@ -516,6 +518,10 @@ def main():
             run_category_attributes(ctx)
             from api_catalog_browse import run_catalog_browse
             run_catalog_browse(ctx)
+            from api_attribute_coverage import run_attribute_coverage
+            run_attribute_coverage(ctx)
+            from api_admin_catalog import run_admin_catalog
+            run_admin_catalog(ctx)
         run_cli_checks(ctx)
         report = {'created_at': datetime.now(timezone.utc).isoformat(), 'isolated_database': True, 'requests': ctx.requests,
                   'passed': sum(row['passed'] for row in ctx.results), 'failed': sum(not row['passed'] for row in ctx.results),

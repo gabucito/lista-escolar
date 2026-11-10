@@ -468,3 +468,138 @@ PostgreSQL only; the live write was the requested catalog migration.
 The separate [codebase/database review](CODEBASE_DATABASE_REVIEW_2026-11-10.md)
 records eight reproduced application defects and one reachable dependency advisory.
 Those findings remain open; passing regressions do not mean they are resolved.
+
+## Alternative supplies in one requirement — 2026-11-10
+
+A list occurrence can now accept 2–12 supplies as alternatives. Its quantity and
+unit apply to the whole requirement, and the parent can use any allowed option
+or combine options to reach that total. Each requirement retains one checklist
+checkbox. Separate rows remain separate requirements. The editor supports catalog
+selection across filters, free options without imposed specifications, review,
+editing an existing group, canceling staged changes, and explicit conversion back
+to one specific item. Copies, templates, import confirmation and published
+snapshots preserve the choices. Option reordering preserves checklist progress;
+changing names, attributes or membership resets that row and flags review.
+
+Storage uses the existing JSON content columns; no database migration or catalog
+seed change was needed. Empty alternatives are omitted on serialization, preserving
+ordinary-item compatibility and no-op publication behavior. Shared attributes are
+validated against every option. A choice group cannot be submitted as one shared
+catalog item. The local backend was restarted before enabling the controls, and
+a read-only process check confirmed that port 3000 uses the updated executable.
+All test mutations used disposable PostgreSQL; the live app remained available.
+
+Validation:
+
+- **21 Rust tests**, `cargo fmt --check`, and Clippy with warnings denied pass.
+- **35 API groups / 632 requests** pass, including legacy no-op serialization,
+  option validation and atomic rejection, copy/template/import preservation,
+  immutable published snapshots and version-aware checklist transitions.
+- **57 Angular tests** pass, including shared typed attributes, independent staging,
+  stable occurrence identity, explicit single-item conversion and all PDF layouts.
+- The production build passes. The editor stylesheet is **27.36 kB**, above the
+  existing 25 kB warning threshold and below the 28 kB error threshold. Budgets were
+  not raised for this change.
+- **104 distinct browser scenarios** pass. The first full run passed 102 and found
+  two real density regressions: only two catalog rows visible at 320 px and five
+  at 1366 px. Moving the desktop action into the existing footer and shortening the
+  mobile label restored the required three and six rows. The final 24-case run
+  passes all catalog, editor and alternatives scenarios. No acceptance threshold
+  was weakened.
+- All **15 alternatives Axe A/AA captures** have zero violations. Desktop 1366 px,
+  mobile 390 px and narrow 320 px screenshots were inspected, including free options
+  with no sheet-count requirement.
+- Four alternative PDFs render **11 pages**: one normal single-requirement example,
+  plus 12-option stress documents in all three layouts. All accepted names and
+  attribute markers survive pagination; checkbox counts are correct and no text
+  or checkbox extends outside a page. A first-row table pagination bug found
+  during implementation was fixed without changing ordinary-row behavior.
+
+The new browser coverage is in `qa/item-alternatives.spec.ts` and is included in
+`scripts/test-local.sh`. Evidence is under `.local/qa/`: `alternatives-api.log`,
+`alternatives-angular-tests.log`, `alternatives-build-final.log`,
+`alternatives-all-browser.log`, `alternatives-browser-final.log`,
+`alternatives-browser-summary.json`, and `item-alternatives/`. A portable visual
+walkthrough is in [the alternatives gallery](../design/revisions/12-item-alternatives/index.html).
+The nine issues from the earlier codebase review remain separate open findings.
+
+
+## Color-count coverage — 2026-11-10
+
+Migration 007 adds seven evidence-linked variants to local `escolar`: **183 total
+items, 14 categories and 397 typed attribute values**. The existing numeric
+color-count field now offers 6/12/24 for ordinary colored-pencil browsing;
+generic unspecified requirements remain unspecified. The importer recognizes
+accented/unaccented Spanish `Lápices` without relaxing mixed-set exclusions.
+
+Validation: 37 Python tests, 21 Rust tests, 36 isolated API groups (658 requests),
+and eight relevant browser scenarios pass. The three new browser scenarios
+cover 1366/390/320-pixel filtering and numeric persistence; six Axe captures have
+zero violations and no horizontal overflow. Initial mobile test failures were
+caused by checking result rows before leaving the filters screen; corrected
+flow assertions pass. Formatting, Clippy and the Rust build pass. Angular source
+is unchanged in this update, so the preceding frontend unit/build results were
+not rerun. Desktop and mobile screenshots were visually reviewed.
+
+Migration applied at 11:53−03 after backup; live API/Angular health checks return
+200 and all seven variants have exact typed attributes. Existing catalog rows,
+category metadata, lists, versions, templates and source-link fingerprints are
+preserved. See [sources, test evidence and backup details](CATALOG_COLOR_COVERAGE_2026-11-10.md).
+
+## Researched attribute coverage — 2026-11-10
+
+Migration 008 implements the 44 researched findings with 81 additional supplies,
+16 new definitions, 69 explicit binding additions/extensions and seven guarded
+seed-item updates. The expected unchanged-baseline catalog has 264 items,
+14 categories, 65 definitions and 653 typed values. Exact provenance and
+measurement distinctions are recorded in the
+[implementation report](CATALOG_ATTRIBUTE_IMPLEMENTATION_2026-11-10.md).
+
+Validation passes:
+
+- 43 Python tests, including six migration cases covering exact source data,
+  preservation, idempotence, removed categories, renamed type keys and rollback
+  on incompatible definitions or closed choices.
+- 21 Rust tests, formatting, Clippy with warnings denied and the offline build.
+- 64 Angular tests and the production build. The existing editor stylesheet
+  warning remains: 27.36 kB against the 25 kB warning budget.
+- 41 isolated API groups, 787 requests. Every new variant and alias is searched;
+  all new attributes survive saving, publishing and copying. The first run's
+  copy assertion omitted the required JSON body; the corrected test passes.
+- 114 distinct browser scenarios: 55 functional and 59 layout/workflow cases.
+  The initial functional run exposed the remaining legacy 200-item cap in the
+  administrator's product-link selector. Complete paged loading now serves
+  link and merge selectors as well as import overrides. The final 64-case batch
+  includes five repeated admin cases and all 59 layout/workflow cases; all pass.
+
+New browser cases cover separate pack quantity, sheet/color counts and fractional
+dimensions; explicit false spiral requirements; independent marker tip shape and
+thickness; incompatible custom-field clearing; tape millimeters/meters; hygiene
+package counts at 390/320 px; and administrator moderation beyond 200 results.
+The 1,000-row import test also selects an item beyond the first 200 catalog rows.
+Existing alternatives, parent checklists, three PDF layouts, long-content PDF
+bounds and publication regressions pass.
+
+Eight new attribute screenshots and three admin pagination screenshots pass Axe
+with no violations or horizontal document overflow. Desktop, 390 px and 320 px
+captures were visually reviewed: filters, results, add actions, quantities and
+custom-form controls remain readable and reachable. All write-based API/browser
+tests use disposable databases, not local `escolar`.
+
+Evidence: `.local/qa/attribute-additions/` contains Python/Rust/API logs,
+`browser-results-initial.json`, `browser-tests.log`, `browser-ui-final.log`,
+attribute screenshots and Axe reports. Final frontend logs are
+`.local/qa/attribute-admin-candidates-unit.log` and
+`.local/qa/attribute-admin-candidates-build.log`; admin captures are in
+`.local/qa/attribute-admin/`.
+
+Applied locally at **12:50:55−03** after a mode-600 custom-format backup.
+Confirmed totals: **264 items, 14 categories, 65 definitions and 653 values**.
+Original item rows, aliases and categories are preserved; all attribute and
+metadata changes exactly match the manifest. All 33 protected application,
+legacy and source-table fingerprints are unchanged. The archive listing is
+readable; restoration was not tested. The app was restarted and read-only checks
+through the Angular proxy verify all 81 additions, all 69 declared bindings,
+boolean-false filtering, authentication on the new admin paging route and
+HTTP 200 health. Backup path and detailed proof are in the implementation report
+and `.local/qa/attribute-additions/{applied,live-api}.json`.

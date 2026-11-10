@@ -71,6 +71,8 @@ pub async fn migrate(pool: &sqlx::PgPool) -> Result<(), sqlx::Error> {
         (4_i64, include_str!("../db/004_notebook_catalog.sql")),
         (5_i64, include_str!("../db/005_category_attributes.sql")),
         (6_i64, include_str!("../db/006_catalog_expansion.sql")),
+        (7_i64, include_str!("../db/007_color_count_variants.sql")),
+        (8_i64, include_str!("../db/008_attribute_coverage.sql")),
     ] {
         let checksum = format!("{:x}", Sha256::digest(script));
         let existing: Option<String> =

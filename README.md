@@ -84,8 +84,40 @@ El importador requiere esta migración y conserva sus claves anteriores.
 
 La migración 006 incorpora 132 útiles adicionales y cinco categorías nuevas a partir
 de listas escolares chilenas de 2026. Está validada en una base desechable y
-aplicada a `escolar`: 176 útiles en 14 categorías. Consulta la
+aplicada a `escolar`, donde dejó 176 útiles en 14 categorías. Consulta la
 [investigación, fuentes y criterios de conservación](docs/CATALOG_RESEARCH_2026-11-10.md).
+
+La migración 007 agregó siete variantes con 6 o 24 colores y dejó el catálogo
+en 183 útiles y 14 categorías. En **Arte y dibujo → Lápices de colores**
+puedes filtrar por **6, 12 o 24 colores**. También se amplían témperas, plumones,
+acuarelas y lápices pastel. Consulta la
+[revisión de atributos y fuentes](docs/CATALOG_COLOR_COVERAGE_2026-11-10.md).
+
+La migración 008 implementa las 44 recomendaciones de la
+[investigación integral de atributos](docs/CATALOG_ATTRIBUTE_RESEARCH_2026-11-10.md):
+agrega **81 útiles y 16 atributos nuevos**, habilita características existentes
+para más tipos y conserva los útiles que dejan opciones abiertas. Incluye espiral
+y margen en cuadernos, gramaje de papel, unidades por envase, medidas de cintas,
+tipo de adhesivo, forma del lápiz y digitación de flautas. Está aplicada a la base
+local `escolar`: **264 útiles, 14 categorías y 65 atributos**.
+
+Selecciona una categoría y un tipo para filtrar las características disponibles;
+también puedes indicarlas al crear un **Útil personalizado**. La cantidad de la
+lista sigue siendo independiente del contenido de cada caja o paquete. La
+administración permite recorrer todas las páginas y los selectores de importación,
+vinculación y combinación incluyen los útiles posteriores al antiguo límite de
+200. Consulta [cambios, fuentes y validación](docs/CATALOG_ATTRIBUTE_IMPLEMENTATION_2026-11-10.md).
+
+Para pedir un útil con varias opciones aceptables, pulsa **Permitir alternativas**
+en el catálogo (**Alternativas** en el teléfono). Incluye los útiles permitidos,
+elige **Revisar opciones** y asigna un nombre general y una cantidad total.
+También puedes usar **Escribir opciones** y agregar opciones libres como
+«Cuaderno universitario cuadriculado» y «Cuaderno universitario rayado», sin
+exigir un número de hojas. Las opciones se guardan en una sola fila y aparecen
+en la lista y en los tres diseños PDF con una sola casilla. La familia puede
+combinar opciones para completar la cantidad; los útiles obligatorios por
+separado deben permanecer en filas distintas. **Editar opciones** permite cambiar
+el grupo o volver explícitamente a un solo útil, conservando la identidad de la fila.
 
 ## Cuentas y administración
 

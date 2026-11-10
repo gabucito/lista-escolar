@@ -44,6 +44,50 @@ export function makeDocument(
   const checkbox = (): ContentCanvas => ({
     canvas: [{ type: 'rect', x: 0, y: 1, w: 8, h: 8, r: 1, lineWidth: 1, lineColor: green }],
   });
+  // Options describe one requirement. Keep this block breakable so a long choice
+  // set can flow across pages without duplicating its quantity or checklist box.
+  const alternatives = (item: Item): PdfContent[] =>
+    item.alternatives?.length
+      ? [
+          {
+            text: 'Cualquiera de estas opciones',
+            bold: true,
+            fontSize: 8,
+            color: green,
+            margin: [0, 5, 0, 3],
+          },
+          ...item.alternatives.flatMap((option, index): PdfContent[] => [
+            ...(index
+              ? [
+                  {
+                    text: 'o',
+                    italics: true,
+                    fontSize: 8,
+                    color: muted,
+                    margin: [5, 2, 0, 2],
+                  } as PdfContent,
+                ]
+              : []),
+            { text: option.name, bold: true, fontSize: 8.5, margin: [5, 0, 0, 1] },
+            ...(attributeSummary(option.attributes)
+              ? [
+                  {
+                    text: attributeSummary(option.attributes),
+                    fontSize: 8,
+                    color: muted,
+                    margin: [5, 0, 0, 2],
+                  } as PdfContent,
+                ]
+              : []),
+          ]),
+          {
+            text: 'Completa la cantidad con cualquiera de estas opciones.',
+            fontSize: 7.5,
+            color: muted,
+            margin: [0, 4, 0, 3],
+          },
+        ]
+      : [];
   const itemRow = (item: Item): TableCell[] => [
     checkbox() as TableCell,
     {
@@ -52,6 +96,7 @@ export function makeDocument(
         ...(attributeSummary(item.attributes)
           ? [{ text: attributeSummary(item.attributes), fontSize: 8, color: muted }]
           : []),
+        ...alternatives(item),
         ...(item.note
           ? [
               {
@@ -66,7 +111,7 @@ export function makeDocument(
       margin: [0, 0, 4, 3],
     },
     {
-      text: `${item.quantity.replace('.', ',')}\n${item.unit}`,
+      text: `${item.quantity.replace('.', ',')}\n${item.unit}${item.alternatives?.length ? '\nen total' : ''}`,
       alignment: 'right',
       fontSize: 9,
       color: green,
@@ -77,7 +122,9 @@ export function makeDocument(
     table: {
       widths: [12, '*', 48],
       headerRows: 1,
-      keepWithHeaderRows: 1,
+      // A choice can exceed a whole page. Keeping its entire first row with
+      // the heading creates an oversized unbreakable block and loses content.
+      keepWithHeaderRows: items[0]?.alternatives?.length ? 0 : 1,
       body: [
         [
           {
@@ -317,7 +364,7 @@ export function makeDocument(
                 { ...checkbox(), width: 12 },
                 { text: item.category, fontSize: 8, color: green, bold: true },
                 {
-                  text: `${item.quantity.replace('.', ',')} ${item.unit}`,
+                  text: `${item.quantity.replace('.', ',')} ${item.unit}${item.alternatives?.length ? '\nen total' : ''}`,
                   fontSize: 11,
                   bold: true,
                   color: accent,
@@ -332,6 +379,7 @@ export function makeDocument(
         ...(attributeSummary(item.attributes)
           ? [{ text: attributeSummary(item.attributes), fontSize: 8, color: muted }]
           : []),
+        ...alternatives(item),
         ...(item.note ? [{ text: item.note, fontSize: 8.5, color: muted }] : []),
       ],
       margin: [9, 9, 9, 10],

@@ -416,15 +416,27 @@ summary:focus-visible,
 }
 .catalog-search {
   display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: end;
   gap: 14px;
+}
+.catalog-search > label:first-child,
+.catalog-search > .btn {
+  grid-column: 1 / -1;
 }
 .catalog-search > label + label {
   margin: 0;
 }
+.catalog-pagination {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding-top: 14px;
+}
 .catalog-options {
   display: grid;
   gap: 10px;
-  max-height: calc(100dvh - 390px);
+  max-height: calc(100dvh - 450px);
   min-height: 140px;
   overflow: auto;
   padding: 3px;
@@ -1339,6 +1351,7 @@ blockquote {
   }
   .catalog-search > .btn {
     align-self: end;
+    grid-column: 1/-1;
   }
   .catalog-options {
     max-height: 240px;

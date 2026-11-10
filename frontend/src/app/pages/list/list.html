@@ -152,6 +152,9 @@
                   type="checkbox"
                   [formField]="progressFields.items[row.index].checked"
                   [attr.aria-label]="'Ya tengo ' + row.item.name"
+                  [attr.aria-describedby]="
+                    row.item.alternatives?.length ? 'accepted-options-' + row.item.id : null
+                  "
                   (change)="mark(row.index)"
                 />
               } @else {
@@ -161,6 +164,32 @@
                 <div class="item-name">{{ row.item.name }}</div>
                 @if (attributes(row.item.attributes)) {
                   <small>{{ attributes(row.item.attributes) }}</small>
+                }
+                @if (row.item.alternatives?.length) {
+                  <section
+                    class="accepted-options"
+                    [attr.aria-labelledby]="'accepted-options-' + row.item.id"
+                  >
+                    <p class="accepted-options-title" [id]="'accepted-options-' + row.item.id">
+                      Cualquiera de estas opciones
+                    </p>
+                    <ul class="accepted-options-list">
+                      @for (option of row.item.alternatives; track $index; let first = $first) {
+                        <li>
+                          @if (!first) {
+                            <span class="accepted-option-or">o</span>
+                          }
+                          <strong class="accepted-option-name">{{ option.name }}</strong>
+                          @if (attributes(option.attributes); as summary) {
+                            <small>{{ summary }}</small>
+                          }
+                        </li>
+                      }
+                    </ul>
+                    <p class="accepted-options-help">
+                      Completa la cantidad con cualquiera de estas opciones.
+                    </p>
+                  </section>
                 }
                 @if (row.item.note) {
                   <small>{{ row.item.note }}</small>
@@ -174,7 +203,12 @@
                   </div>
                 }
               </div>
-              <span class="quantity">{{ row.item.quantity }} {{ row.item.unit }}</span>
+              <span class="quantity"
+                >{{ row.item.quantity }} {{ row.item.unit }}
+                @if (row.item.alternatives?.length) {
+                  <span class="quantity-total">en total</span>
+                }
+              </span>
             </div>
           }
         </section>

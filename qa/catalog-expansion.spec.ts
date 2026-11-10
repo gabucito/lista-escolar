@@ -226,3 +226,37 @@ for (const width of [390, 320]) {
     await expect(page.locator('.supply-row').getByRole('textbox', { name: 'Útil', exact: true })).toHaveValue('Metalófono cromático de 25 notas');
   });
 }
+
+for (const width of [1366, 390, 320]) {
+  test(`color counts 6 and 24 filter and persist as numbers at ${width}px`, async ({ page, context }) => {
+    const id = await editor(page, context, width);
+    await chooseCategory(page, 'Arte y dibujo');
+    await chooseAttribute(page, 'Tipo', 'Lápices de colores');
+    const colors = page.getByRole('group', { name: 'Número de colores', exact: true });
+    for (const count of [6, 12, 24]) {
+      const select = colors.getByRole('combobox');
+      if (await select.count()) {
+        await expect(select.getByRole('option', { name: new RegExp(`^${count} colores(?:\\s|$)`) })).toHaveCount(1);
+      } else await expect(colors.getByRole('radio', { name: `${count} colores`, exact: true })).toBeVisible();
+    }
+    // Switch count without changing the type; contextual facets must retain both alternatives.
+    await chooseAttribute(page, 'Número de colores', '6 colores');
+    if (width <= 720) await expect(page.getByRole('button', { name: 'Ver 1 útil', exact: true })).toBeVisible();
+    else await expect(page.locator('.catalog-result')).toHaveCount(1);
+    await capture(page, `${width}-color-count-6-filters`);
+    await chooseAttribute(page, 'Número de colores', '24 colores');
+    if (width <= 720) await page.getByRole('button', { name: 'Ver 1 útil', exact: true }).click();
+    await expect(page.locator('.catalog-result')).toHaveCount(1);
+    await expect(page.locator('.catalog-result')).toContainText('Lápices de colores, 24 colores');
+    await add(page, 'Lápices de colores, 24 colores');
+    const items = await savedItems(context, id, 1);
+    expect(items[0].attributes.numero_colores.value).toBe(24);
+    expect(items[0].attributes.tipo_arte.value).toBe('Lápices de colores');
+    expect(items[0].catalog_id).toBeTruthy();
+    await capture(page, `${width}-color-count-24`);
+    if (width <= 720) await page.getByRole('button', { name: /Ver mi lista/ }).click();
+    await page.reload();
+    await expect(page.locator('.supply-row')).toHaveCount(1);
+    expect((await savedItems(context, id, 1))[0].attributes.numero_colores.value).toBe(24);
+  });
+}

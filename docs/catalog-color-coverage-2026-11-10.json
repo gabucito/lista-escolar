@@ -1,0 +1,203 @@
+{
+  "researched_on": "2026-11-10",
+  "scope": "Seven missing color-count variants backed by primary school lists and manufacturer evidence. Color count is distinct from pencil pieces, packaging quantities, stock and brands. Existing unspecified items remain unspecified.",
+  "baseline": {
+    "categories": 14,
+    "items": 176,
+    "attribute_values": 381
+  },
+  "sources": [
+    {
+      "id": "staedtler",
+      "title": "STAEDTLER Noris colour 185 C6",
+      "url": "https://www.staedtler.com/uk/en/products/products-for-colouring/coloured-pencils/noris-colour-185-coloured-pencil-185-c6/",
+      "evidence": "Official indexed product text identifies six ordinary pencils in assorted colors; direct fetch returned HTTP 429."
+    },
+    {
+      "id": "giotto",
+      "title": "Giotto Colors 3.0",
+      "url": "https://www.fila.it/int/en/product/giotto-colors-3-0/",
+      "evidence": "Manufacturer describes regular colored pencils, with boxes of 6, 12 and 24 pieces; corroborates ordinary six-pencil format."
+    },
+    {
+      "id": "thomas",
+      "title": "Saint Thomas College: quinto básico 2026",
+      "url": "https://saintthomas.cl/documentos/Lista-utiles-2026/Lista%20de%20%C3%9Atiles%205to%20B%C3%A1sico-2026.pdf",
+      "evidence": "Page 1, Artes Visuales: colored pencils in 24 colors."
+    },
+    {
+      "id": "artel_tempera",
+      "title": "Artel: catálogo de productos 2025",
+      "url": "https://www.artel.cl/wp-content/uploads/2024/11/Catalogo_Artel_2025.pdf",
+      "evidence": "Printed page 58: regular tempera, six different colors in 15 ml jars, code 1002.0605. Jar volume is deliberately not a generic requirement."
+    },
+    {
+      "id": "manquecura",
+      "title": "Manquecura Valle Lo Campino: Kínder 2026",
+      "url": "https://www.ddee.cl/upload_archivos/lista_utiles/upload/2026/VLC/Tradicional/K/archivo.pdf",
+      "evidence": "Page 3 requests tempera in six colors."
+    },
+    {
+      "id": "artel_solida",
+      "title": "Artel: Témpera Sólida 6 Colores",
+      "url": "https://www.artel.cl/producto/tempera-solida-6-colores/",
+      "evidence": "Six-color solid tempera format, SKU 29000400; wholesale unit counts excluded."
+    },
+    {
+      "id": "tis",
+      "title": "The International School La Serena: quinto básico 2026",
+      "url": "https://www.tisls.cl/portal/wp-content/uploads/2025/12/Lista05-2026.pdf",
+      "evidence": "Page 1 requests a box of markers with 24 colors."
+    },
+    {
+      "id": "artel_acuarela",
+      "title": "Artel: Estuche Acuarelas en Pastillas 24 Colores",
+      "url": "https://tienda.artel.cl/products/estuche-acuarelas-en-pastillas-24-colores",
+      "evidence": "Product has 24 watercolor colors, SKU 20702900; tablet format is not imposed on the generic requirement."
+    },
+    {
+      "id": "maisonnette",
+      "title": "La Maisonnette: Jardín 2026",
+      "url": "https://www.lamaisonnette.cl/wp-content/uploads/2025/12/Jardin-Listas-de-Utiles-2026-.pdf",
+      "evidence": "Page 1 requests pastel pencils in 24 colors; oil/dry subtype is unspecified."
+    }
+  ],
+  "categories": [
+    {
+      "slug": "arte-y-dibujo",
+      "name": "Arte y dibujo",
+      "sort_order": 30,
+      "type_key": "tipo_arte",
+      "type_name": "Tipo de arte y dibujo",
+      "new": false
+    }
+  ],
+  "definitions": [
+    {
+      "key": "numero_colores",
+      "name": "Número de colores",
+      "data_type": "number",
+      "unit": "colores"
+    },
+    {
+      "key": "presentacion",
+      "name": "Presentación",
+      "data_type": "text",
+      "unit": null
+    }
+  ],
+  "items": [
+    {
+      "category": "arte-y-dibujo",
+      "key": "lapices-colores:6",
+      "name": "Lápices de colores, 6 colores",
+      "type": "Lápices de colores",
+      "attributes": {
+        "numero_colores": 6
+      },
+      "aliases": [
+        "lapices colores 6",
+        "lapices de color 6 colores"
+      ],
+      "sources": [
+        "staedtler",
+        "giotto"
+      ]
+    },
+    {
+      "category": "arte-y-dibujo",
+      "key": "lapices-colores:24",
+      "name": "Lápices de colores, 24 colores",
+      "type": "Lápices de colores",
+      "attributes": {
+        "numero_colores": 24
+      },
+      "aliases": [
+        "lapices colores 24",
+        "lapices de color 24 colores"
+      ],
+      "sources": [
+        "thomas",
+        "giotto"
+      ]
+    },
+    {
+      "category": "arte-y-dibujo",
+      "key": "manual:temperas-6-colores",
+      "name": "Témperas, 6 colores",
+      "type": "Témperas",
+      "attributes": {
+        "numero_colores": 6,
+        "presentacion": "Líquida"
+      },
+      "aliases": [
+        "tempera 6 colores"
+      ],
+      "sources": [
+        "artel_tempera",
+        "manquecura"
+      ]
+    },
+    {
+      "category": "arte-y-dibujo",
+      "key": "manual:temperas-solidas-6-colores",
+      "name": "Témperas sólidas, 6 colores",
+      "type": "Témperas",
+      "attributes": {
+        "numero_colores": 6,
+        "presentacion": "Sólida"
+      },
+      "aliases": [
+        "tempera solida 6 colores"
+      ],
+      "sources": [
+        "artel_solida"
+      ]
+    },
+    {
+      "category": "arte-y-dibujo",
+      "key": "manual:plumones-24-colores",
+      "name": "Plumones, 24 colores",
+      "type": "Plumones",
+      "attributes": {
+        "numero_colores": 24
+      },
+      "aliases": [
+        "marcadores 24 colores"
+      ],
+      "sources": [
+        "tis"
+      ]
+    },
+    {
+      "category": "arte-y-dibujo",
+      "key": "manual:acuarelas-24-colores",
+      "name": "Acuarelas, 24 colores",
+      "type": "Acuarelas",
+      "attributes": {
+        "numero_colores": 24
+      },
+      "aliases": [
+        "acuarela 24 colores"
+      ],
+      "sources": [
+        "artel_acuarela"
+      ]
+    },
+    {
+      "category": "arte-y-dibujo",
+      "key": "manual:lapices-pastel-24-colores",
+      "name": "Lápices pastel, 24 colores",
+      "type": "Lápices pastel",
+      "attributes": {
+        "numero_colores": 24
+      },
+      "aliases": [
+        "pasteles 24 colores"
+      ],
+      "sources": [
+        "maisonnette"
+      ]
+    }
+  ]
+}

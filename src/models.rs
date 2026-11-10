@@ -46,6 +46,27 @@ pub struct Item {
     pub category: String,
     pub note: String,
     pub attributes: Value,
+    /// All accepted choices for this one requirement; an empty list is an ordinary item.
+    #[serde(skip_serializing_if = "Vec::is_empty")]
+    pub alternatives: Vec<ItemAlternative>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+#[serde(default, deny_unknown_fields)]
+pub struct ItemAlternative {
+    pub catalog_id: String,
+    pub name: String,
+    pub attributes: Value,
+}
+
+impl Default for ItemAlternative {
+    fn default() -> Self {
+        Self {
+            catalog_id: String::new(),
+            name: String::new(),
+            attributes: json!({}),
+        }
+    }
 }
 
 impl Default for Item {
@@ -59,6 +80,7 @@ impl Default for Item {
             category: String::new(),
             note: String::new(),
             attributes: json!({}),
+            alternatives: Vec::new(),
         }
     }
 }
@@ -159,6 +181,45 @@ pub fn validate_content(content: &Content, publishing: bool) -> ApiResult<()> {
                 "La referencia al catálogo no es válida.",
             ));
         }
+        if !item.alternatives.is_empty() {
+            if !(2..=12).contains(&item.alternatives.len()) || !item.catalog_id.is_empty() {
+                return Err(ApiError::bad_request(
+                    "Un útil con alternativas necesita entre 2 y 12 opciones y no puede representar un solo artículo del catálogo.",
+                ));
+            }
+            for (index, option) in item.alternatives.iter().enumerate() {
+                if option.name.trim().is_empty()
+                    || option.name.chars().count() > 300
+                    || !option.attributes.is_object()
+                    || option.attributes.to_string().len() > 16_384
+                    || (!option.catalog_id.is_empty()
+                        && Uuid::parse_str(&option.catalog_id).is_err())
+                {
+                    return Err(ApiError::bad_request(
+                        "Cada alternativa necesita un nombre de hasta 300 caracteres, atributos válidos y una referencia de catálogo válida si se incluye.",
+                    ));
+                }
+                if item.alternatives[..index]
+                    .iter()
+                    .any(|previous| same_alternative(previous, option))
+                {
+                    return Err(ApiError::bad_request(
+                        "Las alternativas de un útil no pueden repetirse.",
+                    ));
+                }
+                if item
+                    .attributes
+                    .as_object()
+                    .expect("item attributes validated above")
+                    .iter()
+                    .any(|(key, value)| option.attributes.get(key) != Some(value))
+                {
+                    return Err(ApiError::bad_request(
+                        "Las características compartidas deben coincidir con todas las alternativas.",
+                    ));
+                }
+            }
+        }
         if publishing {
             if item.name.trim().is_empty() {
                 return Err(ApiError::bad_request(
@@ -183,6 +244,13 @@ pub fn canonical_content(mut content: Content) -> ApiResult<Content> {
                 .map_err(|_| ApiError::bad_request("La referencia al catálogo no es válida."))?
                 .to_string();
         }
+        for option in &mut item.alternatives {
+            if !option.catalog_id.is_empty() {
+                option.catalog_id = Uuid::parse_str(&option.catalog_id)
+                    .map_err(|_| ApiError::bad_request("La referencia al catálogo no es válida."))?
+                    .to_string();
+            }
+        }
     }
     Ok(content)
 }
@@ -201,6 +269,17 @@ pub fn same_requirements(left: &Item, right: &Item) -> bool {
             == quantity_milli(&right.quantity, &right.unit).ok()
         && left.note.trim() == right.note.trim()
         && left.attributes == right.attributes
+        && left.alternatives.len() == right.alternatives.len()
+        && left.alternatives.iter().all(|option| {
+            right
+                .alternatives
+                .iter()
+                .any(|other| same_alternative(option, other))
+        })
+}
+
+fn same_alternative(left: &ItemAlternative, right: &ItemAlternative) -> bool {
+    left.name.trim() == right.name.trim() && left.attributes == right.attributes
 }
 
 #[derive(Debug, Clone, Copy, Default, Serialize, Deserialize, PartialEq)]
@@ -263,6 +342,161 @@ pub fn content_changes(previous: Option<&Content>, current: &Content) -> Value {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    fn choice_content() -> Content {
+        let shared = json!({"formato":{"name":"Formato","value":"universitario"}});
+        Content {
+            school: "Colegio de prueba".into(),
+            class_name: "5° básico".into(),
+            items: vec![Item {
+                name: "Cuaderno universitario".into(),
+                quantity: "2".into(),
+                category: "Cuadernos".into(),
+                attributes: shared.clone(),
+                alternatives: ["Cuadriculado", "Rayado"]
+                    .into_iter()
+                    .map(|kind| {
+                        let mut attributes = shared.clone();
+                        attributes["tipo_cuaderno"] = json!({"name":"Tipo","value":kind});
+                        ItemAlternative {
+                            catalog_id: Uuid::new_v4().to_string(),
+                            name: format!("Cuaderno universitario {kind}"),
+                            attributes,
+                        }
+                    })
+                    .collect(),
+                ..Item::default()
+            }],
+            ..Content::default()
+        }
+    }
+
+    #[test]
+    fn old_items_keep_their_serialized_shape_and_option_snapshots_are_flat() {
+        let legacy = json!({"id":Uuid::new_v4(),"catalog_id":"","name":"Lápiz",
+            "quantity":"1","unit":"unidad","category":"Escritura","note":"","attributes":{}});
+        let item: Item = serde_json::from_value(legacy.clone()).unwrap();
+        assert!(item.alternatives.is_empty());
+        assert_eq!(serde_json::to_value(item).unwrap(), legacy);
+        let empty = json!({"alternatives":[]});
+        assert!(
+            serde_json::to_value(serde_json::from_value::<Item>(empty).unwrap())
+                .unwrap()
+                .get("alternatives")
+                .is_none()
+        );
+        for unknown in ["id", "quantity", "alternatives", "unit"] {
+            let mut option = json!({"name":"Cuaderno"});
+            option[unknown] = json!("not supported");
+            assert!(serde_json::from_value::<ItemAlternative>(option).is_err());
+        }
+    }
+
+    #[test]
+    fn alternatives_validate_bounded_distinct_choices_and_shared_attributes() {
+        let valid = choice_content();
+        assert!(validate_content(&valid, true).is_ok());
+        let mutate: [fn(&mut Item); 11] = [
+            |item| item.alternatives.truncate(1),
+            |item| item.alternatives = vec![item.alternatives[0].clone(); 13],
+            |item| item.catalog_id = Uuid::new_v4().to_string(),
+            |item| item.alternatives[0].name = "  ".into(),
+            |item| item.alternatives[0].name = "á".repeat(301),
+            |item| item.alternatives[0].catalog_id = "not-a-uuid".into(),
+            |item| item.alternatives[0].attributes = json!([]),
+            |item| item.alternatives[0].attributes = json!({"long":"x".repeat(16_385)}),
+            |item| {
+                item.alternatives[1] = item.alternatives[0].clone();
+                item.alternatives[1].catalog_id = Uuid::new_v4().to_string();
+            },
+            |item| item.alternatives[0].attributes["formato"] = json!("college"),
+            |item| item.attributes["numero_hojas"] = json!(100),
+        ];
+        for change in mutate {
+            let mut invalid = valid.clone();
+            change(&mut invalid.items[0]);
+            assert!(validate_content(&invalid, false).is_err());
+            assert!(validate_content(&invalid, true).is_err());
+        }
+        let mut maximum = valid.clone();
+        for index in 2..12 {
+            let mut option = maximum.items[0].alternatives[0].clone();
+            option.name = format!("Otra opción {index}");
+            maximum.items[0].alternatives.push(option);
+        }
+        assert!(validate_content(&maximum, true).is_ok());
+    }
+
+    #[test]
+    fn alternatives_survive_copy_and_canonicalize_their_catalog_references() {
+        let mut original = choice_content();
+        original.items[0].alternatives[0].catalog_id =
+            original.items[0].alternatives[0].catalog_id.to_uppercase();
+        let canonical = canonical_content(original.clone()).unwrap();
+        assert_eq!(
+            canonical.items[0].alternatives[0].catalog_id,
+            original.items[0].alternatives[0].catalog_id.to_lowercase()
+        );
+        let copied = copied_content(canonical.clone());
+        assert_ne!(copied.items[0].id, canonical.items[0].id);
+        assert_eq!(
+            copied.items[0].alternatives,
+            canonical.items[0].alternatives
+        );
+        assert_eq!(copied.items[0].quantity, "2");
+    }
+
+    #[test]
+    fn alternative_order_and_catalog_changes_preserve_progress_but_choice_changes_reset_it() {
+        let first = choice_content();
+        let id = first.items[0].id;
+        let old = Progress::from([(
+            id,
+            ProgressState {
+                checked: true,
+                review: false,
+            },
+        )]);
+        let mut reordered = first.clone();
+        reordered.items[0].alternatives.reverse();
+        reordered.items[0].alternatives[0].catalog_id = Uuid::new_v4().to_string();
+        reordered.items[0].category = "Otra categoría".into();
+        assert_eq!(migrate_progress(Some(&first), &reordered, &old), old);
+        assert_eq!(
+            content_changes(Some(&first), &reordered)["changed"],
+            json!([])
+        );
+        for change in [
+            (|item: &mut Item| item.alternatives[0].name = "Cuaderno college".into())
+                as fn(&mut Item),
+            |item| item.alternatives[0].attributes["numero_hojas"] = json!(80),
+            |item| {
+                let mut added = item.alternatives[0].clone();
+                added.name = "Cuaderno universitario liso".into();
+                item.alternatives.push(added);
+            },
+            |item| item.alternatives.clear(),
+        ] {
+            let mut changed = first.clone();
+            change(&mut changed.items[0]);
+            let state = migrate_progress(Some(&first), &changed, &old);
+            assert_eq!(
+                state[&id],
+                ProgressState {
+                    checked: false,
+                    review: true
+                }
+            );
+            assert_eq!(
+                content_changes(Some(&first), &changed)["changed"],
+                json!([id])
+            );
+            assert_eq!(
+                migrate_progress(Some(&changed), &first, &state)[&id],
+                state[&id]
+            );
+        }
+    }
     #[test]
     fn exact_quantity_rules() {
         assert_eq!(quantity_milli("0,001", "m").unwrap(), 1);

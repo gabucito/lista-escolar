@@ -21,7 +21,10 @@ import {
   newItem,
   dateLabel,
 } from '../../core/models';
-import { applicableCategoryAttributes, categoryInputAttributes } from '../../core/catalog-attributes';
+import {
+  applicableCategoryAttributes,
+  categoryInputAttributes,
+} from '../../core/catalog-attributes';
 
 interface Administrator {
   id: string;
@@ -42,6 +45,12 @@ interface AttributeDefinition {
 }
 interface AdminItem extends CatalogItem {
   aliases?: string[];
+}
+interface CatalogPage {
+  items: AdminItem[];
+  total: number;
+  offset: number;
+  limit: number;
 }
 interface AttributeInput {
   key: string;
@@ -138,6 +147,20 @@ export class Admin {
   };
   readonly counts = signal<Record<string, number>>({});
   readonly catalog = signal<AdminItem[]>([]);
+  readonly catalogTotal = signal(0);
+  readonly catalogOffset = signal(0);
+  readonly catalogLoading = signal(false);
+  readonly catalogPageSize = 50;
+  private catalogRequest = 0;
+  private readonly catalogFilters = signal({ q: '', status: '', category: '' });
+  readonly catalogHasNext = computed(
+    () => this.catalogOffset() + this.catalog().length < this.catalogTotal(),
+  );
+  readonly catalogRange = computed(() =>
+    this.catalogTotal() === 0
+      ? '0 resultados'
+      : `${this.catalogOffset() + 1}–${this.catalogOffset() + this.catalog().length} de ${this.catalogTotal()} ${this.catalogTotal() === 1 ? 'resultado' : 'resultados'}`,
+  );
   readonly categories = signal<Category[]>([]);
   readonly products = signal<Product[]>([]);
   readonly matches = signal<Match[]>([]);
@@ -174,13 +197,8 @@ export class Admin {
     required(p.username);
     required(p.password);
   });
-  readonly searchModel = signal({ q: '', status: '' });
+  readonly searchModel = signal({ q: '', status: '', category: '' });
   readonly searchFields = form(this.searchModel);
-  readonly shownCatalog = computed(() =>
-    this.catalog().filter(
-      (i) => !this.searchModel().status || i.review_status === this.searchModel().status,
-    ),
-  );
   readonly reviewModel = signal({
     name: '',
     target_id: '',
@@ -292,6 +310,16 @@ export class Admin {
     }
   }
   private clearPrivateData() {
+    this.catalogRequest++;
+    this.linkRequest++;
+    this.mergeRequest++;
+    this.catalogLoading.set(false);
+    this.catalog.set([]);
+    this.catalogTotal.set(0);
+    this.catalogOffset.set(0);
+    this.linkCandidates.set([]);
+    this.mergeCandidates.set([]);
+    this.linkModel.set({ item_id: '' });
     this.reports.set([]);
     this.products.set([]);
     this.matches.set([]);
@@ -311,6 +339,8 @@ export class Admin {
   }
   async selectTab(tab: Tab) {
     if (this.busy()) return;
+    this.linkRequest++;
+    this.mergeRequest++;
     this.attempted.set('');
     this.tab.set(tab);
     this.error.set('');
@@ -333,12 +363,11 @@ export class Admin {
         this.counts.set(await this.api.get<Record<string, number>>('/admin/dashboard'));
         break;
       case 'catalog': {
-        const [items, categories, definitions] = await Promise.all([
-          this.api.get<AdminItem[]>('/admin/catalog?q=' + encodeURIComponent(this.searchModel().q)),
+        const [, categories, definitions] = await Promise.all([
+          this.loadCatalogPage(this.catalogOffset()),
           this.api.get<Category[]>('/catalog/categories'),
           this.api.get<AttributeDefinition[]>('/admin/attributes'),
         ]);
-        this.catalog.set(items);
         this.categories.set(categories);
         this.attributeDefinitions.set(definitions);
         break;
@@ -401,6 +430,65 @@ export class Admin {
       this.fail(error);
     } finally {
       this.loading.set(false);
+    }
+  }
+  private async loadCatalogPage(offset: number, filters = this.catalogFilters()) {
+    const request = ++this.catalogRequest;
+    this.catalogLoading.set(true);
+    const fetch = (pageOffset: number) => {
+      const parameters = new URLSearchParams({
+        ...filters,
+        limit: String(this.catalogPageSize),
+        offset: String(pageOffset),
+      });
+      return this.api.get<CatalogPage>('/admin/catalog/browse?' + parameters);
+    };
+    try {
+      let page = await fetch(offset);
+      if (request !== this.catalogRequest) return false;
+      // Moderating the last item on a filtered final page can remove that page.
+      if (offset > 0 && offset >= page.total) {
+        const last = Math.max(
+          0,
+          Math.floor((page.total - 1) / this.catalogPageSize) * this.catalogPageSize,
+        );
+        page = await fetch(last);
+      }
+      if (request !== this.catalogRequest) return false;
+      this.catalog.set(page.items);
+      this.catalogTotal.set(page.total);
+      this.catalogOffset.set(page.offset);
+      this.catalogFilters.set(filters);
+      return true;
+    } catch (error) {
+      if (request === this.catalogRequest) throw error;
+      return false;
+    } finally {
+      if (request === this.catalogRequest) this.catalogLoading.set(false);
+    }
+  }
+  async searchCatalog() {
+    if (this.busy()) return;
+    this.error.set('');
+    try {
+      await this.loadCatalogPage(0, { ...this.searchModel() });
+    } catch (error) {
+      this.fail(error);
+    }
+  }
+  async changeCatalogPage(direction: -1 | 1) {
+    if (this.busy() || this.catalogLoading()) return;
+    const next = this.catalogOffset() + direction * this.catalogPageSize;
+    if (next < 0 || (direction === 1 && !this.catalogHasNext())) return;
+    this.error.set('');
+    try {
+      if (await this.loadCatalogPage(next)) {
+        requestAnimationFrame(() =>
+          document.getElementById('admin-catalog-results-heading')?.focus(),
+        );
+      }
+    } catch (error) {
+      this.fail(error);
     }
   }
   private async action(work: () => Promise<unknown>, message: string) {
@@ -615,16 +703,39 @@ export class Admin {
         .filter(Boolean),
     };
   }
+  private async allCatalogCandidates(query: string, current: () => boolean) {
+    const items = new Map<string, CatalogItem>();
+    let offset = 0;
+    while (current()) {
+      const parameters = new URLSearchParams({ q: query, limit: '100', offset: String(offset) });
+      const page = await this.api.get<CatalogPage>('/catalog/browse?' + parameters);
+      if (!current()) return undefined;
+      for (const item of page.items) items.set(item.id, item);
+      offset += page.items.length;
+      if (!page.items.length || offset >= page.total) break;
+    }
+    return current() ? [...items.values()] : undefined;
+  }
   async findMergeTargets() {
     const request = ++this.mergeRequest;
+    const itemId = this.selectedItem()?.id;
+    const current = () =>
+      request === this.mergeRequest &&
+      !!this.administrator() &&
+      !!itemId &&
+      this.selectedItem()?.id === itemId;
+    if (!current()) return;
     try {
-      const candidates = await this.api.get<CatalogItem[]>(
-        '/catalog?q=' + encodeURIComponent(this.mergeModel().q),
+      const candidates = await this.allCatalogCandidates(this.mergeModel().q, current);
+      if (!candidates || !current()) return;
+      this.mergeCandidates.set(candidates);
+      this.reviewModel.update((model) =>
+        candidates.some((item) => item.id === model.target_id && item.review_status === 'approved')
+          ? model
+          : { ...model, target_id: '' },
       );
-      if (request === this.mergeRequest && this.administrator() && this.selectedItem())
-        this.mergeCandidates.set(candidates);
     } catch (error) {
-      this.fail(error);
+      if (current()) this.fail(error);
     }
   }
   review(action: 'update' | 'approve' | 'reject' | 'merge') {
@@ -728,15 +839,24 @@ export class Admin {
   }
   async findLinkTargets() {
     const request = ++this.linkRequest;
-    this.linkModel.set({ item_id: '' });
+    const productId = this.selectedProduct()?.id;
+    const current = () =>
+      request === this.linkRequest &&
+      !!this.administrator() &&
+      !!productId &&
+      this.selectedProduct()?.id === productId;
+    if (!current()) return;
     try {
-      const items = await this.api.get<CatalogItem[]>(
-        '/catalog?q=' + encodeURIComponent(this.linkSearchModel().q),
+      const items = await this.allCatalogCandidates(this.linkSearchModel().q, current);
+      if (!items || !current()) return;
+      this.linkCandidates.set(items);
+      this.linkModel.update((model) =>
+        items.some((item) => item.id === model.item_id && item.review_status !== 'rejected')
+          ? model
+          : { item_id: '' },
       );
-      if (request === this.linkRequest && this.administrator() && this.selectedProduct())
-        this.linkCandidates.set(items);
     } catch (error) {
-      this.fail(error);
+      if (current()) this.fail(error);
     }
   }
   variantAttributes(attributes: Record<string, unknown>) {

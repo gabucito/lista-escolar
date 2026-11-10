@@ -1,0 +1,95 @@
+:host,
+form {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+}
+.options-form-body {
+  display: grid;
+  gap: 16px;
+  padding: 18px 22px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+.explanation {
+  margin: 0;
+  line-height: 1.5;
+  color: #465864;
+}
+.amount-fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+h3 {
+  margin: 0 0 10px;
+  font-size: 15px;
+}
+.review-options {
+  margin: 0 0 14px;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 8px;
+}
+.review-options li {
+  display: flex;
+  gap: 12px;
+  align-items: start;
+  padding: 12px;
+  background: #f1f5eb;
+  border: 1px solid #d8ded5;
+  border-radius: 8px;
+}
+.review-options li > div {
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.review-options small {
+  display: block;
+  margin-top: 5px;
+  line-height: 1.5;
+  color: #465864;
+}
+.review-options button {
+  flex: none;
+  min-height: 44px;
+}
+footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 14px 22px;
+  border-top: 1px solid #d8ded5;
+  background: white;
+}
+.free-option {
+  display: grid;
+  gap: 8px;
+  margin: 12px 0 16px;
+  padding-block: 12px;
+  border-block: 1px solid #d8ded5;
+}
+.free-option small {
+  color: #465864;
+  line-height: 1.5;
+}
+.free-option .btn {
+  justify-self: start;
+}
+@media (max-width: 720px) {
+  .options-form-body {
+    padding: 14px;
+  }
+  footer {
+    padding: 12px;
+    flex-wrap: wrap;
+  }
+  footer .btn {
+    flex: 1;
+    min-width: 0;
+    white-space: normal;
+  }
+}

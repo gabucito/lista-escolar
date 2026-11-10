@@ -98,6 +98,30 @@ class OtherSupplySuggestionsTest(unittest.TestCase):
         self.assertIsNone(catalog_import.color_pencil_suggestion("Lapiz Color 12 Col Mega Hexagonal"))
         self.assertIsNone(catalog_import.color_pencil_suggestion("Lapiz Color 12 col 3.0 Giotto"))
 
+    def test_plural_color_pencils_preserve_count_and_existing_identity(self):
+        for noun in ("Lápiz", "Lapiz", "Lápices", "Lapices"):
+            for count in (6, 12, 24):
+                with self.subTest(noun=noun, count=count):
+                    item = catalog_import.product_suggestion(f"{noun} de colores {count} colores")
+                    self.assertIsNotNone(item)
+                    expected_key = "manual:lapices-colores-12" if count == 12 else f"lapices-colores:{count}"
+                    self.assertEqual(item["key"], expected_key)
+                    self.assertEqual(item["attributes"]["numero_colores"], count)
+                    self.assertEqual(item["attributes"]["tipo_arte"], "Lápices de colores")
+
+    def test_plural_color_pencils_do_not_guess_special_or_unspecified_sets(self):
+        for name in (
+            "Lápices de colores 6 colores bicolor",
+            "Lapices de colores 24 colores jumbo",
+            "Lápices de colores 12 colores acuarelables",
+            "Lápices de colores 24 colores metálicos",
+            "Lapices de colores 6 colores + grafito + goma",
+            "Lápices de colores 24 colores pack",
+            "Lápices de colores",
+        ):
+            with self.subTest(name=name):
+                self.assertIsNone(catalog_import.product_suggestion(name))
+
     def test_graphite_grade_and_eraser_are_distinct(self):
         with_eraser = catalog_import.graphite_pencil_suggestion("Lapiz Grafito HB c/Goma Doms")
         without_eraser = catalog_import.graphite_pencil_suggestion("Lapiz Grafito HB s/Goma Doms")

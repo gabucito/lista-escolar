@@ -1,0 +1,43 @@
+<div class="selection-heading">
+  <strong aria-live="polite">{{ selection().options.length }} de {{ maximum }} opciones</strong
+  ><span>La familia elige cualquiera.</span>
+</div>
+@if (selection().options.length) {
+  <details class="selection-list">
+    <summary>Ver opciones seleccionadas</summary>
+    <ul>
+      @for (option of selection().options; track $index; let i = $index) {
+        <li>
+          <span>{{ option.name }}</span
+          ><button
+            class="text-button"
+            type="button"
+            [disabled]="blocked()"
+            [attr.aria-label]="'Quitar opción ' + option.name"
+            (click)="removed.emit(i)"
+          >
+            Quitar
+          </button>
+        </li>
+      }
+    </ul>
+  </details>
+} @else {
+  <p>
+    Incluye los útiles que se pueden intercambiar. Puedes cambiar de filtros sin perder tu
+    selección.
+  </p>
+}
+<div class="selection-actions">
+  <button class="btn secondary" type="button" [disabled]="blocked()" (click)="cancelled.emit()">
+    Cancelar alternativas</button
+  ><button
+    id="review-item-options"
+    class="btn"
+    type="button"
+    [disabled]="blocked()"
+    (click)="review.emit()"
+  >
+    {{ selection().options.length ? 'Revisar opciones' : 'Escribir opciones' }}
+  </button>
+</div>

@@ -44,6 +44,16 @@ import {
 import { Modal } from '../../shared/modal';
 import { PdfOptions } from '../../shared/pdf-options/pdf-options';
 import { quantityIssue, steppedQuantity } from './editor-workspace';
+import { AlternativeSelectionBar } from './alternative-selection-bar/alternative-selection-bar';
+import { ItemOptionsEditor, OptionsReview } from './item-options-editor/item-options-editor';
+import {
+  AlternativeSelection,
+  MAX_ALTERNATIVES,
+  alternativeKey,
+  alternativeRequirement,
+  beginAlternatives,
+  catalogChoice,
+} from './item-alternatives';
 import {
   attributeChoice,
   browseQuery,
@@ -67,7 +77,16 @@ interface ImportRow extends Item {
 }
 @Component({
   selector: 'app-editor',
-  imports: [RouterLink, FormField, PdfOptions, Modal, NgTemplateOutlet, CategoryIcon],
+  imports: [
+    RouterLink,
+    FormField,
+    PdfOptions,
+    Modal,
+    NgTemplateOutlet,
+    CategoryIcon,
+    AlternativeSelectionBar,
+    ItemOptionsEditor,
+  ],
   templateUrl: './editor.html',
   styleUrl: './editor.scss',
 })
@@ -94,7 +113,11 @@ export class Editor implements OnInit, OnDestroy {
   readonly editingBlocked = computed(
     () => this.readOnly() || this.busy() || !!this.importPreview(),
   );
-  readonly panel = signal<'metadata' | 'custom' | 'upload' | 'import' | 'picker' | null>(null);
+  readonly panel = signal<
+    'metadata' | 'custom' | 'upload' | 'import' | 'picker' | 'alternatives' | null
+  >(null);
+  readonly alternativeSelection = signal<AlternativeSelection | undefined>(undefined);
+  readonly maxAlternatives = MAX_ALTERNATIVES;
   readonly metadata = signal<Content>(emptyContent());
   readonly metadataFields = form(this.metadata, (path) =>
     disabled(path, () => this.readOnly() || this.metadataBusy()),
@@ -114,7 +137,11 @@ export class Editor implements OnInit, OnDestroy {
   private metadataSnapshot = '';
   readonly model = signal<Content>(emptyContent());
   readonly fields = form(this.model, (p) =>
-    disabled(p, () => this.readOnly() || this.busy() || !!this.importPreview()),
+    disabled(
+      p,
+      () =>
+        this.readOnly() || this.busy() || !!this.importPreview() || !!this.alternativeSelection(),
+    ),
   );
   readonly units = UNITS;
   readonly catalog = signal<CatalogItem[]>([]);
@@ -282,7 +309,7 @@ export class Editor implements OnInit, OnDestroy {
     { revision: number; current_version: number; request_id: string } | undefined;
   readonly saveBeforePdf = () => this.save();
   private beforeUnload = (event: BeforeUnloadEvent) => {
-    if (this.dirty()) {
+    if (this.dirty() || this.alternativeSelection()) {
       event.preventDefault();
       event.returnValue = '';
     }
@@ -333,6 +360,7 @@ export class Editor implements OnInit, OnDestroy {
     });
   }
   openPanel(panel: 'metadata' | 'custom' | 'upload') {
+    if (this.alternativeSelection()) return;
     this.api.clear();
     this.returnToPicker = this.panel() === 'picker';
     if (this.returnToPicker) this.rememberPicker();
@@ -387,6 +415,10 @@ export class Editor implements OnInit, OnDestroy {
   }
   async closePanel() {
     if (this.importing() || this.customBusy() || this.metadataBusy()) return;
+    if (this.panel() === 'alternatives') {
+      this.cancelAlternatives();
+      return;
+    }
     if (this.panel() === 'import') {
       await this.cancelImport();
       return;
@@ -474,6 +506,7 @@ export class Editor implements OnInit, OnDestroy {
     this.importModel.set({ items: [] });
     this.importPage.set(0);
     this.panel.set(null);
+    this.alternativeSelection.set(undefined);
     this.metadata.set(emptyContent());
     this.custom.set({
       name: '',
@@ -498,6 +531,7 @@ export class Editor implements OnInit, OnDestroy {
     }
   }
   async reload() {
+    this.alternativeSelection.set(undefined);
     this.ready.set(false);
     const draft = await this.api.get<Draft>(`/lists/${this.id()}/draft`);
     this.draft.set(draft);
@@ -515,6 +549,7 @@ export class Editor implements OnInit, OnDestroy {
   canLeave() {
     return (
       (!this.dirty() &&
+        !this.alternativeSelection() &&
         !(
           this.panel() === 'metadata' && JSON.stringify(this.metadata()) !== this.metadataSnapshot
         )) ||
@@ -769,6 +804,10 @@ export class Editor implements OnInit, OnDestroy {
   }
   add(item: CatalogItem) {
     if (this.editingBlocked() || this.catalogBusy()) return;
+    if (this.alternativeSelection()) {
+      this.toggleAlternative(item);
+      return;
+    }
     const added = {
       ...newItem(item.name, item.category),
       catalog_id: item.id,
@@ -780,6 +819,91 @@ export class Editor implements OnInit, OnDestroy {
     }));
     this.lastAdded.set({ id: added.id, name: added.name, catalogId: item.id });
   }
+  startAlternatives(item?: Item) {
+    if (this.editingBlocked() || this.alternativeSelection()) return;
+    this.api.clear();
+    this.alternativeSelection.set({
+      ...beginAlternatives(item),
+      category: item?.category || this.selectedCategory()?.name,
+    });
+    this.lastAdded.set(undefined);
+    if (item) this.chooseCatalogCategory(this.categorySlug(item.category));
+    if (this.mobile()) this.openPicker();
+  }
+  alternativeSelected(item: CatalogItem): boolean {
+    const key = alternativeKey({
+      catalog_id: item.id,
+      name: item.name,
+      attributes: item.attributes,
+    });
+    return (
+      this.alternativeSelection()?.options.some((option) => alternativeKey(option) === key) ?? false
+    );
+  }
+  toggleAlternative(item: CatalogItem) {
+    if (this.editingBlocked()) return;
+    this.api.clear();
+    const choice = catalogChoice(item),
+      key = alternativeKey(choice);
+    this.alternativeSelection.update((selection) => {
+      if (!selection) return selection;
+      const exists = selection.options.some((option) => alternativeKey(option) === key);
+      if (!exists && selection.options.length >= MAX_ALTERNATIVES) return selection;
+      return {
+        ...selection,
+        options: exists
+          ? selection.options.filter((option) => alternativeKey(option) !== key)
+          : [...selection.options, choice],
+      };
+    });
+  }
+  removeAlternative(index: number) {
+    if (this.editingBlocked()) return;
+    this.alternativeSelection.update((selection) =>
+      selection
+        ? { ...selection, options: selection.options.filter((_, i) => i !== index) }
+        : selection,
+    );
+  }
+  reviewAlternatives() {
+    if (this.editingBlocked() || !this.alternativeSelection()) return;
+    if (this.panel() === 'picker') this.rememberPicker();
+    this.returnToPicker = false;
+    this.panel.set('alternatives');
+  }
+  backToAlternatives(review: OptionsReview) {
+    this.alternativeSelection.set({ ...review.selection, details: review.details });
+    this.panel.set(this.mobile() ? 'picker' : null);
+    this.restorePicker();
+  }
+  cancelAlternatives() {
+    this.alternativeSelection.set(undefined);
+    this.api.clear();
+    if (this.panel() === 'alternatives') this.panel.set(this.mobile() ? 'picker' : null);
+    requestAnimationFrame(() => document.getElementById('start-item-alternatives')?.focus());
+  }
+  saveAlternatives(review: OptionsReview) {
+    if (this.editingBlocked() || !this.alternativeSelection()) return;
+    const original = review.selection.original;
+    if (original && !this.model().items.some((item) => item.id === original.id)) {
+      this.api.fail(
+        new Error('El útil original ya no está en el borrador. Cancela y revisa la lista.'),
+      );
+      return;
+    }
+    const item = alternativeRequirement(review.selection, review.details);
+    this.model.update((model) => ({
+      ...model,
+      items: original
+        ? model.items.map((existing) => (existing.id === original.id ? item : existing))
+        : [...model.items, item],
+    }));
+    this.alternativeSelection.set(undefined);
+    this.panel.set(null);
+    this.lastAdded.set(original ? undefined : { id: item.id, name: item.name, catalogId: '' });
+    this.api.clear();
+    requestAnimationFrame(() => document.getElementById('item-options-' + item.id)?.focus());
+  }
   undoAdd() {
     const added = this.lastAdded();
     if (!added || this.editingBlocked()) return;
@@ -790,7 +914,7 @@ export class Editor implements OnInit, OnDestroy {
     this.lastAdded.set(undefined);
   }
   stepQuantity(index: number, delta: number) {
-    if (this.editingBlocked()) return;
+    if (this.editingBlocked() || this.alternativeSelection()) return;
     this.model.update((model) => ({
       ...model,
       items: model.items.map((item, i) =>
@@ -889,12 +1013,12 @@ export class Editor implements OnInit, OnDestroy {
     }
   }
   remove(index: number) {
-    if (this.editingBlocked()) return;
+    if (this.editingBlocked() || this.alternativeSelection()) return;
     if (this.model().items[index]?.id === this.lastAdded()?.id) this.lastAdded.set(undefined);
     this.model.update((m) => ({ ...m, items: m.items.filter((_, i) => i !== index) }));
   }
   move(index: number, delta: number) {
-    if (this.editingBlocked()) return;
+    if (this.editingBlocked() || this.alternativeSelection()) return;
     this.model.update((m) => {
       const items = [...m.items],
         target = index + delta;
@@ -919,6 +1043,10 @@ export class Editor implements OnInit, OnDestroy {
     this.metadata.update((m) => ({ ...m, logo_id: '' }));
   }
   async publish() {
+    if (this.alternativeSelection()) {
+      this.api.fail(new Error('Guarda o cancela las opciones antes de publicar.'));
+      return;
+    }
     this.busy.set(true);
     try {
       await this.save();
@@ -997,8 +1125,17 @@ export class Editor implements OnInit, OnDestroy {
       }>('/catalog/match', {
         names: sourceRows.map(({ cells }) => cells[Number(mapping.name)] || ''),
       });
-      const allCatalog = await this.api.get<CatalogItem[]>('/catalog');
-      const options = new Map(allCatalog.map((item) => [item.id, item]));
+      // Manual overrides must include supplies beyond the legacy array route's cap.
+      const options = new Map<string, CatalogItem>();
+      let offset = 0;
+      while (true) {
+        const page = await this.api.get<CatalogBrowseResult>(
+          `/catalog/browse?limit=100&offset=${offset}`,
+        );
+        for (const item of page.items) options.set(item.id, item);
+        offset += page.items.length;
+        if (!page.items.length || offset >= page.total) break;
+      }
       for (const row of matchResult.rows)
         for (const candidate of row.candidates) options.set(candidate.id, candidate);
       this.importCatalog.set([...options.values()]);

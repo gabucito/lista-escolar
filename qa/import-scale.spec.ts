@@ -18,6 +18,18 @@ test('1000-row import review stays paged, retains explicit checks and cancels at
   await dialog.getByRole('button', { name: 'Aplicar columnas y revisar' }).click();
   const reviewed = dialog.getByLabel('Revisé este útil, su cantidad, unidad y nota');
   await expect(reviewed).toHaveCount(25);
+  // A manually selected match must be available even when it is outside the
+  // old 200-result catalog route and does not resemble the imported row name.
+  const tailResponse = await context.request.get('/api/catalog/browse?offset=200&limit=100');
+  expect(tailResponse.status()).toBe(200);
+  const tail = await tailResponse.json();
+  expect(tail.total).toBeGreaterThan(200);
+  const lastItem = tail.items.at(-1);
+  expect(lastItem).toBeTruthy();
+  const manualMatch = dialog.getByRole('combobox', { name: 'Coincidencia del catálogo' }).first();
+  await expect(manualMatch.locator(`option[value="${lastItem.id}"]`)).toHaveCount(1);
+  await manualMatch.selectOption(lastItem.id);
+  await expect(manualMatch).toHaveValue(lastItem.id);
   await page.screenshot({ path: '../.local/qa/ui/editor-workspace-import-review.png' });
   await expect(dialog.getByText('Página 1 de 40', { exact: true })).toBeVisible();
   for (const checkbox of await reviewed.all()) await checkbox.check();

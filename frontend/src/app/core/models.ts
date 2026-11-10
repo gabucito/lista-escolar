@@ -1,3 +1,8 @@
+export interface ItemAlternative {
+  catalog_id: string;
+  name: string;
+  attributes: Record<string, unknown>;
+}
 export interface Item {
   id: string;
   catalog_id: string;
@@ -7,6 +12,7 @@ export interface Item {
   category: string;
   note: string;
   attributes: Record<string, unknown>;
+  alternatives?: ItemAlternative[];
 }
 export interface Content {
   school: string;

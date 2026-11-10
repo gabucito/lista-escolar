@@ -41,24 +41,43 @@
           </button>
         </div>
       </div>
-      <button class="btn quiet edit-details" (click)="openPanel('metadata')">Editar datos</button>
+      <button
+        class="btn quiet edit-details"
+        [disabled]="!!alternativeSelection()"
+        (click)="openPanel('metadata')"
+      >
+        Editar datos
+      </button>
     </div>
     <div class="desktop-workspace-actions">
       <span class="save-state" role="status" [class.error]="saveState() === 'No se guardó'">{{
         saveState() === 'Guardado' ? '✓ Guardado' : saveState()
       }}</span>
-      <button class="btn secondary" [disabled]="busy() || conflict()" (click)="previewPdf()">
+      <button
+        class="btn secondary"
+        [disabled]="busy() || conflict() || !!alternativeSelection()"
+        (click)="previewPdf()"
+      >
         Vista previa
       </button>
       <button
         class="btn"
-        [disabled]="busy() || readOnly() || draft()?.hidden || conflict()"
+        [disabled]="
+          busy() || readOnly() || draft()?.hidden || conflict() || !!alternativeSelection()
+        "
         (click)="publish()"
       >
         {{ busy() ? 'Publicando…' : 'Publicar lista' }}
       </button>
     </div>
   </header>
+  @if (alternativeSelection() && mobile() && panel() === null) {
+    <div class="notice info alternative-resume" role="status">
+      <span>Tienes opciones sin guardar.</span>
+      <button class="text-button" (click)="openPicker()">Continuar selección</button>
+      <button class="text-button" (click)="cancelAlternatives()">Cancelar alternativas</button>
+    </div>
+  }
   @if (readOnly()) {
     <p class="notice info">
       Esta lista está archivada. Su propietario puede restaurarla desde Compartir.
@@ -83,7 +102,22 @@
           <p>{{ server.content.instructions }}</p>
           <ul>
             @for (item of server.content.items; track item.id) {
-              <li>{{ item.quantity }} {{ item.unit }} · {{ item.name }}</li>
+              <li>
+                {{ item.quantity }} {{ item.unit }} · {{ item.name }}
+                @if (item.alternatives?.length) {
+                  <p>Cualquiera de estas opciones:</p>
+                  <ul>
+                    @for (option of item.alternatives; track $index) {
+                      <li>
+                        {{ option.name }}
+                        @if (attributes(option.attributes); as description) {
+                          <small> · {{ description }}</small>
+                        }
+                      </li>
+                    }
+                  </ul>
+                }
+              </li>
             }
           </ul>
         </details>
@@ -137,7 +171,7 @@
                 <div class="quantity-control">
                   <button
                     class="quantity-step"
-                    [disabled]="editingBlocked()"
+                    [disabled]="editingBlocked() || !!alternativeSelection()"
                     (click)="stepQuantity(i, -1)"
                     [attr.aria-label]="'Reducir cantidad de ' + entry.name"
                   >
@@ -154,7 +188,7 @@
                   /></label>
                   <button
                     class="quantity-step"
-                    [disabled]="editingBlocked()"
+                    [disabled]="editingBlocked() || !!alternativeSelection()"
                     (click)="stepQuantity(i, 1)"
                     [attr.aria-label]="'Aumentar cantidad de ' + entry.name"
                   >
@@ -165,7 +199,7 @@
               </div>
               <button
                 class="remove-supply"
-                [disabled]="editingBlocked()"
+                [disabled]="editingBlocked() || !!alternativeSelection()"
                 (click)="remove(i)"
                 [attr.aria-label]="'Quitar ' + entry.name"
               >
@@ -180,6 +214,24 @@
             @if (comparisonSummary(entry.attributes, [], entry.name); as summary) {
               <p class="supply-attributes">{{ summary }}</p>
             }
+            @if (entry.alternatives?.length) {
+              <details class="supply-options-summary">
+                <summary>{{ entry.alternatives!.length }} opciones · elegir cualquiera</summary>
+                <ul>
+                  @for (option of entry.alternatives; track $index) {
+                    <li>{{ option.name }}</li>
+                  }
+                </ul>
+              </details>
+            }
+            <button
+              class="text-button item-options-action"
+              [id]="'item-options-' + entry.id"
+              [disabled]="editingBlocked() || !!alternativeSelection()"
+              (click)="startAlternatives(entry)"
+            >
+              {{ entry.alternatives?.length ? 'Editar opciones' : 'Permitir alternativas' }}
+            </button>
             <details class="supply-details">
               <summary>{{ entry.note ? 'Nota: ' + entry.note : 'Nota y detalles' }}</summary>
               <div class="supply-details-body">
@@ -205,7 +257,7 @@
                 >
                   <button
                     class="btn secondary small"
-                    [disabled]="i === 0 || editingBlocked()"
+                    [disabled]="i === 0 || editingBlocked() || !!alternativeSelection()"
                     (click)="move(i, -1)"
                     [attr.aria-label]="'Subir ' + entry.name"
                   >
@@ -213,7 +265,9 @@
                   </button>
                   <button
                     class="btn secondary small"
-                    [disabled]="i === model().items.length - 1 || editingBlocked()"
+                    [disabled]="
+                      i === model().items.length - 1 || editingBlocked() || !!alternativeSelection()
+                    "
                     (click)="move(i, 1)"
                     [attr.aria-label]="'Bajar ' + entry.name"
                   >
@@ -241,12 +295,16 @@
     <span class="mobile-save-state" role="status" [class.error]="saveState() === 'No se guardó'">{{
       saveState() === 'Guardado' ? '✓ Guardado' : saveState()
     }}</span>
-    <button class="btn secondary" [disabled]="busy() || conflict()" (click)="previewPdf()">
+    <button
+      class="btn secondary"
+      [disabled]="busy() || conflict() || !!alternativeSelection()"
+      (click)="previewPdf()"
+    >
       Vista previa
     </button>
     <button
       class="btn"
-      [disabled]="busy() || readOnly() || draft()?.hidden || conflict()"
+      [disabled]="busy() || readOnly() || draft()?.hidden || conflict() || !!alternativeSelection()"
       (click)="publish()"
     >
       {{ busy() ? 'Publicando…' : 'Publicar lista' }}
@@ -558,6 +616,18 @@
             <span class="catalog-count" aria-live="polite">{{
               catalogBusy() ? 'Buscando…' : catalogCountLabel()
             }}</span>
+            @if (!alternativeSelection() && mobile()) {
+              <button
+                id="start-item-alternatives"
+                class="text-button"
+                type="button"
+                aria-label="Permitir alternativas"
+                [disabled]="editingBlocked()"
+                (click)="startAlternatives()"
+              >
+                {{ mobile() ? 'Alternativas' : 'Permitir alternativas' }}
+              </button>
+            }
             @if (hasCatalogFilters()) {
               <button
                 class="text-button clear-catalog-filters"
@@ -596,7 +666,10 @@
             @for (item of visibleCatalog(); track item.id) {
               <article
                 class="catalog-result"
-                [class.just-added]="lastAdded()?.catalogId === item.id"
+                [class.just-added]="
+                  lastAdded()?.catalogId === item.id ||
+                  (alternativeSelection() && alternativeSelected(item))
+                "
               >
                 <div class="catalog-identity">
                   <app-category-icon class="supply-symbol" [slug]="item.category_slug" />
@@ -627,11 +700,26 @@
                 <button
                   class="btn add-catalog-item"
                   [id]="'add-' + item.id"
-                  [disabled]="editingBlocked() || catalogBusy()"
+                  [disabled]="
+                    editingBlocked() ||
+                    catalogBusy() ||
+                    (alternativeSelection() &&
+                      alternativeSelection()!.options.length >= maxAlternatives &&
+                      !alternativeSelected(item))
+                  "
                   (click)="add(item)"
-                  [attr.aria-label]="'Agregar ' + item.name"
+                  [attr.aria-label]="
+                    alternativeSelection()
+                      ? (alternativeSelected(item) ? 'Quitar opción ' : 'Incluir ') + item.name
+                      : 'Agregar ' + item.name
+                  "
+                  [attr.aria-pressed]="alternativeSelection() ? alternativeSelected(item) : null"
                 >
-                  <span aria-hidden="true">＋</span> Agregar
+                  @if (alternativeSelection()) {
+                    {{ alternativeSelected(item) ? '✓ Incluido' : '＋ Incluir' }}
+                  } @else {
+                    <span aria-hidden="true">＋</span> Agregar
+                  }
                 </button>
               </article>
             }
@@ -647,7 +735,7 @@
               }
               <button
                 class="btn secondary"
-                [disabled]="editingBlocked()"
+                [disabled]="editingBlocked() || !!alternativeSelection()"
                 (click)="openPanel('custom')"
               >
                 Crear útil personalizado
@@ -670,32 +758,53 @@
           }
         </div>
         <footer class="catalog-footer">
-          <div class="catalog-secondary-actions">
-            <button
-              class="btn secondary"
-              [disabled]="editingBlocked()"
-              (click)="openPanel('custom')"
-            >
-              ＋ Útil personalizado</button
-            ><button
-              class="btn secondary"
-              [disabled]="editingBlocked() || conflict()"
-              (click)="openPanel('upload')"
-            >
-              Importar Excel o CSV
-            </button>
-          </div>
-          @if (mobile()) {
-            @if (lastAdded(); as added) {
-              <div class="picker-feedback" aria-live="polite">
-                <span>✓ {{ added.name }} agregado.</span
-                ><button class="text-button" (click)="undoAdd()">Deshacer</button>
-              </div>
+          @if (alternativeSelection(); as selection) {
+            <app-alternative-selection-bar
+              [selection]="selection"
+              [blocked]="editingBlocked()"
+              (review)="reviewAlternatives()"
+              (cancelled)="cancelAlternatives()"
+              (removed)="removeAlternative($event)"
+            />
+          } @else {
+            <div class="catalog-secondary-actions">
+              @if (!mobile()) {
+                <button
+                  id="start-item-alternatives"
+                  type="button"
+                  class="btn secondary"
+                  [disabled]="editingBlocked()"
+                  (click)="startAlternatives()"
+                >
+                  Permitir alternativas
+                </button>
+              }
+              <button
+                class="btn secondary"
+                [disabled]="editingBlocked()"
+                (click)="openPanel('custom')"
+              >
+                ＋ Útil personalizado</button
+              ><button
+                class="btn secondary"
+                [disabled]="editingBlocked() || conflict()"
+                (click)="openPanel('upload')"
+              >
+                Importar Excel o CSV
+              </button>
+            </div>
+            @if (mobile()) {
+              @if (lastAdded(); as added) {
+                <div class="picker-feedback" aria-live="polite">
+                  <span>✓ {{ added.name }} agregado.</span
+                  ><button class="text-button" (click)="undoAdd()">Deshacer</button>
+                </div>
+              }
+              <button class="btn picker-done" (click)="closePanel()">
+                Ver mi lista · {{ model().items.length }}
+                {{ model().items.length === 1 ? 'útil' : 'útiles' }} →
+              </button>
             }
-            <button class="btn picker-done" (click)="closePanel()">
-              Ver mi lista · {{ model().items.length }}
-              {{ model().items.length === 1 ? 'útil' : 'útiles' }} →
-            </button>
           }
         </footer>
       </div>
@@ -722,11 +831,13 @@
           ? 'Agregar útiles'
           : activePanel === 'metadata'
             ? 'Datos de la lista'
-            : activePanel === 'custom'
-              ? 'Útil personalizado'
-              : activePanel === 'upload'
-                ? 'Importar desde una planilla'
-                : 'Revisar importación'
+            : activePanel === 'alternatives'
+              ? 'Opciones del útil'
+              : activePanel === 'custom'
+                ? 'Útil personalizado'
+                : activePanel === 'upload'
+                  ? 'Importar desde una planilla'
+                  : 'Revisar importación'
       "
     >
       <header class="dialog-heading" (keydown)="activePanel === 'picker' && catalogKeydown($event)">
@@ -751,13 +862,15 @@
                 : 'Agregar útiles'
               : activePanel === 'metadata'
                 ? 'Datos de la lista'
-                : activePanel === 'custom'
-                  ? 'Útil personalizado'
-                  : activePanel === 'upload'
-                    ? 'Importar desde una planilla'
-                    : mapped()
-                      ? 'Revisa antes de agregar'
-                      : 'Relaciona las columnas'
+                : activePanel === 'alternatives'
+                  ? 'Opciones del útil'
+                  : activePanel === 'custom'
+                    ? 'Útil personalizado'
+                    : activePanel === 'upload'
+                      ? 'Importar desde una planilla'
+                      : mapped()
+                        ? 'Revisa antes de agregar'
+                        : 'Relaciona las columnas'
           }}
         </h2>
         <button
@@ -773,6 +886,17 @@
         <p class="notice error dialog-error" role="alert">{{ api.error() }}</p>
       }
       @switch (activePanel) {
+        @case ('alternatives') {
+          @if (alternativeSelection(); as selection) {
+            <app-item-options-editor
+              [selection]="selection"
+              [blocked]="editingBlocked()"
+              (saved)="saveAlternatives($event)"
+              (back)="backToAlternatives($event)"
+              (cancelled)="cancelAlternatives()"
+            />
+          }
+        }
         @case ('picker') {
           <ng-container [ngTemplateOutlet]="catalogPane" />
         }

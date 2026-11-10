@@ -1899,3 +1899,48 @@ h1 {
     min-height: 48px;
   }
 }
+
+.item-options-action {
+  align-self: flex-start;
+  padding: 3px 0;
+  min-height: 28px;
+  font-size: 12px;
+}
+.supply-options-summary {
+  margin: 6px 0;
+  font-size: 12px;
+  color: #315c4e;
+}
+.supply-options-summary summary {
+  cursor: pointer;
+  padding-block: 4px;
+}
+.supply-options-summary ul {
+  margin: 6px 0;
+  padding-left: 20px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+.alternative-resume {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.catalog-title-row {
+  flex-wrap: wrap;
+}
+#start-item-alternatives {
+  min-height: 44px;
+  padding-inline: 0;
+}
+@media (min-width: 721px) {
+  .catalog-secondary-actions {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .catalog-secondary-actions .btn {
+    min-height: 44px;
+    font-size: 12px;
+    padding-inline: 5px;
+  }
+}

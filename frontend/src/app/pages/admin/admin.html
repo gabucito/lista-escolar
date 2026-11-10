@@ -133,31 +133,47 @@
           @case ('catalog') {
             <div class="catalog-layout">
               <section class="panel catalog-results-panel" aria-label="Buscar en el catálogo">
-                <form class="catalog-search" (submit)="refresh(); $event.preventDefault()">
+                <form class="catalog-search" (submit)="searchCatalog(); $event.preventDefault()">
                   <label
                     >Buscar útil<input
                       [formField]="searchFields.q"
                       placeholder="Nombre o alternativa"
                   /></label>
                   <label
-                    >Estado<select [formField]="searchFields.status">
+                    >Estado<select [formField]="searchFields.status" (change)="searchCatalog()">
                       <option value="">Todos</option>
                       <option value="pending">Pendientes</option>
                       <option value="approved">Aprobados</option>
                       <option value="rejected">Rechazados</option>
                     </select></label
                   >
-                  <button class="btn full-width" type="submit">Buscar</button>
+                  <label
+                    >Categoría del catálogo<select
+                      [formField]="searchFields.category"
+                      (change)="searchCatalog()"
+                    >
+                      <option value="">Todas las categorías</option>
+                      @for (category of categories(); track category.id) {
+                        <option [value]="category.slug">{{ category.name }}</option>
+                      }
+                    </select></label
+                  >
+                  <button class="btn full-width" type="submit" [disabled]="busy()">Buscar</button>
                 </form>
-                <p class="result-count">
-                  {{ shownCatalog().length }}
-                  {{ shownCatalog().length === 1 ? 'resultado' : 'resultados' }}
-                  @if (catalog().length === 200) {
-                    · Refina la búsqueda para ver más útiles.
+                <p
+                  class="result-count"
+                  id="admin-catalog-results-heading"
+                  tabindex="-1"
+                  role="status"
+                >
+                  @if (catalogLoading()) {
+                    Buscando…
+                  } @else {
+                    {{ catalogRange() }}
                   }
                 </p>
-                <div class="catalog-options">
-                  @for (item of shownCatalog(); track item.id) {
+                <div class="catalog-options" [attr.aria-busy]="catalogLoading()">
+                  @for (item of catalog(); track item.id) {
                     <button
                       type="button"
                       class="catalog-option"
@@ -165,7 +181,7 @@
                       [attr.aria-label]="'Revisar ' + item.name"
                       [attr.aria-pressed]="selectedItem()?.id === item.id"
                       (click)="chooseItem(item)"
-                      [disabled]="busy()"
+                      [disabled]="busy() || catalogLoading()"
                     >
                       <span class="option-top"
                         ><strong>{{ item.name }}</strong
@@ -186,6 +202,24 @@
                     </p>
                   }
                 </div>
+                <nav class="catalog-pagination" aria-label="Páginas del catálogo">
+                  <button
+                    class="btn small secondary"
+                    type="button"
+                    (click)="changeCatalogPage(-1)"
+                    [disabled]="busy() || catalogLoading() || catalogOffset() === 0"
+                  >
+                    Anterior
+                  </button>
+                  <button
+                    class="btn small secondary"
+                    type="button"
+                    (click)="changeCatalogPage(1)"
+                    [disabled]="busy() || catalogLoading() || !catalogHasNext()"
+                  >
+                    Siguiente
+                  </button>
+                </nav>
               </section>
               @if (itemEditing()) {
                 <section class="panel supply-editor" aria-label="Revisión del útil">
